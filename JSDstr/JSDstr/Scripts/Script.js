@@ -181,8 +181,6 @@
         var pingSessionAttempts = 0;
         var calculationSessionAttempts = 0;
 
-        var startAgainSessionTimeout = 1500;
-
         var checkCreateSessionMaxAttempts = function () {
             if (createSessionAttempts >= maxSessionAttempts) {
                 handlers.failMaxAttemptsCreateSession.fire(maxSessionAttempts);
@@ -215,7 +213,7 @@
             return true;
         };
 
-        var createSession = function () {
+        var createSession = function () {            
             if (worker != null)
                 worker.close();
             timerStarted = false;
@@ -223,6 +221,7 @@
                 return;
             handlers.beforeCreateSession.fire();
             createSessionAttempts++;
+            requestExecuted = true;
             $.post('/processing/createsession', function (session) {
                 if (checkSession(session, Processing.sessionState.Started)) {
                     currentSession = session;
@@ -230,74 +229,80 @@
                     createSessionAttempts = 0;
 
                     worker = cw(calculation);
-                    calculationSessionAttempts++;
                     worker.data(currentSession.Data).then(function (data) {
                         if (checkCurrentSession()) {
                             calculationSessionAttempts = 0;
                             //currentSession.Results = data;
                             completeSession();
                         } else {
-                            setTimeout(createSession, startAgainSessionTimeout);
+                            createSession();
                         }
                     }, function (d) {
                         if (d != "closed") {
+                            calculationSessionAttempts++;
                             handlers.failSessionCalculation.fire(d);
-                            setTimeout(createSession, startAgainSessionTimeout);
+                            createSession();
                         }
                     });
+                    requestExecuted = false;
 
                     timerStarted = true;
                     startPing();
                 } else {
-                    setTimeout(createSession, startAgainSessionTimeout);
+                    createSession();
                 }
             }).fail(function (d) {
                 handlers.failCreateSession.fire(d.statusText);
-                setTimeout(createSession, startAgainSessionTimeout);
+                createSession();
+                requestExecuted = false;
             });
         };
 
         var pingSession = function () {
-            if (!pingExecuted) {
+            if (!requestExecuted) {
                 if (!checkPingSessionMaxAttempts())
                     return;
                 pingSessionAttempts++;
                 if (checkCurrentSession()) {
-                    pingExecuted = true;
+                    requestExecuted = true;
                     $.post('/processing/pingsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                         if (checkCurrentSession() && checkSession(session, currentSession.State)) {
                             pingSessionAttempts = 0;
                             currentSession = session;
                             handlers.successPingSession.fire(session);
                         } else {
-                            setTimeout(createSession, startAgainSessionTimeout);
+                            //createSession();
                         }
-                        pingExecuted = false;
+                        requestExecuted = false;
                     }).fail(function (d) {
-                        pingExecuted = false;
                         handlers.failPingSession.fire(d.statusText);
+                        requestExecuted = false;
                     });
                 } else {
-                    setTimeout(createSession, startAgainSessionTimeout);
+                    createSession();
                 }
             }
         };
 
         var completeSession = function () {
-            timerStarted = false;
+            timerStarted = true;
             if (checkCurrentSession()) {
+                requestExecuted = true;
                 $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function (session) {
+                    requestExecuted = false;
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed)) {
                         currentSession = session;
                         handlers.successCompleteSession.fire(session);
                     }
-                    setTimeout(createSession, startAgainSessionTimeout);
+                    requestExecuted = false;
+                    createSession();
                 }).fail(function (d) {
                     handlers.failCompleteSession.fire(d.statusText);
-                    setTimeout(createSession, startAgainSessionTimeout);
+                    requestExecuted = false;
+                    createSession();
                 });
             } else {
-                setTimeout(createSession, startAgainSessionTimeout);
+                createSession();
             }
         };
 
@@ -307,19 +312,22 @@
             if (worker != null)
                 worker.close();
             if (checkCurrentSession()) {
+                requestExecuted = true;
                 $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
+                    requestExecuted = false;
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped)) {
                         currentSession = session;
                         handlers.successCancelSession.fire(session);
                     }
                 }).fail(function (d) {
                     handlers.failCancelSession.fire(d.statusText);
+                    requestExecuted = false;
                 });
             }
         };
 
         var timerStarted = false;
-        var pingExecuted = false;
+        var requestExecuted = false;
         var timerInterval = 500;
 
         var startPing = function () {

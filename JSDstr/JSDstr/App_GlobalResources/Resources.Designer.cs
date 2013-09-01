@@ -240,7 +240,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Creating session was failed with max attempts count. Please try again later..
+        ///   Looks up a localized string similar to Creating session was failed with max attempts count. Please try again later.
         /// </summary>
         internal static string Error_MaxAttemptsCreateSession {
             get {
@@ -294,7 +294,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Client session is null. Another attempt....
+        ///   Looks up a localized string similar to Client session is null.
         /// </summary>
         internal static string Error_SessionClientNull {
             get {
@@ -303,7 +303,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server returned session with invalid state. Another attempt....
+        ///   Looks up a localized string similar to Server returned session with invalid state.
         /// </summary>
         internal static string Error_SessionInvalidState {
             get {
@@ -312,7 +312,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server returned null session. Another attempt....
+        ///   Looks up a localized string similar to Server returned null session.
         /// </summary>
         internal static string Error_SessionServerNull {
             get {

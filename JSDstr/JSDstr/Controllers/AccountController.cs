@@ -20,7 +20,7 @@ namespace JSDstr.Controllers
         public ActionResult Logout(string returnUrl)
         {
             if(User.Identity.IsAuthenticated)
-                LogService.Save(string.Format("User [{0}] logged out", User.Identity.Name));
+                LogService.Log(string.Format("User [{0}] logged out", User.Identity.Name));
             FormsAuthentication.SignOut();
             return Redirect(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "/");
         }
@@ -31,7 +31,7 @@ namespace JSDstr.Controllers
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pwd) ||
                 (email.StartsWith("anonym.") && email.EndsWith("@jsdstr.com")))
             {
-                LogService.Save(
+                LogService.Log(
                     string.Format("Error sign in. Email: [{0}], Pwd: [{1}], Remember: [{2}]", email, pwd, remember),
                     LogType.Warning);
                 return false;
@@ -39,11 +39,11 @@ namespace JSDstr.Controllers
             if (Membership.ValidateUser(email, pwd))
             {
                 FormsAuthentication.SetAuthCookie(email, remember);
-                LogService.Save(string.Format("User signed in. Email: [{0}], Pwd: [{1}], Remember: [{2}]", email,
+                LogService.Log(string.Format("User signed in. Email: [{0}], Pwd: [{1}], Remember: [{2}]", email,
                     pwd, remember));
                 return true;
             }
-            LogService.Save(string.Format(
+            LogService.Log(string.Format(
                     "Error sign in. Membership.ValidateUser failed. Email: [{0}], Pwd: [{1}], Remember: [{2}]", email,
                     pwd, remember), LogType.Warning);
             return false;
@@ -58,22 +58,22 @@ namespace JSDstr.Controllers
             try
             {
                 var user = Membership.CreateUser(email, pwd, email);
-                LogService.Save(string.Format("Anonym user created. Email: [{0}], Pwd: [{1}]", email, pwd));
+                LogService.Log(string.Format("Anonym user created. Email: [{0}], Pwd: [{1}]", email, pwd));
                 if (Membership.ValidateUser(email, pwd))
                 {
                     FormsAuthentication.SetAuthCookie(email, false);
                     _settingsService.SetAnonymUsersCount(anonymUsersCount);
-                    LogService.Save(string.Format("Anonym user signed in. Email: [{0}], Pwd: [{1}]", email, pwd));
+                    LogService.Log(string.Format("Anonym user signed in. Email: [{0}], Pwd: [{1}]", email, pwd));
                     return true;
                 }
-                LogService.Save(string.Format(
+                LogService.Log(string.Format(
                     "Error anonym user sign in. Membership.ValidateUser failed. Email: [{0}], Pwd: [{1}]",
                     email, pwd), LogType.Warning);
                 return false;
             }
             catch (MembershipCreateUserException e)
             {
-                LogService.Save(string.Format("Anonym user sign up exception. Email: [{0}], Pwd: [{1}]. StatusCode: [{2}]. Exception: [{3}]", email,
+                LogService.Log(string.Format("Anonym user sign up exception. Email: [{0}], Pwd: [{1}]. StatusCode: [{2}]. Exception: [{3}]", email,
                         pwd, e.StatusCode, e.Message), LogType.Warning);
                 return false;
             }
@@ -85,31 +85,31 @@ namespace JSDstr.Controllers
             var error = Resources.Resources.Error_SignUp;
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pwd))
             {
-                LogService.Save(string.Format("Error sign up. Email: [{0}], Pwd: [{1}]", email, pwd),
+                LogService.Log(string.Format("Error sign up. Email: [{0}], Pwd: [{1}]", email, pwd),
                     LogType.Warning);
                 return error;
             }
             try
             {
                 var user = Membership.CreateUser(email, pwd, email);
-                LogService.Save(string.Format("User created. Email: [{0}], Pwd: [{1}]", email, pwd));
+                LogService.Log(string.Format("User created. Email: [{0}], Pwd: [{1}]", email, pwd));
                 if (Membership.ValidateUser(email, pwd))
                 {
                     FormsAuthentication.SetAuthCookie(email, true);
-                    LogService.Save(string.Format("Created user signed in. Email: [{0}], Pwd: [{1}]", email, pwd));
+                    LogService.Log(string.Format("Created user signed in. Email: [{0}], Pwd: [{1}]", email, pwd));
                     return "";
                 }
-                LogService.Save(string.Format(
+                LogService.Log(string.Format(
                     "Error created user sign in. Membership.ValidateUser failed. Email: [{0}], Pwd: [{1}]",
                     email, pwd), LogType.Warning);
                 return error;
             }
             catch (MembershipCreateUserException e)
             {
-                LogService.Save(
+                LogService.Log(
                     string.Format(
                         "User sign up exception. Email: [{0}], Pwd: [{1}]. StatusCode: [{2}]. Exception: [{3}]",
-                        email, pwd, e.StatusCode, e.Message), LogType.Error);
+                        email, pwd, e.StatusCode, e.Message), LogType.Warning);
                 switch (e.StatusCode)
                 {
                     case MembershipCreateStatus.DuplicateEmail:

@@ -4,6 +4,6 @@ namespace JSDstr.Interfaces
 {
     public interface ILogService
     {
-        //void Save(string message, LogType type);
+        //void Log(string message, LogType type);
     }
 }

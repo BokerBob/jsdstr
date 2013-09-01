@@ -98,8 +98,7 @@ namespace JSDstr
             var ex = Server.GetLastError();
             if (Response.StatusCode != 404)
             {
-                LogService.Save(string.Format("Unhandled exception. Message: [{0}]. Source: [{1}]. StackTrace: [{2}]", ex.Message,
-                        ex.Source, ex.StackTrace), LogType.Error);
+                LogService.Log(ex);
             }
         }
     }

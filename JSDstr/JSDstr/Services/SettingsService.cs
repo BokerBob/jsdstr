@@ -6,7 +6,7 @@ using JSDstr.Repositories;
 
 namespace JSDstr.Services
 {
-    public class SettingsService : ISettingsService
+    public class SettingsService : BaseService, ISettingsService
     {
         private readonly IRepository<Settings> _settingsRepository = new SqlRepository<Settings>();
 
@@ -20,7 +20,6 @@ namespace JSDstr.Services
                 Value = value
             };
             _settingsRepository.Insert(settings);
-            _settingsRepository.Submit();
             return settings;
         }
 
@@ -49,12 +48,30 @@ namespace JSDstr.Services
 
         public int GetAnonymUsersCount()
         {
-            return Convert.ToInt32(GetValue(AnonymUsersCountKey, "0"));
+            try
+            {
+                var value = Convert.ToInt32(GetValue(AnonymUsersCountKey, "0"));
+                Log(string.Format("GetAnonymUsersCount: [{0}]", value));
+                return value;
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                return 0;
+            }
         }
 
         public void SetAnonymUsersCount(int count)
         {
-            SetValue(AnonymUsersCountKey, count.ToString());
+            try
+            {
+                SetValue(AnonymUsersCountKey, count.ToString());
+                Log(string.Format("SetAnonymUsersCount: [{0}]", count));
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
         }
     }
 }

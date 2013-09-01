@@ -183,7 +183,7 @@
     <value>Calculation session was failed with max attempts count. Please try again later.</value>
   </data>
   <data name="Error_MaxAttemptsCreateSession" xml:space="preserve">
-    <value>Creating session was failed with max attempts count. Please try again later.</value>
+    <value>Creating session was failed with max attempts count. Please try again later</value>
   </data>
   <data name="Error_MaxAttemptsPingSession" xml:space="preserve">
     <value>Ping session was failed with max attempts count. Please try again later.</value>
@@ -201,13 +201,13 @@
     <value>Calculation was stopped with error. Another attempt...</value>
   </data>
   <data name="Error_SessionClientNull" xml:space="preserve">
-    <value>Client session is null. Another attempt...</value>
+    <value>Client session is null</value>
   </data>
   <data name="Error_SessionInvalidState" xml:space="preserve">
-    <value>Server returned session with invalid state. Another attempt...</value>
+    <value>Server returned session with invalid state</value>
   </data>
   <data name="Error_SessionServerNull" xml:space="preserve">
-    <value>Server returned null session. Another attempt...</value>
+    <value>Server returned null session</value>
   </data>
   <data name="Error_SignIn" xml:space="preserve">
     <value>Invalid credentials</value>

@@ -11,9 +11,11 @@ namespace JSDstr.Repositories
 {
     public class SqlRepository<TModel> : IRepository<TModel> where TModel : BaseModel
     {
-        protected readonly Table<TModel> DataTable;
+        protected readonly string ConnectionString;
 
-        protected readonly DataContext DataContext;
+        protected DataContext DataContext { get; set; }
+        
+        private readonly object _locker = new object();
 
         public SqlRepository()
             : this(ConfigurationHelper.ConnectionString)
@@ -22,62 +24,94 @@ namespace JSDstr.Repositories
 
         public SqlRepository(string connectionString)
         {
-            DataContext = new DataContext(connectionString);
-            DataTable = DataContext.GetTable<TModel>();
-            foreach (var entity in DataTable)
-            {
-                entity.CreateSnapshot();
-            }
+            ConnectionString = connectionString;
+            DataContext = new DataContext(ConnectionString);
         }
 
         public IQueryable<TModel> Entities
         {
-            get { return DataTable; }
+            get { return DataContext.GetTable<TModel>().AsQueryable(); }
         }
 
         public void Insert(TModel entity)
         {
-            entity.CreatedDate = entity.ChangedDate = DateTime.Now;
-            ((Table<TModel>)Entities).InsertOnSubmit(entity);
+            lock(_locker)
+            {
+                using (DataContext = new DataContext(ConnectionString))
+                {
+                    entity.CreatedDate = entity.ChangedDate = DateTime.Now;
+                    ((Table<TModel>) Entities).InsertOnSubmit(entity);
+                    DataContext.SubmitChanges();
+                }
+            }
         }
 
         public void Insert(IEnumerable<TModel> entities)
         {
             if (entities == null) return;
-            foreach (var entity in entities)
+            lock (_locker)
             {
-                entity.CreatedDate = entity.ChangedDate = DateTime.Now;
+                using (DataContext = new DataContext(ConnectionString))
+                {
+                    var enumerable = entities.ToArray();
+                    foreach (var entity in enumerable)
+                    {
+                        entity.CreatedDate = entity.ChangedDate = DateTime.Now;
+                    }
+                    ((Table<TModel>) Entities).InsertAllOnSubmit(enumerable);
+                    DataContext.SubmitChanges();
+                }
             }
-            ((Table<TModel>)Entities).InsertAllOnSubmit(entities);
         }
 
         public void Delete(TModel entity)
         {
-            ((Table<TModel>)Entities).DeleteOnSubmit(entity);
+            lock (_locker)
+            {
+                using (DataContext = new DataContext(ConnectionString))
+                {
+                    ((Table<TModel>) Entities).DeleteOnSubmit(entity);
+                    DataContext.SubmitChanges();
+                }
+            }
         }
 
         public void Delete(IEnumerable<TModel> entities)
         {
-            ((Table<TModel>)Entities).DeleteAllOnSubmit(entities);
+            lock (_locker)
+            {
+                using (DataContext = new DataContext(ConnectionString))
+                {
+                    ((Table<TModel>) Entities).DeleteAllOnSubmit(entities);
+                    DataContext.SubmitChanges();
+                }
+            }
         }
 
         public void Submit(bool updateChangedDate = true)
         {
-            if (updateChangedDate)
+            lock (_locker)
             {
-                foreach (var entity in Entities)
+                using (DataContext = new DataContext(ConnectionString))
                 {
-                    if (entity.IsChanged)
-                        entity.ChangedDate = DateTime.Now;
-                    entity.CreateSnapshot();
+                    if (updateChangedDate)
+                    {
+                        foreach (var entity in Entities)
+                        {
+                            entity.ChangedDate = DateTime.Now;
+                        }
+                    }
+                    DataContext.SubmitChanges();
                 }
             }
-            DataContext.SubmitChanges();
         }
 
         public void Refresh()
         {
-            DataContext.Refresh(RefreshMode.OverwriteCurrentValues);
+            using (DataContext = new DataContext(ConnectionString))
+            {
+                DataContext.Refresh(RefreshMode.OverwriteCurrentValues);
+            }
         }
     }
 
