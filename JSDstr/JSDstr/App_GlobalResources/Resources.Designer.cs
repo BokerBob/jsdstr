@@ -115,7 +115,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Andriy Babets © All rights reserved.
+        ///   Looks up a localized string similar to © 2013 Andriy Babets.
         /// </summary>
         internal static string Content_Footer {
             get {
@@ -150,7 +150,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while cancelling session. Please refresh page.
+        ///   Looks up a localized string similar to Cancel session error. Calculation was stopped..
         /// </summary>
         internal static string Error_CancelSession {
             get {
@@ -159,7 +159,16 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while creating session. Please refresh page and try again.
+        ///   Looks up a localized string similar to Complete session error. Another attempt....
+        /// </summary>
+        internal static string Error_CompleteSession {
+            get {
+                return ResourceManager.GetString("Error_CompleteSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create session error. Another attempt....
         /// </summary>
         internal static string Error_CreateSession {
             get {
@@ -177,11 +186,38 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Some error occured. Please contact site administrator..
+        ///   Looks up a localized string similar to Some errors occured. Please contact site administrator..
         /// </summary>
         internal static string Error_General {
             get {
                 return ResourceManager.GetString("Error_General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculation session was failed with max attempts count. Please try again later..
+        /// </summary>
+        internal static string Error_MaxAttemptsCalculateSession {
+            get {
+                return ResourceManager.GetString("Error_MaxAttemptsCalculateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating session was failed with max attempts count. Please try again later..
+        /// </summary>
+        internal static string Error_MaxAttemptsCreateSession {
+            get {
+                return ResourceManager.GetString("Error_MaxAttemptsCreateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ping session was failed with max attempts count. Please try again later..
+        /// </summary>
+        internal static string Error_MaxAttemptsPingSession {
+            get {
+                return ResourceManager.GetString("Error_MaxAttemptsPingSession", resourceCulture);
             }
         }
         
@@ -204,7 +240,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ping error. Please refresh page.
+        ///   Looks up a localized string similar to Ping error. Another attempt....
         /// </summary>
         internal static string Error_PingSession {
             get {
@@ -213,7 +249,16 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Client session is null. Please refresh page.
+        ///   Looks up a localized string similar to Calculation was stopped with error. Another attempt....
+        /// </summary>
+        internal static string Error_SessionCalculation {
+            get {
+                return ResourceManager.GetString("Error_SessionCalculation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client session is null. Another attempt....
         /// </summary>
         internal static string Error_SessionClientNull {
             get {
@@ -222,7 +267,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Session state is invalid. Please refresh page and start again.
+        ///   Looks up a localized string similar to Server returned session with invalid state. Another attempt....
         /// </summary>
         internal static string Error_SessionInvalidState {
             get {
@@ -231,7 +276,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server session is null. Please refresh page and start again.
+        ///   Looks up a localized string similar to Server returned null session. Another attempt....
         /// </summary>
         internal static string Error_SessionServerNull {
             get {
@@ -348,6 +393,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data.
+        /// </summary>
+        internal static string Label_Data {
+            get {
+                return ResourceManager.GetString("Label_Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string Label_Email {
@@ -407,6 +461,15 @@ namespace Resources {
         internal static string Label_RememberMe {
             get {
                 return ResourceManager.GetString("Label_RememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Results.
+        /// </summary>
+        internal static string Label_Results {
+            get {
+                return ResourceManager.GetString("Label_Results", resourceCulture);
             }
         }
         
@@ -582,7 +645,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Session was canceled successfully.
+        ///   Looks up a localized string similar to Session was cancelled successfully. Calculation was stopped..
         /// </summary>
         internal static string Success_CancelSession {
             get {
@@ -591,7 +654,16 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Session was created successfully.
+        ///   Looks up a localized string similar to Session was completed successfully. Starting another....
+        /// </summary>
+        internal static string Success_CompleteSession {
+            get {
+                return ResourceManager.GetString("Success_CompleteSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session was created successfully. Calculation is running....
         /// </summary>
         internal static string Success_CreateSession {
             get {
@@ -672,7 +744,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Result of clasterization.
+        ///   Looks up a localized string similar to Results of clasterization.
         /// </summary>
         internal static string Title_Results {
             get {

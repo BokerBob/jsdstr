@@ -101,21 +101,35 @@ namespace JSDstr.Services
             }
         }
 
-        //public bool CompleteSession(Guid sessionGuid)
-        //{
-        //    var session = _sessionRepository.Entities.SingleOrDefault(x => x.Guid == sessionGuid && x.State == (int)SessionState.Started);
-        //    if (session != null)
-        //    {
-        //        session.ChangedDate = DateTime.Now;
-        //        session.State = (int)SessionState.Completed;
-        //        _sessionRepository.Submit();
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        // logging
-        //        return false;
-        //    }
-        //}
+        public SessionViewObject CompleteSession(SessionViewObject sessionViewObject, string loggedUser)
+        {
+            using (var t = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.Serializable
+            }))
+            {
+                var session = _sessionRepository.Entities.SingleOrDefault(x =>
+                    x.Guid == sessionViewObject.Guid &&
+                    x.UserName == sessionViewObject.UserName &&
+                    x.UserName == loggedUser);
+                if (session == null)
+                    return null;
+                if (session.State == (int)SessionState.Started)
+                {
+                    session.State = (int)SessionState.Completed;
+                    session.StateMessage = string.Format("Completed at {0} successfull", DateTime.Now);
+                }
+                else
+                {
+                    session.StateMessage =
+                        string.Format("Complete session at {0} failed. Invalid session state. Client: {1}, Server: {2}",
+                            DateTime.Now, (SessionState)sessionViewObject.State, (SessionState)session.State);
+                }
+                session.ChangedDate = DateTime.Now;
+                _sessionRepository.Submit(false);
+                t.Complete();
+                return session;
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿(function () {
-    Date.prototype.format = function(format) //author: meizz
+    Date.prototype.format = function (format) //author: meizz
     {
         var o = {
             "M+": this.getMonth() + 1, //month
@@ -21,7 +21,7 @@
                         ("00" + o[k]).substr(("" + o[k]).length));
         return format;
     };
-    
+
     var helpers = {
         returnUrlParameter: "ReturnUrl",
         defaultReturnUrl: "/",
@@ -41,7 +41,7 @@
             else
                 window.location = helpers.defaultReturnUrl;
         },
-        
+
         parseDate: function (jsonDate) {
             return new Date(parseInt(jsonDate.substr(6)));
         }
@@ -56,8 +56,6 @@
 
     var ui = {
         errorClass: 'has-error',
-        errorAlertClass: 'alert-danger',
-        successAlertClass: 'alert-success',
         dateTimeFormat: "dd.MM.yyyy hh:mm:ss",
 
         addError: function (source, msg) {
@@ -66,17 +64,31 @@
             return source + msg;
         },
 
-        setAlertState: function ($alert, msg, success) {
+        setAlertState: function ($alert, msg, cssClass) {
             if ($alert != null && msg != '') {
-                if (success) {
-                    $alert.addClass(ui.successAlertClass);
-                    $alert.removeClass(ui.errorAlertClass);
-                } else {
-                    $alert.addClass(ui.errorAlertClass);
-                    $alert.removeClass(ui.successAlertClass);
+                if (typeof cssClass == "string") {
+                    $alert.attr('class', '').addClass('alert').addClass(cssClass);
+                }
+                else if (typeof cssClass == "boolean" && cssClass) {
+                    $alert.attr('class', '').addClass('alert').addClass('alert-success');
+                } else if (typeof cssClass == "boolean") {
+                    $alert.attr('class', '').addClass('alert').addClass('alert-danger');
                 }
                 $alert.html(msg);
                 $alert.removeClass('hide');
+            }
+        },
+
+        setButtonState: function ($btn, cssClass, title, state, dataState) {
+            if ($btn != null) {
+                if (state != null)
+                    $btn.button(state);
+                if (cssClass != null)
+                    $btn.attr('class', '').addClass('btn').addClass(cssClass);
+                if (title != null)
+                    $btn.html(title);
+                if (dataState != null)
+                    $btn.data('state', dataState);
             }
         }
     };
@@ -85,107 +97,217 @@
 
     var Processing = function () {
         var handlers = {
+            beforeCreateSession: $.Callbacks(),
+            beforeCancelSession: $.Callbacks(),
+
+            failMaxAttemptsCreateSession: $.Callbacks(),
+            failMaxAttemptsPingSession: $.Callbacks(),
+            failMaxAttemptsCalculationSession: $.Callbacks(),
+
             successCreateSession: $.Callbacks(),
             failCreateSession: $.Callbacks(),
+            
             successPingSession: $.Callbacks(),
             failPingSession: $.Callbacks(),
+            
             successCancelSession: $.Callbacks(),
             failCancelSession: $.Callbacks(),
+            
+            successCompleteSession: $.Callbacks(),
+            failCompleteSession: $.Callbacks(),
 
             failSessionClientNull: $.Callbacks(),
             failSessionServerNull: $.Callbacks(),
-            failSessionInvalidState: $.Callbacks()
+            failSessionInvalidState: $.Callbacks(),
+            
+            failSessionCalculation: $.Callbacks()
         };
 
         var currentSession;
-        
-        var createSession = function () {
-            $.post('/processing/createsession', function (session) {
-                if (!$.isPlainObject(session)) {
-                    currentSession = null;
-                    handlers.failSessionServerNull.fire();
-                } else if (session.State != Processing.sessionState.Started) {
-                    currentSession = null;
-                    handlers.failSessionInvalidState.fire(session);
-                } else {
-                    currentSession = session;
-                    handlers.successCreateSession.fire(session);
-                    timerStarted = true;
-                    startPing();
-                }
-            }).fail(function () {
-                currentSession = null;
-                handlers.failCreateSession.fire();
-            });
-        };
-        
-        var pingSession = function () {
+
+        var checkCurrentSession = function () {
             if (!$.isPlainObject(currentSession)) {
                 handlers.failSessionClientNull.fire();
-                return;
+                return false;
             }
+            return true;
+        };
+
+        var checkSession = function (session, stateShouldBe) {
+            if (!$.isPlainObject(session)) {
+                handlers.failSessionServerNull.fire();
+                return false;
+            }
+            else if (stateShouldBe != null && session.State != stateShouldBe) {
+                handlers.failSessionInvalidState.fire(session);
+                return false;
+            }
+            return true;
+        };
+
+        var calculation = function (data) {
+            var sum = 0;
+            for (var i = 0; i <= 100000; i++) {
+                sum += i;
+                throw "kk";
+            }
+            return sum;
+        };
+
+        var worker;
+
+        var maxSessionAttempts = 5;
+        var createSessionAttempts = 0;
+        var pingSessionAttempts = 0;
+        var calculationSessionAttempts = 0;
+
+        var checkCreateSessionMaxAttempts = function () {
+            if (createSessionAttempts >= maxSessionAttempts) {
+                handlers.failMaxAttemptsCreateSession.fire(maxSessionAttempts);
+                createSessionAttempts = 0;
+                return false;
+            }
+            return true;
+        };
+
+        var checkPingSessionMaxAttempts = function () {
+            if (pingSessionAttempts >= maxSessionAttempts) {
+                if(worker != null)
+                    worker.close();
+                handlers.failMaxAttemptsPingSession.fire(maxSessionAttempts);
+                pingSessionAttempts = 0;
+                return false;
+            }
+            return true;
+        };
+
+        var checkCalculateSessionMaxAttempts = function () {
+            if (calculationSessionAttempts >= maxSessionAttempts) {
+                if (worker != null)
+                    worker.close();
+                handlers.failMaxAttemptsCalculationSession.fire(maxSessionAttempts);
+                calculationSessionAttempts = 0;
+                return false;
+            }
+            return true;
+        };
+
+        var createSession = function () {
+            if (worker != null)
+                worker.close();
+            timerStarted = false;
+            if (!checkCreateSessionMaxAttempts() || !checkPingSessionMaxAttempts() || !checkCalculateSessionMaxAttempts())
+                return;
+            handlers.beforeCreateSession.fire();
+            createSessionAttempts++;
+            $.post('/processing/createsession', function (session) {
+                if (checkSession(session, Processing.sessionState.Started)) {
+                    currentSession = session;
+                    handlers.successCreateSession.fire(session);
+                    createSessionAttempts = 0;
+
+                    worker = cw(calculation);
+                    calculationSessionAttempts++;
+                    worker.data(currentSession.Data).then(function (data) {
+                        if (checkCurrentSession()) {
+                            calculationSessionAttempts = 0;
+                            currentSession.Results = data;
+                            completeSession();
+                        } else {
+                            createSession();
+                        }
+                    }, function (d) {
+                        if (d != "closed") {
+                            handlers.failSessionCalculation.fire(d);
+                            createSession();
+                        }
+                    });
+
+                    timerStarted = true;
+                    startPing();
+                } else {
+                    createSession();
+                }
+            }).fail(function (d) {
+                handlers.failCreateSession.fire(d);
+                createSession();
+            });
+        };
+
+        var pingSession = function () {
             if (!pingExecuted) {
-                pingExecuted = true;
-                $.post('/processing/pingsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
-                    if (!$.isPlainObject(session)) {
-                        currentSession = null;
-                        timerStarted = false;
-                        handlers.failSessionServerNull.fire();
-                    } else if (session.State != currentSession.State) {
-                        currentSession = null;
-                        timerStarted = false;
-                        handlers.failSessionInvalidState.fire(session);
-                    } else {
-                        currentSession = session;
-                        handlers.successPingSession.fire(session);
+                if (!checkPingSessionMaxAttempts())
+                    return;
+                pingSessionAttempts++;
+                if (checkCurrentSession()) {
+                    pingExecuted = true;
+                    $.post('/processing/pingsession?sessionjson=' + JSON.stringify(currentSession), function(session) {
+                        if (checkCurrentSession() && checkSession(session, currentSession.State)) {
+                            pingSessionAttempts = 0;
+                            currentSession = session;
+                            handlers.successPingSession.fire(session);
+                        } else {
+                            createSession();
+                        }
+                        pingExecuted = false;
+                    }).fail(function(d) {
+                        pingExecuted = false;
+                        handlers.failPingSession.fire(d);
+                    });
+                } else {
+                    createSession();
+                }
+            }
+        };
+
+        var completeSession = function () {
+            timerStarted = false;
+            if (checkCurrentSession()) {
+                $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function(session) {
+                    if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed)) {
+                        handlers.successCompleteSession.fire(session);
                     }
-                    pingExecuted = false;
-                }).fail(function () {
-                    currentSession = null;
-                    timerStarted = false;
-                    handlers.failPingSession.fire();
+                    createSession();
+                }).fail(function(d) {
+                    handlers.failCompleteSession.fire(d);
+                    createSession();
+                });
+            } else {
+                createSession();
+            }
+        };
+
+        var cancelSession = function () {
+            handlers.beforeCancelSession.fire();
+            timerStarted = false;
+            worker.close();
+            if (checkCurrentSession()) {
+                $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
+                    if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped)) {
+                        handlers.successCancelSession.fire(session);
+                    }
+                }).fail(function (d) {
+                    handlers.failCancelSession.fire(d);
                 });
             }
         };
-        
-        var cancelSession = function () {
-            timerStarted = false;
-            if (!$.isPlainObject(currentSession)) {
-                handlers.failSessionClientNull.fire();
-                return;
-            }
-            $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
-                if (!$.isPlainObject(session)) {
-                    currentSession = null;
-                    handlers.failSessionServerNull.fire();
-                } else if (session.State != Processing.sessionState.Stopped) {
-                    currentSession = null;
-                    handlers.failSessionInvalidState.fire(session);
-                } else {
-                    currentSession = null;
-                    handlers.successCancelSession.fire(session);
-                }
-            }).fail(function () {
-                currentSession = null;
-                handlers.failCancelSession.fire();
-            });
-        };
-        
+
         var timerStarted = false;
         var pingExecuted = false;
         var timerInterval = 500;
-        
+
         var startPing = function () {
             if (timerStarted) {
                 pingSession();
                 setTimeout(startPing, timerInterval);
             }
         };
-        
+
         this.startProcessing = createSession;
         this.stopProcessing = cancelSession;
         this.handlers = handlers;
         this.currentSession = currentSession;
+
     };
     Processing.sessionState = {
         Started: 1,
@@ -323,64 +445,104 @@
             var $btn = $('#btnProcessing');
             var $alert = $('#msgProcessing');
             var processing = new Processing();
+            processing.handlers.beforeCreateSession.add(function () {
+                $btn.button('starting');
+            });
+            processing.handlers.beforeCancelSession.add(function () {
+                $btn.button('stopping');
+            });
+
+            processing.handlers.failMaxAttemptsCreateSession.add(function (maxAttempts) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_MaxAttemptsCreateSession, "alert-danger");
+                updateProcessingInfo(null, false);
+                console.log("Fail max attempts create session: " + maxAttempts);
+            });
+            processing.handlers.failMaxAttemptsPingSession.add(function (maxAttempts) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_MaxAttemptsPingSession, "alert-danger");
+                updateProcessingInfo(null, false);
+                console.log("Fail max attempts ping session: " + maxAttempts);
+            });
+            processing.handlers.failMaxAttemptsCalculationSession.add(function (maxAttempts) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_MaxAttemptsCalculateSession, "alert-danger");
+                updateProcessingInfo(null, false);
+                console.log("Fail max attempts calculate session: " + maxAttempts);
+            });
+
             processing.handlers.successCreateSession.add(function (session) {
-                $btn.button('reset');
-                $btn.html(resources.Button_StopSession);
-                $btn.removeClass('btn-success');
-                $btn.addClass('btn-danger');
-                $btn.data('state', 'stop');
-                ui.setAlertState($alert, resources.Success_CreateSession, true);
+                ui.setButtonState($btn, 'btn-danger', resources.Button_StopSession, 'reset', 'stop');
+                ui.setAlertState($alert, resources.Success_CreateSession, "alert-success");
                 updateProcessingInfo(session, true);
                 console.log('Success create session: ' + JSON.stringify(session));
             });
-            processing.handlers.failCreateSession.add(function () {
-                $btn.button('reset');
+            processing.handlers.failCreateSession.add(function (data) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Error_CreateSession, false);
                 updateProcessingInfo(null, false);
-                console.log('Fail create session');
+                console.log('Fail create session: ' + JSON.stringify(data));
             });
+            
             processing.handlers.successPingSession.add(function (session) {
                 if (session.state != Processing.sessionState)
                     updateProcessingInfo(session, true);
                 console.log('Success ping session: ' + JSON.stringify(session));
             });
-            processing.handlers.failPingSession.add(function () {
-                updateProcessingInfo(null, false);
-                console.log('Fail ping session');
+            processing.handlers.failPingSession.add(function (data) {
+                console.log('Fail ping session: ' + JSON.stringify(data));
             });
+            
             processing.handlers.successCancelSession.add(function (session) {
-                $btn.button('reset');
-                $btn.html(resources.Button_StartSession);
-                $btn.removeClass('btn-danger');
-                $btn.addClass('btn-success');
-                $btn.data('state', 'start');
-                ui.setAlertState($alert, resources.Success_CancelSession, true);
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Success_CancelSession, "alert-warning");
                 updateProcessingInfo(session, true);
-                console.log('Success stop session: ' + JSON.stringify(session));
+                console.log('Success cancel session: ' + JSON.stringify(session));
             });
-            processing.handlers.failCancelSession.add(function () {
-                $btn.button('reset');
+            processing.handlers.failCancelSession.add(function (data) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Error_CancelSession, false);
                 updateProcessingInfo(null, false);
-                console.log('Fail cancel session');
+                console.log('Fail cancel session: ' + JSON.stringify(data));
             });
+            
+            processing.handlers.successCompleteSession.add(function (session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Success_CompleteSession, true);
+                updateProcessingInfo(session, true);
+                console.log('Success complete session: ' + JSON.stringify(session));
+            });
+            processing.handlers.failCompleteSession.add(function (data) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CompleteSession, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail complete session: ' + JSON.stringify(data));
+            });
+
+
             processing.handlers.failSessionClientNull.add(function () {
-                $btn.button('reset');
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Error_SessionClientNull, false);
                 updateProcessingInfo(null, false);
                 console.log('Fail session client null');
             });
             processing.handlers.failSessionServerNull.add(function () {
-                $btn.button('reset');
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Error_SessionServerNull, false);
                 updateProcessingInfo(null, false);
                 console.log('Fail session server null');
             });
             processing.handlers.failSessionInvalidState.add(function (session) {
-                $btn.button('reset');
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Error_SessionInvalidState, false);
                 updateProcessingInfo(null, false);
                 console.log('Fail session invalid state: ' + JSON.stringify(session));
+            });
+            processing.handlers.failSessionCalculation.add(function (error) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_SessionCalculation, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail session calculation: ' + error);
             });
             return processing;
         };
@@ -394,6 +556,7 @@
                 var $userName = $('#lblUserName');
                 var $state = $('#lblState');
                 var $stateMessage = $('#lblStateMessage');
+                var $data = $('#lblData');
 
                 $createdDate.html(helpers.parseDate(session.CreatedDate).format(ui.dateTimeFormat));
                 $changedDate.html(helpers.parseDate(session.ChangedDate).format(ui.dateTimeFormat));
@@ -413,6 +576,11 @@
                 }
                 $state.html(state);
                 $stateMessage.html(session.StateMessage);
+                if (session.Results != null) {
+                    $data.html(session.Results).parent().removeClass('hide');
+                } else {
+                    $data.parent().addClass('hide');
+                }
 
                 $sessionInfo.removeClass('hide');
             } else {
@@ -430,20 +598,18 @@
                 $btn.data('state', state);
             }
             if (state == 'start') {
-                $btn.button('starting');
                 currentProcessing.startProcessing();
             }
             else if (state == 'stop') {
-                $btn.button('stopping');
                 currentProcessing.stopProcessing();
             }
         });
     };
 
     window.JSD = function () {
-        //        this.helpers = helpers;
-        //        this.validation = validation;
-        //        this.processing = processing;
+        this.helpers = helpers;
+        this.validation = validation;
+        this.Processing = Processing;
         this.resources = resources;
 
         $(document).ready(ready);

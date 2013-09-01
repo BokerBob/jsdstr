@@ -12,5 +12,6 @@ namespace JSDstr.Interfaces
         SessionViewObject CreateSession(string loggedUser);
         SessionViewObject PingSession(SessionViewObject sessionViewObject, string loggedUser);
         SessionViewObject CancelSession(SessionViewObject sessionViewObject, string loggedUser);
+        SessionViewObject CompleteSession(SessionViewObject sessionViewObject, string loggedUser);
     }
 }

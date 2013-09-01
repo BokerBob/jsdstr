@@ -38,6 +38,9 @@
                 <div class="row">
                     <div class="col-md-4">@Resources.Label_StateMessage:</div><div id="lblStateMessage" class="pull-right col-md-8"></div>
                 </div>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_Results:</div><div id="lblData" class="pull-right col-md-8"></div>
+                </div>
             </div>
         </div>
      </div>
@@ -45,30 +48,38 @@
 
 @section script
 {
-<script type="text/javascript">
-    var resources = jsd.resources;
-    resources.Button_StartSession = '@Resources.Button_StartSession';
-    resources.Button_StopSession = '@Resources.Button_StopSession';
+    <script type="text/javascript">
+        var resources = jsd.resources;
+        resources.Button_StartSession = '@Resources.Button_StartSession';
+        resources.Button_StopSession = '@Resources.Button_StopSession';
     
-    resources.Success_CreateSession = '@Resources.Success_CreateSession';
-    resources.Error_CreateSession = '@Resources.Error_CreateSession';
-    resources.Success_PingSession = '@Resources.Success_PingSession';
-    resources.Error_PingSession = '@Resources.Error_PingSession';
-    resources.Success_CancelSession = '@Resources.Success_CancelSession';
-    resources.Error_CancelSession = '@Resources.Error_CancelSession';
-    resources.Error_SessionClientNull = '@Resources.Error_SessionClientNull';
-    resources.Error_SessionServerNull = '@Resources.Error_SessionServerNull';
-    resources.Error_SessionInvalidState = '@Resources.Error_SessionInvalidState';
+        resources.Success_CreateSession = '@Resources.Success_CreateSession';
+        resources.Error_CreateSession = '@Resources.Error_CreateSession';
+        resources.Success_PingSession = '@Resources.Success_PingSession';
+        resources.Error_PingSession = '@Resources.Error_PingSession';
+        resources.Success_CompleteSession = '@Resources.Success_CompleteSession';
+        resources.Error_CompleteSession = '@Resources.Error_CompleteSession';
+        resources.Success_CancelSession = '@Resources.Success_CancelSession';
+        resources.Error_CancelSession = '@Resources.Error_CancelSession';
+        resources.Error_MaxAttemptsCreateSession = '@Resources.Error_MaxAttemptsCreateSession';
+        resources.Error_MaxAttemptsPingSession = '@Resources.Error_MaxAttemptsPingSession';
+        resources.Error_MaxAttemptsCalculateSession = '@Resources.Error_MaxAttemptsCalculateSession';
+        
+        resources.Error_SessionClientNull = '@Resources.Error_SessionClientNull';
+        resources.Error_SessionServerNull = '@Resources.Error_SessionServerNull';
+        resources.Error_SessionInvalidState = '@Resources.Error_SessionInvalidState';
+        resources.Error_SessionCalculation = '@Resources.Error_SessionCalculation';
     
-    resources.Label_CreatedDate = '@Resources.Label_CreatedDate';
-    resources.Label_ChangedDate = '@Resources.Label_ChangedDate';
-    resources.Label_Guid = '@Resources.Label_Guid';
-    resources.Label_UserName = '@Resources.Label_UserName';
-    resources.Label_State = '@Resources.Label_State';
-    resources.Label_StateMessage = '@Resources.Label_StateMessage';
+        resources.Label_CreatedDate = '@Resources.Label_CreatedDate';
+        resources.Label_ChangedDate = '@Resources.Label_ChangedDate';
+        resources.Label_Guid = '@Resources.Label_Guid';
+        resources.Label_UserName = '@Resources.Label_UserName';
+        resources.Label_State = '@Resources.Label_State';
+        resources.Label_StateMessage = '@Resources.Label_StateMessage';
 
-    resources.Label_StateStarted = '@Resources.Label_StateStarted';
-    resources.Label_StateStopped = '@Resources.Label_StateStopped';
-    resources.Label_StateCompleted = '@Resources.Label_StateCompleted';
-</script>
+        resources.Label_StateStarted = '@Resources.Label_StateStarted';
+        resources.Label_StateStopped = '@Resources.Label_StateStopped';
+        resources.Label_StateCompleted = '@Resources.Label_StateCompleted';
+    </script>
+    <script src="@Url.Content("~/Scripts/Catiline/catiline.js")" type="text/javascript"></script>
 }

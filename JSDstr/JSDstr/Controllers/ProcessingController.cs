@@ -50,5 +50,11 @@ namespace JSDstr.Controllers
         {
             return _sessionService.CancelSession((SessionViewObject)sessionJson, User.Identity.Name);
         }
+
+        [HttpPost, Authorize]
+        public JsonResult CompleteSession(string sessionJson)
+        {
+            return _sessionService.CompleteSession((SessionViewObject)sessionJson, User.Identity.Name);
+        }
     }
 }

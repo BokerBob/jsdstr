@@ -136,7 +136,7 @@
     <value>&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;</value>
   </data>
   <data name="Content_Footer" xml:space="preserve">
-    <value>Andriy Babets © All rights reserved</value>
+    <value>© 2013 Andriy Babets</value>
   </data>
   <data name="Content_Home" xml:space="preserve">
     <value>&lt;p&gt;
@@ -153,16 +153,28 @@
             Improve our world now!</value>
   </data>
   <data name="Error_CancelSession" xml:space="preserve">
-    <value>Error while cancelling session. Please refresh page</value>
+    <value>Cancel session error. Calculation was stopped.</value>
+  </data>
+  <data name="Error_CompleteSession" xml:space="preserve">
+    <value>Complete session error. Another attempt...</value>
   </data>
   <data name="Error_CreateSession" xml:space="preserve">
-    <value>Error while creating session. Please refresh page and try again</value>
+    <value>Create session error. Another attempt...</value>
   </data>
   <data name="Error_Email" xml:space="preserve">
     <value>Invalid email</value>
   </data>
   <data name="Error_General" xml:space="preserve">
-    <value>Some error occured. Please contact site administrator.</value>
+    <value>Some errors occured. Please contact site administrator.</value>
+  </data>
+  <data name="Error_MaxAttemptsCalculateSession" xml:space="preserve">
+    <value>Calculation session was failed with max attempts count. Please try again later.</value>
+  </data>
+  <data name="Error_MaxAttemptsCreateSession" xml:space="preserve">
+    <value>Creating session was failed with max attempts count. Please try again later.</value>
+  </data>
+  <data name="Error_MaxAttemptsPingSession" xml:space="preserve">
+    <value>Ping session was failed with max attempts count. Please try again later.</value>
   </data>
   <data name="Error_NotAcceptedTerms" xml:space="preserve">
     <value>You didn't accept terms</value>
@@ -171,16 +183,19 @@
     <value>Invalid password</value>
   </data>
   <data name="Error_PingSession" xml:space="preserve">
-    <value>Ping error. Please refresh page</value>
+    <value>Ping error. Another attempt...</value>
+  </data>
+  <data name="Error_SessionCalculation" xml:space="preserve">
+    <value>Calculation was stopped with error. Another attempt...</value>
   </data>
   <data name="Error_SessionClientNull" xml:space="preserve">
-    <value>Client session is null. Please refresh page</value>
+    <value>Client session is null. Another attempt...</value>
   </data>
   <data name="Error_SessionInvalidState" xml:space="preserve">
-    <value>Session state is invalid. Please refresh page and start again</value>
+    <value>Server returned session with invalid state. Another attempt...</value>
   </data>
   <data name="Error_SessionServerNull" xml:space="preserve">
-    <value>Server session is null. Please refresh page and start again</value>
+    <value>Server returned null session. Another attempt...</value>
   </data>
   <data name="Error_SignIn" xml:space="preserve">
     <value>Invalid credentials</value>
@@ -218,6 +233,9 @@
   <data name="Label_CreatedDate" xml:space="preserve">
     <value>Created Date</value>
   </data>
+  <data name="Label_Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
   <data name="Label_Email" xml:space="preserve">
     <value>Email</value>
   </data>
@@ -238,6 +256,9 @@
   </data>
   <data name="Label_RememberMe" xml:space="preserve">
     <value>Remember me</value>
+  </data>
+  <data name="Label_Results" xml:space="preserve">
+    <value>Results</value>
   </data>
   <data name="Label_State" xml:space="preserve">
     <value>State</value>
@@ -297,10 +318,14 @@
     <value>Results</value>
   </data>
   <data name="Success_CancelSession" xml:space="preserve">
-    <value>Session was canceled successfully</value>
+    <value>Session was cancelled successfully. Calculation was stopped.</value>
+  </data>
+  <data name="Success_CompleteSession" xml:space="preserve">
+    <value>Session was completed successfully. Starting another...</value>
+    <comment>Session was successfully completed. Thank you for your computing resources. You became a small but important part of the universe computing!</comment>
   </data>
   <data name="Success_CreateSession" xml:space="preserve">
-    <value>Session was created successfully</value>
+    <value>Session was created successfully. Calculation is running...</value>
   </data>
   <data name="Success_PingSession" xml:space="preserve">
     <value>Successfull ping</value>
@@ -327,6 +352,6 @@
     <value>Processing</value>
   </data>
   <data name="Title_Results" xml:space="preserve">
-    <value>Result of clasterization</value>
+    <value>Results of clasterization</value>
   </data>
 </root>
