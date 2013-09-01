@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = Resources.HomeTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Resources.HomeHeader</h1>
+
+@Html.Raw(Resources.HomeContent)
+
+<p>
+    <a class="btn btn-lg btn-primary" href="/about">@Resources.HomeButton</a>
+</p>

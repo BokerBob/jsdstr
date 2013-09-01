@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="3b35c987-1ade-4332-9eb3-f7cbc16e2f71" name="JSDstrUMLUseCaseDiagram" linkedPackageId="35285726-645d-4f34-a37d-9b444e7f7d38" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="646e367b-87fe-457c-ba2c-f4de8ecb41a0">
+      <profileInstance Id="3dc04f92-ddbe-4940-958b-7949711a5a78" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="546cafb6-54fe-4041-aac0-a3320ec9b858">
+      <profileInstance Id="33db7f8b-1fe1-4d6d-b671-bd72c38ffa9c" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="06f95c3f-5cda-47c4-a845-948965b1c8be" name="Авторизований користувач" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e05c21e3-294f-45a3-8dad-bdcacffe50ae" />
+        <targetEnds>
+          <association Id="1a88b492-b5c9-496e-bb00-b0167d05c583" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Перегляд інформації про проект" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="96a55aa8-7eca-48d5-9c56-1fe7991633c0" LastKnownName="Перегляд інформації про проект" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="5c0bf4d6-b5ae-437a-968c-6b4397437da3" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="3928f763-0914-476d-9763-293c026841e1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="2f67e08c-e79d-446a-b2f8-88792fff88d2" name="Перегляд інформації про проект" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="392245a9-0b0e-4680-8d46-088d8cb9184f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="2ff80d87-2233-4844-8cc7-e7b8744ff415" />
+          </association>
+          <association Id="f0b315be-b0c5-4248-b5a0-a54854ee84df" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Перегляд загальної статистики системи" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="7ff48044-5590-45f6-8d8b-4c99286f9c77" LastKnownName="Перегляд загальної статистики системи" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="67a0035f-37a3-4a1a-a68b-97e2f88ba672" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c7188ae5-2deb-4172-b46e-3fd018ae8b25" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="1891ca14-2cd5-48a8-a7a7-a27789083c0a" name="Перегляд загальної статистики системи" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="4676c4d1-fc17-4797-b534-67312e9e5d95" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5e847827-663c-479c-b189-6493849d2d58" />
+          </association>
+          <association Id="2206b797-7f23-4f33-a943-116af87b11db" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Проведення обчислень" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="8486ce94-954d-4702-8c6b-90cdb38e7bb9" LastKnownName="Проведення обчислень" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="5d5c5f7b-dbde-4771-a93a-cfc2ec5d63e8" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="7bd7dd4a-eb57-410a-972d-e208574d89bc" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3bafc9a9-c8d8-423c-b556-b6c949e6729d" name="Проведення обчислень" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="b8bd1e6f-0fac-4f1a-a2c3-0c82b8ff146c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="dd6bbfb0-c13d-44fa-a226-a7165344d604" />
+          </association>
+          <association Id="921ba539-6630-4cd5-a09f-c9bae10f1d88" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Перегляд поточної статистики обчислень" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="36cfcd48-2b44-4f5e-af8f-52af1f97a78f" LastKnownName="Перегляд поточної статистики обчислень" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="71e1dfc2-f55a-4b41-a2d3-03f9b5d4ec19" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="fc6f0d6e-9c35-4f88-9bd8-e969dd774d77" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3e752213-9a16-4584-bf2f-e1527fd7eefb" name="Перегляд поточної статистики обчислень" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="8e4028e3-b21f-4e33-a4f7-13bbe22956f6" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5cd80f96-36ad-4467-9d98-79d47c7d2720" />
+          </association>
+          <association Id="13af2e40-0268-4ed4-864d-d005952c9370" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Перегляд результатів роботи системи" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="472a636c-4784-4e23-808a-59a68a098e03" LastKnownName="Перегляд результатів роботи системи" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="b5df22b9-57bc-41ca-ba68-843a90c8d239" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c5b2cae4-3faa-4cde-81bf-fa10d303e4f4" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3bbbe548-59d5-4a71-9741-463919da9b59" name="Перегляд результатів роботи системи" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="1c3249c6-6fed-49c0-a8af-a746221f9804" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5d3fe128-2533-430a-a19e-04331de50561" />
+          </association>
+          <association Id="d3080c95-c623-49c7-a98c-251ba194a222" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Авторизація" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="a520ead9-a91a-4c92-aae4-372a25de6a91" LastKnownName="Авторизація" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4256f0d4-9f2c-4140-96d5-a2cbf045d773" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b21289af-6d6f-4a9d-8372-59337ab31ea8" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a592852f-04e4-498b-a888-ee45c0feba52" name="Авторизація" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="81b905b5-6482-4f5a-a05c-99ceefae9424" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a5b796ae-a48c-4be0-84ff-57388de8a181" />
+          </association>
+          <association Id="11ce6481-4e0b-41d6-964c-bbe50216f681" isDerived="false" sourceEndRoleName="Авторизований користувач" targetEndRoleName="Перегляд попередніх сесій" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="33bd0a89-9f00-40c0-8b7d-1e3e42ea61cb" LastKnownName="Перегляд попередніх сесій" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9d2e577a-2f65-4d34-becd-b27a3d67ef60" name="Авторизований користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="7cfc1f86-b175-460e-89f1-cbf52d4ec05a" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="abb3ee31-90c7-46dd-afc1-1bbd5c65015d" name="Перегляд попередніх сесій" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="42cf05ea-10e7-4532-8f13-03c2b6c4a80e" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="aab6563d-4c7b-4d59-b760-0eae6a0a678e" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="029a3b27-f9ac-4d50-b137-f8632e4f6d1e" name="Анонімний користувач" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="3f94e8ec-d3ee-409a-b69d-7f61f013cfca" />
+        <targetEnds>
+          <association Id="334073f6-d050-4178-8582-c82e5f499fe2" isDerived="false" sourceEndRoleName="Анонімний користувач" targetEndRoleName="Перегляд інформації про проект" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="96a55aa8-7eca-48d5-9c56-1fe7991633c0" LastKnownName="Перегляд інформації про проект" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="c32c39e7-e72d-468f-85b1-9b80db94f376" name="Анонімний користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c73c43d5-809a-4285-a283-fddb6810b682" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="16555329-47bb-4d87-b84e-e351db7d85e9" name="Перегляд інформації про проект" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="cf00176f-a7c4-4d8e-bbc9-b493e1aa473a" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="55677503-8c65-4c52-8cf4-117c0fe81174" />
+          </association>
+          <association Id="fe328796-83dc-4acd-8227-5b39d742c836" isDerived="false" sourceEndRoleName="Анонімний користувач" targetEndRoleName="Перегляд загальної статистики системи" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="7ff48044-5590-45f6-8d8b-4c99286f9c77" LastKnownName="Перегляд загальної статистики системи" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0ecc90ab-4e77-427a-9c1b-db60632fdff5" name="Анонімний користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="018945c5-b4ae-41ff-a894-71fb864bbf42" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="5a1c2fd1-cd0c-4933-b4ab-7adcf5203ce8" name="Перегляд загальної статистики системи" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="acd56912-14ec-4061-9a2b-e2813d0d2afc" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a07cc05f-e37b-4522-ba17-844799688ccc" />
+          </association>
+          <association Id="66dd2364-e6ff-415b-8136-a24747466b47" isDerived="false" sourceEndRoleName="Анонімний користувач" targetEndRoleName="Проведення обчислень" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="8486ce94-954d-4702-8c6b-90cdb38e7bb9" LastKnownName="Проведення обчислень" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9adb802d-7f20-4152-be29-9b6776724b44" name="Анонімний користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="69f9ce71-6af1-48c9-9e6b-41d2b6fecdff" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="80f08911-f150-42d3-b579-68a77b6b5516" name="Проведення обчислень" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="2d75cde4-8b31-43ec-b478-cac4c2feda72" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="fa585dba-8939-4a3a-9a5a-21b3222c7e08" />
+          </association>
+          <association Id="60e3ee5d-25e8-401d-9e3d-c3b9f5695d66" isDerived="false" sourceEndRoleName="Анонімний користувач" targetEndRoleName="Перегляд поточної статистики обчислень" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="36cfcd48-2b44-4f5e-af8f-52af1f97a78f" LastKnownName="Перегляд поточної статистики обчислень" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a5a72d2c-64ec-4fbb-8472-871bb4e328cf" name="Анонімний користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="83722088-14e2-42a4-9ea5-40199dc7da72" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="dd5b5edf-4c08-4cd7-b2b5-4618217496eb" name="Перегляд поточної статистики обчислень" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="f8706d67-7b7f-4233-bab2-1f55a97a87e3" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="65ffdcca-a3e4-4f96-94d1-856ae5d2be93" />
+          </association>
+          <association Id="568dc41f-a664-43e1-8c93-9e521264dabe" isDerived="false" sourceEndRoleName="Анонімний користувач" targetEndRoleName="Перегляд результатів роботи системи" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="472a636c-4784-4e23-808a-59a68a098e03" LastKnownName="Перегляд результатів роботи системи" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="7014b8a4-3c4b-461d-963e-d7acba3ed331" name="Анонімний користувач" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="2ac334fa-654a-47d5-9a0d-fe5f7c85a916" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="7d281210-8e90-4355-b71e-9a77e4ff485c" name="Перегляд результатів роботи системи" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="1284c386-32c6-479b-b978-24441353d867" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="52f7b9c7-8f97-4f10-83b7-2dc4ef1079b6" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="96a55aa8-7eca-48d5-9c56-1fe7991633c0" name="Перегляд інформації про проект" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="5a9a35d5-de45-4a59-a4b7-c6715411f018" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="a520ead9-a91a-4c92-aae4-372a25de6a91" name="Авторизація" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="6822f5be-54d2-4c66-b2b5-437048aa7b3d" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="8486ce94-954d-4702-8c6b-90cdb38e7bb9" name="Проведення обчислень" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8573b2a9-869d-4d98-9a1d-78e679a8e7b6" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="7ff48044-5590-45f6-8d8b-4c99286f9c77" name="Перегляд загальної статистики системи" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="bce4dfa7-3f04-4255-a4de-4c76677d2893" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="36cfcd48-2b44-4f5e-af8f-52af1f97a78f" name="Перегляд поточної статистики обчислень" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="ccbd7063-8e49-48b7-aaaf-25df7ad524a4" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="33bd0a89-9f00-40c0-8b7d-1e3e42ea61cb" name="Перегляд попередніх сесій" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b894812f-f52f-4b4d-8863-54d81faafccd" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="472a636c-4784-4e23-808a-59a68a098e03" name="Перегляд результатів роботи системи" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="1eba1371-da94-4170-a047-b1ed150b94eb" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="35285726-645d-4f34-a37d-9b444e7f7d38" name="JSDstrModelling">
+    <elementDefinition Id="31a635d6-7cdc-447a-873b-0bb8143d648c" />
+  </package>
+</useCaseModelRoot>
