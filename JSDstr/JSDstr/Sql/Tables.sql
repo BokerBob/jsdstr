@@ -10,6 +10,7 @@ create table [dbo].[Settings]
 	[Key] nvarchar(max) not null,
 	[Value] nvarchar(max) not null
 )
+select * from [Settings]
 drop table session
 create table dbo.Session
 (
@@ -123,7 +124,7 @@ create table Centroid
 	CalculationId int not null,
 	Committed bit not null
 );
-
+drop table CentroidAssignment
 create table CentroidAssignment
 (
 	Id int identity(1,1) primary key,
@@ -132,7 +133,7 @@ create table CentroidAssignment
 	CentroidId int null,
 	VectorId int null
 );
-
+drop table VectorTask
 create table VectorTask
 (
 	Id int identity(1,1) primary key,
@@ -143,5 +144,7 @@ create table VectorTask
 	State int not null,
 	Type int not null,
 	SessionGuid uniqueidentifier null,
+	CalculationId int not null,
 	Iteration int not null
 );
+select * from KmeansCalculation

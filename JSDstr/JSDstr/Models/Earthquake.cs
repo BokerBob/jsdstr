@@ -40,19 +40,19 @@ namespace JSDstr.Models
         [Column(Name = "INTENSITY")]
         public int? Intensity { get; set; }
 
-        private readonly EntitySet<CentroidAssignment> _centroidAssignments;
+        //private readonly EntitySet<CentroidAssignment> _centroidAssignments;
 
-        [Association(Name = "FK_vector_assignment", Storage = "_centroidAssignments", ThisKey = "Id", OtherKey = "VectorId", IsForeignKey = false)]
-        public EntitySet<CentroidAssignment> CentroidAssignments
-        {
-            get
-            {
-                return _centroidAssignments;
-            }
-            set
-            {
-                _centroidAssignments.Assign(value);
-            }
-        }
+        //[Association(Name = "FK_vector_assignment", Storage = "_centroidAssignments", ThisKey = "Id", OtherKey = "VectorId", IsForeignKey = false)]
+        //public EntitySet<CentroidAssignment> CentroidAssignments
+        //{
+        //    get
+        //    {
+        //        return _centroidAssignments;
+        //    }
+        //    set
+        //    {
+        //        _centroidAssignments.Assign(value);
+        //    }
+        //}
     }
 }

@@ -17,6 +17,7 @@ namespace JSDstr.Models
         UpdateCentroids = 3
     }
 
+    [Table]
     public class VectorTask : BaseModel
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
@@ -39,6 +40,9 @@ namespace JSDstr.Models
 
         [Column]
         public Guid? SessionGuid { get; set; }
+
+        [Column]
+        public int CalculationId { get; set; }
 
         [Column]
         public int Iteration { get; set; }

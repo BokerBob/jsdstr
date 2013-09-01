@@ -11,14 +11,14 @@ namespace JSDstr.Models
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public override int Id { get; set; }
-        [Column(UpdateCheck = UpdateCheck.Never)]
+        [Column]
         public override DateTime CreatedDate { get; set; }
-        [Column(UpdateCheck = UpdateCheck.Never)]
+        [Column]
         public override DateTime ChangedDate { get; set; }
 
-        [Column(UpdateCheck = UpdateCheck.Never)]
+        [Column]
         public string Key { get; set; }
-        [Column(UpdateCheck = UpdateCheck.Never)]
+        [Column]
         public string Value { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace JSDstr.Interfaces
         IQueryable<TModel> Insert(IEnumerable<TModel> entities);
         void Delete(TModel entity);
         void Delete(IEnumerable<TModel> entities);
+        void BeginContext();
         void Submit(bool updateChangedDate = true);
         void Refresh();
     }

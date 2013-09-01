@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data.Linq.Mapping;
+using System.Data.SqlTypes;
+using JSDstr.Annotations;
 
 namespace JSDstr.Models
 {
@@ -9,7 +12,6 @@ namespace JSDstr.Models
         AssignmentLoop = 2,
         UpdateCentroidsLoop = 3,
         Completed = 4,
-
         Failed = 5,
 
         Successful = 6,
@@ -17,27 +19,29 @@ namespace JSDstr.Models
         Busy = 8
     }
 
-    public class KmeansCalculation : BaseModel
+    [Table]
+    public class KmeansCalculation : BaseModel//, INotifyPropertyChanged
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public override int Id { get; set; }
-
         [Column]
         public override DateTime CreatedDate { get; set; }
-
         [Column]
         public override DateTime ChangedDate { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Always)]
         public int K { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Always)]
         public int Iteration { get; set; }
 
-        [Column]
-        public KmeansCalculationState State { get; set; }
+        [Column(UpdateCheck = UpdateCheck.Always)]
+        public int State { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Always)]
         public string StateMessage { get; set; }
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+        
     }
 }

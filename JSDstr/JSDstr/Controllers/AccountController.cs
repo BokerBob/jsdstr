@@ -53,7 +53,8 @@ namespace JSDstr.Controllers
         public bool SignInAnonym()
         {
             var anonymUsersCount = _settingsService.GetAnonymUsersCount();
-            var email = string.Format("anonym.{0}@jsdstr.com", ++anonymUsersCount);
+            ++anonymUsersCount;
+            var email = string.Format("anonym.{0}@jsdstr.com", Guid.NewGuid());
             var pwd = Guid.NewGuid().ToString();
             try
             {

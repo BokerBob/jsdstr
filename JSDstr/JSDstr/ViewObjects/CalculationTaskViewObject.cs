@@ -17,7 +17,7 @@ namespace JSDstr.ViewObjects
 
         public Guid SessionGuid { get; set; }
 
-        public KmeansCalculationState State { get; set; }
+        public int State { get; set; }
         public string StateMessage { get; set; }
 
         public VectorViewObject[] Vectors { get; set; }
