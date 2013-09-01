@@ -15,6 +15,7 @@ create table dbo.Session -- користувацька сесія обчисле
 	Guid uniqueidentifier not null,
 	UserName nvarchar(max) not null,
 	State int not null,
+	StateMessage nvarchar(max) null,
 	DataId int null,
 	ResultId int null,
 	StatisticsId int null
