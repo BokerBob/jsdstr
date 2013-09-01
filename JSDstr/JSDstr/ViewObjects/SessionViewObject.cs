@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace JSDstr.ViewObjects
 {
-    public class SessionViewObject : BaseViewObject<Session>
+    public class SessionViewObject : ViewObject<Session>
     {
         public SessionViewObject()
         {

@@ -7,3 +7,11 @@ JSDstr/JSDstr/obj/Debug/JSDstr.csproj.FileListAbsolute.txt
 JSDstr/JSDstr/obj/Debug/JSDstr.csprojResolveAssemblyReference.cache
 JSDstr/JSDstr/obj/Debug/JSDstr.dll
 JSDstr/JSDstr/obj/Debug/JSDstr.pdb
+JSDstr/Csv2Sql/obj/x86/Debug/Csv2Sql.csproj.FileListAbsolute.txt
+*.cache
+*.pdb
+*.bin
+*.resources
+*.exe
+*.vshost.exe
+*.vshost.exe.manifest

@@ -11,6 +11,8 @@ namespace JSDstr.Services
         private readonly IRepository<Settings> _settingsRepository = new SqlRepository<Settings>();
 
         private const string AnonymUsersCountKey = "AnonymUsersCount";
+        private const string CurrentCalculationIdKey = "CurrentCalculationId";
+        private const string KmeansKKey = "KmeansK";
 
         private Settings CreateSettings(string key, string value)
         {
@@ -71,6 +73,66 @@ namespace JSDstr.Services
             catch (Exception ex)
             {
                 Log(ex);
+            }
+        }
+
+        public int CurrentCalculationId
+        {
+            get
+            {
+                try
+                {
+                    var value = Convert.ToInt32(GetValue(CurrentCalculationIdKey, "0"));
+                    Log(string.Format("get CurrentCalculationId: [{0}]", value));
+                    return value;
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                    return 0;
+                }
+            }
+            set
+            {
+                try
+                {
+                    SetValue(CurrentCalculationIdKey, value.ToString());
+                    Log(string.Format("set CurrentCalculationIdKey: [{0}]", value));
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
+            }
+        }
+
+        public int KmeansK
+        {
+            get
+            {
+                try
+                {
+                    var value = Convert.ToInt32(GetValue(KmeansKKey, "4"));
+                    Log(string.Format("get KmeansK: [{0}]", value));
+                    return value;
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                    return 0;
+                }
+            }
+            set
+            {
+                try
+                {
+                    SetValue(KmeansKKey, value.ToString());
+                    Log(string.Format("set CurrentCalculationIdKey: [{0}]", value));
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
             }
         }
     }

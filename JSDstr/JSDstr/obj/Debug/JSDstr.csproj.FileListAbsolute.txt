@@ -17,3 +17,4 @@ C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\Newtonsoft.Json.p
 C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\Newtonsoft.Json.xml
 C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\obj\Debug\JSDstr.dll
 C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\obj\Debug\JSDstr.pdb
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\obj\Debug\JSDstr.csprojResolveAssemblyReference.cache

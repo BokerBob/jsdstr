@@ -83,6 +83,9 @@
     <Compile Include="Helpers\ErrorData.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\ResourcesHelper.cs" />
+    <Compile Include="Helpers\Singleton.cs" />
+    <Compile Include="Interfaces\IClusteredEntity.cs" />
+    <Compile Include="Interfaces\IClusterizationService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\ISeriazable.cs" />
@@ -91,17 +94,24 @@
     <Compile Include="Interfaces\IViewObject.cs" />
     <Compile Include="Interfaces\IViewObjectCollection.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\Cluster.cs" />
+    <Compile Include="Models\ClusterAssignment.cs" />
+    <Compile Include="Models\KmeansCalculation.cs" />
+    <Compile Include="Models\Earthquake.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SqlRepository.cs" />
     <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Services\KmeansDistributedService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="ViewObjects\AssignmentViewObject.cs" />
+    <Compile Include="ViewObjects\VectorViewObject.cs" />
     <Compile Include="ViewObjects\SessionViewObject.cs" />
-    <Compile Include="ViewObjects\BaseViewObject.cs" />
+    <Compile Include="ViewObjects\ViewObject.cs" />
     <Compile Include="ViewObjects\ViewObjectCollection.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +153,7 @@
     <Content Include="Scripts\Bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\Catiline\catiline.js" />
     <Content Include="Scripts\Catiline\catiline.min.js" />
+    <Content Include="Scripts\figue.js" />
     <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.5.1.js" />
     <Content Include="Scripts\jquery-1.5.1.min.js" />
@@ -158,6 +169,7 @@
     <Content Include="Scripts\Parallel\parallel.js" />
     <Content Include="Scripts\Parallel\Worker.js" />
     <Content Include="Scripts\Script.js" />
+    <Content Include="Sql\Earthquake_FillData.sql" />
     <Content Include="Sql\Tables.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
