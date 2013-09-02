@@ -59,8 +59,8 @@
             else if (typeof source == "string") {
                 var generatedCommentIndex = source.indexOf(generatedСomment);
                 if (generatedCommentIndex != -1)
-                    str = str.slice(0, generatedCommentIndex);
-                return str;
+                    source = source.slice(0, generatedCommentIndex);
+                return source;
             }
         }
     };
