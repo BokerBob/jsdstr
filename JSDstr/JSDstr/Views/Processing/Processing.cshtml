@@ -11,7 +11,8 @@
                 @Html.Raw(Resources.Content_Processing)
             </p>
             <hr />
-            <div id="msgProcessing" class="alert hide"></div>
+            <div id="msgProcessing" class="alert hide alert-dismissable">
+            </div>
             <button id="btnProcessing" data-starting-text="@Resources.Label_WaitingStartSession" data-stopping-text="@Resources.Label_WaitingStopSession" data-completing-text="@Resources.Label_WaitingCompleteSession" class="btn btn-success" type="submit">@Resources.Button_StartSession</button>
             <hr/>
         </div>

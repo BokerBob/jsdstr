@@ -70,7 +70,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sign in as anonym user.
+        ///   Looks up a localized string similar to Sign in as anonymous user.
         /// </summary>
         internal static string Button_SignInAnonym {
             get {
@@ -124,6 +124,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Content_GeneralError {
+            get {
+                return ResourceManager.GetString("Content_GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;p&gt;
         ///    jsDSTR is a javascript distributed system for clasterization big data. 
         ///&lt;/p&gt;
@@ -139,6 +148,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Content_PageWasNotFound {
+            get {
+                return ResourceManager.GetString("Content_PageWasNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click start button for beginning of calculation above. &lt;br /&gt;
         ///            You will become a little node in the great process. &lt;br /&gt;
         ///            Improve our world now!.
@@ -146,6 +164,15 @@ namespace Resources {
         internal static string Content_Processing {
             get {
                 return ResourceManager.GetString("Content_Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Content_ServerError {
+            get {
+                return ResourceManager.GetString("Content_ServerError", resourceCulture);
             }
         }
         
@@ -173,6 +200,15 @@ namespace Resources {
         internal static string Error_CreateSession {
             get {
                 return ResourceManager.GetString("Error_CreateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Such email is already registered.
+        /// </summary>
+        internal static string Error_DuplicateEmail {
+            get {
+                return ResourceManager.GetString("Error_DuplicateEmail", resourceCulture);
             }
         }
         
@@ -321,6 +357,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred.
+        /// </summary>
+        internal static string Header_GeneralError {
+            get {
+                return ResourceManager.GetString("Header_GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About jsDSTR.
         /// </summary>
         internal static string Header_Home {
@@ -330,11 +375,29 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 404 - page wasn&apos;t found.
+        /// </summary>
+        internal static string Header_PageWasNotFound {
+            get {
+                return ResourceManager.GetString("Header_PageWasNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Improve your world now!.
         /// </summary>
         internal static string Header_Processing {
             get {
                 return ResourceManager.GetString("Header_Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 500 - server error.
+        /// </summary>
+        internal static string Header_ServerError {
+            get {
+                return ResourceManager.GetString("Header_ServerError", resourceCulture);
             }
         }
         
@@ -375,7 +438,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last Changed Date.
+        ///   Looks up a localized string similar to Changed Date.
         /// </summary>
         internal static string Label_ChangedDate {
             get {
@@ -717,6 +780,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Site error.
+        /// </summary>
+        internal static string Title_GeneralError {
+            get {
+                return ResourceManager.GetString("Title_GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to jsDSTR - Javascript Distributed System for clasterization.
         /// </summary>
         internal static string Title_Home {
@@ -735,6 +807,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 404 - not found.
+        /// </summary>
+        internal static string Title_PageWasNotFound {
+            get {
+                return ResourceManager.GetString("Title_PageWasNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processing.
         /// </summary>
         internal static string Title_Processing {
@@ -749,6 +830,15 @@ namespace Resources {
         internal static string Title_Results {
             get {
                 return ResourceManager.GetString("Title_Results", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 500 - server error.
+        /// </summary>
+        internal static string Title_ServerError {
+            get {
+                return ResourceManager.GetString("Title_ServerError", resourceCulture);
             }
         }
     }

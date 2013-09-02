@@ -121,7 +121,7 @@
     <value>Sign in</value>
   </data>
   <data name="Button_SignInAnonym" xml:space="preserve">
-    <value>Sign in as anonym user</value>
+    <value>Sign in as anonymous user</value>
   </data>
   <data name="Button_SignUp" xml:space="preserve">
     <value>Sign up</value>
@@ -138,6 +138,9 @@
   <data name="Content_Footer" xml:space="preserve">
     <value>© 2013 Andriy Babets</value>
   </data>
+  <data name="Content_GeneralError" xml:space="preserve">
+    <value />
+  </data>
   <data name="Content_Home" xml:space="preserve">
     <value>&lt;p&gt;
     jsDSTR is a javascript distributed system for clasterization big data. 
@@ -147,10 +150,16 @@
     Processing are doing on the big array of geographic data.
 &lt;/p&gt;</value>
   </data>
+  <data name="Content_PageWasNotFound" xml:space="preserve">
+    <value />
+  </data>
   <data name="Content_Processing" xml:space="preserve">
     <value>Click start button for beginning of calculation above. &lt;br /&gt;
             You will become a little node in the great process. &lt;br /&gt;
             Improve our world now!</value>
+  </data>
+  <data name="Content_ServerError" xml:space="preserve">
+    <value />
   </data>
   <data name="Error_CancelSession" xml:space="preserve">
     <value>Cancel session error. Calculation was stopped.</value>
@@ -160,6 +169,9 @@
   </data>
   <data name="Error_CreateSession" xml:space="preserve">
     <value>Create session error. Another attempt...</value>
+  </data>
+  <data name="Error_DuplicateEmail" xml:space="preserve">
+    <value>Such email is already registered</value>
   </data>
   <data name="Error_Email" xml:space="preserve">
     <value>Invalid email</value>
@@ -209,11 +221,20 @@
   <data name="Header_About" xml:space="preserve">
     <value>About jsDSTR</value>
   </data>
+  <data name="Header_GeneralError" xml:space="preserve">
+    <value>An error occurred</value>
+  </data>
   <data name="Header_Home" xml:space="preserve">
     <value>About jsDSTR</value>
   </data>
+  <data name="Header_PageWasNotFound" xml:space="preserve">
+    <value>404 - page wasn't found</value>
+  </data>
   <data name="Header_Processing" xml:space="preserve">
     <value>Improve your world now!</value>
+  </data>
+  <data name="Header_ServerError" xml:space="preserve">
+    <value>500 - server error</value>
   </data>
   <data name="Header_SessionInfo" xml:space="preserve">
     <value>Session Info</value>
@@ -228,7 +249,7 @@
     <value>I've read and accept to the &lt;abbr title="Can be found in About page"&gt;terms&lt;/abbr&gt;</value>
   </data>
   <data name="Label_ChangedDate" xml:space="preserve">
-    <value>Last Changed Date</value>
+    <value>Changed Date</value>
   </data>
   <data name="Label_CreatedDate" xml:space="preserve">
     <value>Created Date</value>
@@ -342,16 +363,25 @@
   <data name="Title_About" xml:space="preserve">
     <value>About jsDSTR - Javascript Distributed System for clasterization</value>
   </data>
+  <data name="Title_GeneralError" xml:space="preserve">
+    <value>Site error</value>
+  </data>
   <data name="Title_Home" xml:space="preserve">
     <value>jsDSTR - Javascript Distributed System for clasterization</value>
   </data>
   <data name="Title_Login" xml:space="preserve">
     <value>Sign in</value>
   </data>
+  <data name="Title_PageWasNotFound" xml:space="preserve">
+    <value>404 - not found</value>
+  </data>
   <data name="Title_Processing" xml:space="preserve">
     <value>Processing</value>
   </data>
   <data name="Title_Results" xml:space="preserve">
     <value>Results of clasterization</value>
+  </data>
+  <data name="Title_ServerError" xml:space="preserve">
+    <value>500 - server error</value>
   </data>
 </root>

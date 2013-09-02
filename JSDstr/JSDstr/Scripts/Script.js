@@ -66,14 +66,16 @@
 
         setAlertState: function ($alert, msg, cssClass) {
             if ($alert != null && msg != '') {
+                var classToAdd = 'alert';
                 if (typeof cssClass == "string") {
-                    $alert.attr('class', '').addClass('alert').addClass(cssClass);
+                    classToAdd += ' ' + cssClass;
                 }
                 else if (typeof cssClass == "boolean" && cssClass) {
-                    $alert.attr('class', '').addClass('alert').addClass('alert-success');
+                    classToAdd += ' alert-success';
                 } else if (typeof cssClass == "boolean") {
-                    $alert.attr('class', '').addClass('alert').addClass('alert-danger');
+                    classToAdd += ' alert-danger';
                 }
+                $alert.attr('class', '').addClass(classToAdd);
                 $alert.html(msg);
                 $alert.removeClass('hide');
             }
@@ -106,20 +108,20 @@
 
             successCreateSession: $.Callbacks(),
             failCreateSession: $.Callbacks(),
-            
+
             successPingSession: $.Callbacks(),
             failPingSession: $.Callbacks(),
-            
+
             successCancelSession: $.Callbacks(),
             failCancelSession: $.Callbacks(),
-            
+
             successCompleteSession: $.Callbacks(),
             failCompleteSession: $.Callbacks(),
 
             failSessionClientNull: $.Callbacks(),
             failSessionServerNull: $.Callbacks(),
             failSessionInvalidState: $.Callbacks(),
-            
+
             failSessionCalculation: $.Callbacks()
         };
 
@@ -147,7 +149,7 @@
 
         var calculation = function (data) {
             var sum = 0;
-            for (var i = 0; i <= 100000; i++) {
+            for (var i = 0; i <= 10000000000; i++) {
                 sum += i;
             }
             return sum;
@@ -160,6 +162,8 @@
         var pingSessionAttempts = 0;
         var calculationSessionAttempts = 0;
 
+        var startAgainSessionTimeout = 1500;
+
         var checkCreateSessionMaxAttempts = function () {
             if (createSessionAttempts >= maxSessionAttempts) {
                 handlers.failMaxAttemptsCreateSession.fire(maxSessionAttempts);
@@ -171,7 +175,8 @@
 
         var checkPingSessionMaxAttempts = function () {
             if (pingSessionAttempts >= maxSessionAttempts) {
-                if(worker != null)
+                timerStarted = false;
+                if (worker != null)
                     worker.close();
                 handlers.failMaxAttemptsPingSession.fire(maxSessionAttempts);
                 pingSessionAttempts = 0;
@@ -210,26 +215,26 @@
                     worker.data(currentSession.Data).then(function (data) {
                         if (checkCurrentSession()) {
                             calculationSessionAttempts = 0;
-                            currentSession.Results = data;
+                            //currentSession.Results = data;
                             completeSession();
                         } else {
-                            createSession();
+                            setTimeout(createSession, startAgainSessionTimeout);
                         }
                     }, function (d) {
                         if (d != "closed") {
                             handlers.failSessionCalculation.fire(d);
-                            createSession();
+                            setTimeout(createSession, startAgainSessionTimeout);
                         }
                     });
 
                     timerStarted = true;
                     startPing();
                 } else {
-                    createSession();
+                    setTimeout(createSession, startAgainSessionTimeout);
                 }
             }).fail(function (d) {
                 handlers.failCreateSession.fire(d);
-                createSession();
+                setTimeout(createSession, startAgainSessionTimeout);
             });
         };
 
@@ -240,21 +245,21 @@
                 pingSessionAttempts++;
                 if (checkCurrentSession()) {
                     pingExecuted = true;
-                    $.post('/processing/pingsession?sessionjson=' + JSON.stringify(currentSession), function(session) {
+                    $.post('/processing/pingsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                         if (checkCurrentSession() && checkSession(session, currentSession.State)) {
                             pingSessionAttempts = 0;
                             currentSession = session;
                             handlers.successPingSession.fire(session);
                         } else {
-                            createSession();
+                            setTimeout(createSession, startAgainSessionTimeout);
                         }
                         pingExecuted = false;
-                    }).fail(function(d) {
+                    }).fail(function (d) {
                         pingExecuted = false;
                         handlers.failPingSession.fire(d);
                     });
                 } else {
-                    createSession();
+                    setTimeout(createSession, startAgainSessionTimeout);
                 }
             }
         };
@@ -262,24 +267,25 @@
         var completeSession = function () {
             timerStarted = false;
             if (checkCurrentSession()) {
-                $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function(session) {
+                $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed)) {
                         handlers.successCompleteSession.fire(session);
                     }
-                    createSession();
-                }).fail(function(d) {
+                    setTimeout(createSession, startAgainSessionTimeout);
+                }).fail(function (d) {
                     handlers.failCompleteSession.fire(d);
-                    createSession();
+                    setTimeout(createSession, startAgainSessionTimeout);
                 });
             } else {
-                createSession();
+                setTimeout(createSession, startAgainSessionTimeout);
             }
         };
 
         var cancelSession = function () {
             handlers.beforeCancelSession.fire();
             timerStarted = false;
-            worker.close();
+            if (worker != null)
+                worker.close();
             if (checkCurrentSession()) {
                 $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped)) {
@@ -358,7 +364,7 @@
                     if (d == "True") {
                         ui.setAlertState($alert, resources.Success_SignIn, true);
                         setTimeout(helpers.returnBack, ui.messageDelay);
-                        $btn.button('toggle');
+                        $btn.attr('disabled', 'disabled');
                     } else {
                         ui.setAlertState($alert, resources.Error_SignIn, false);
                         $email.focus();
@@ -403,12 +409,12 @@
                 $btn.button('loading');
                 account.signUp(email, pwd, function (d) {
                     $btn.button('reset');
-                    if (d == "True") {
+                    if (d == "") {
                         ui.setAlertState($alert, resources.Success_SignUp, true);
                         setTimeout(helpers.returnBack, ui.messageDelay);
-                        $btn.button('toggle');
+                        $btn.attr('disabled', 'disabled');
                     } else {
-                        ui.setAlertState($alert, resources.Error_SignUp, false);
+                        ui.setAlertState($alert, d, false);
                         $email.focus();
                     }
                 }, function () {
@@ -429,7 +435,7 @@
                 if (d == 'True') {
                     ui.setAlertState($alert, resources.Success_SignInAnonym, true);
                     setTimeout(helpers.returnBack, ui.messageDelay);
-                    $btn.button('toggle');
+                    $btn.attr('disabled', 'disabled');
                 } else {
                     ui.setAlertState($alert, resources.Error_SignInAnonym, false);
                 }
@@ -482,7 +488,7 @@
                 updateProcessingInfo(null, false);
                 console.log('Fail create session: ' + JSON.stringify(data));
             });
-            
+
             processing.handlers.successPingSession.add(function (session) {
                 if (session.state != Processing.sessionState)
                     updateProcessingInfo(session, true);
@@ -491,7 +497,7 @@
             processing.handlers.failPingSession.add(function (data) {
                 console.log('Fail ping session: ' + JSON.stringify(data));
             });
-            
+
             processing.handlers.successCancelSession.add(function (session) {
                 ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Success_CancelSession, "alert-warning");
@@ -504,7 +510,7 @@
                 updateProcessingInfo(null, false);
                 console.log('Fail cancel session: ' + JSON.stringify(data));
             });
-            
+
             processing.handlers.successCompleteSession.add(function (session) {
                 ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
                 ui.setAlertState($alert, resources.Success_CompleteSession, true);

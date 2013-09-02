@@ -20,5 +20,20 @@ namespace JSDstr.Controllers
             //ViewBag.UseJumbotron = true;
             return View("About");
         }
+
+        public ActionResult NotFound()
+        {
+            return View("404");
+        }
+
+        public ActionResult ServerError()
+        {
+            return View("500");
+        }
+
+        public ActionResult GeneralError()
+        {
+            return View("Error");
+        }
     }
 }

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using JSDstr.Helpers;
+using JSDstr.Models;
+using JSDstr.Services;
 
 namespace JSDstr
 {
@@ -59,6 +62,24 @@ namespace JSDstr
             );
 
             routes.MapRoute(
+                "404",
+                "404",
+                new {controller = "Home", action = "NotFound"}
+            );
+
+            routes.MapRoute(
+                "500",
+                "500",
+                new {controller = "Home", action = "ServerError"}
+            );
+
+            routes.MapRoute(
+                "Error",
+                "error",
+                new {controller = "Home", action = "GeneralError"}
+            );
+
+            routes.MapRoute(
                 null,
                 "{controller}/{action}/"
             );
@@ -70,6 +91,16 @@ namespace JSDstr
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            var ex = Server.GetLastError();
+            if (Response.StatusCode != 404)
+            {
+                LogService.Save(string.Format("Unhandled exception. Message: [{0}]. Source: [{1}]. StackTrace: [{2}]", ex.Message,
+                        ex.Source, ex.StackTrace), LogType.Error);
+            }
         }
     }
 }

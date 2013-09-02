@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using JSDstr.Interfaces;
 using JSDstr.Models;
 using JSDstr.Repositories;
@@ -39,7 +37,7 @@ namespace JSDstr.Services
 
         private void SetValue(string key, string value)
         {
-            var settings = _settingsRepository.Entities.Where(x => x.Key == AnonymUsersCountKey).SingleOrDefault();
+            var settings = _settingsRepository.Entities.SingleOrDefault(x => x.Key == AnonymUsersCountKey);
             if (settings == null)
                 CreateSettings(key, value);
             else

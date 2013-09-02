@@ -1,15 +1,18 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = @Resources.Title_ServerError;
 }
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Error</title>
+    <title>@Resources.Title_ServerError</title>
 </head>
 <body>
-    <h2>
-        Sorry, an error occurred while processing your request.
-    </h2>
+    <h3>
+        @Resources.Header_ServerError
+    </h3>
+    <div>
+        @Resources.Content_ServerError
+    </div>
 </body>
 </html>
