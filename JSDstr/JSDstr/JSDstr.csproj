@@ -198,6 +198,7 @@
     <Content Include="Views\Shared\Statistics.cshtml" />
     <Content Include="Views\Shared\404.cshtml" />
     <Content Include="Views\Shared\500.cshtml" />
+    <None Include="Scripts\jQuery\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_GlobalResources\Resources.resx">
