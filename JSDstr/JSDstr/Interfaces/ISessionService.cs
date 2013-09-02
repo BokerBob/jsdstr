@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using JSDstr.Models;
+using JSDstr.ViewObjects;
 
 namespace JSDstr.Interfaces
 {
     public interface ISessionService
     {
-        Guid CreateSession(string userName);
-        bool PingSession(Guid sessionGuid);
-        bool CompleteSession(Guid sessionGuid);
+        SessionViewObject CreateSession(string loggedUser);
+        SessionViewObject PingSession(SessionViewObject sessionViewObject, string loggedUser);
+        SessionViewObject CancelSession(SessionViewObject sessionViewObject, string loggedUser);
     }
 }

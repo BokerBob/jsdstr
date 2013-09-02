@@ -3,17 +3,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-lg-6 processing">
-        <h3>@Resources.Header_Processing</h3>
-        <p class="text-muted">
-            @Html.Raw(Resources.Content_Processing)
-        </p>
-        <hr />
-        <button id="btnProcessing" data-starting-text="@Resources.Label_WaitingStartSession" data-stopping-text="@Resources.Label_WaitingStopSession" data-compleating-text="@Resources.Label_WaitingCompleteSession" class="btn btn-success" type="submit">@Resources.Button_StartSession</button>
-        <br/><br/>
-        <div id="msgProcessing" class="alert hide"></div>
+<div class="processing">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>@Resources.Header_Processing</h3>
+            <p class="text-muted">
+                @Html.Raw(Resources.Content_Processing)
+            </p>
+            <hr />
+            <div id="msgProcessing" class="alert hide"></div>
+            <button id="btnProcessing" data-starting-text="@Resources.Label_WaitingStartSession" data-stopping-text="@Resources.Label_WaitingStopSession" data-completing-text="@Resources.Label_WaitingCompleteSession" class="btn btn-success" type="submit">@Resources.Button_StartSession</button>
+            <hr/>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div id="msgProcessingInfo" class="hide text-muted">
+                <h4>@Resources.Header_SessionInfo</h4>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_Guid:</div><div id="lblGuid" class="pull-right col-md-8"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_CreatedDate:</div><div id="lblCreatedDate" class="pull-right col-md-8"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_ChangedDate:</div><div id="lblChangedDate" class="pull-right col-md-8"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_UserName:</div><div id="lblUserName" class="pull-right col-md-8"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_State:</div><div id="lblState" class="pull-right col-md-8"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Resources.Label_StateMessage:</div><div id="lblStateMessage" class="pull-right col-md-8"></div>
+                </div>
+            </div>
+        </div>
+     </div>
 </div>
 
 @section script
@@ -22,6 +49,26 @@
     var resources = jsd.resources;
     resources.Button_StartSession = '@Resources.Button_StartSession';
     resources.Button_StopSession = '@Resources.Button_StopSession';
-    resources.Error_StartSession = '@Resources.Error_StartSession';
+    
+    resources.Success_CreateSession = '@Resources.Success_CreateSession';
+    resources.Error_CreateSession = '@Resources.Error_CreateSession';
+    resources.Success_PingSession = '@Resources.Success_PingSession';
+    resources.Error_PingSession = '@Resources.Error_PingSession';
+    resources.Success_CancelSession = '@Resources.Success_CancelSession';
+    resources.Error_CancelSession = '@Resources.Error_CancelSession';
+    resources.Error_SessionClientNull = '@Resources.Error_SessionClientNull';
+    resources.Error_SessionServerNull = '@Resources.Error_SessionServerNull';
+    resources.Error_SessionInvalidState = '@Resources.Error_SessionInvalidState';
+    
+    resources.Label_CreatedDate = '@Resources.Label_CreatedDate';
+    resources.Label_ChangedDate = '@Resources.Label_ChangedDate';
+    resources.Label_Guid = '@Resources.Label_Guid';
+    resources.Label_UserName = '@Resources.Label_UserName';
+    resources.Label_State = '@Resources.Label_State';
+    resources.Label_StateMessage = '@Resources.Label_StateMessage';
+
+    resources.Label_StateStarted = '@Resources.Label_StateStarted';
+    resources.Label_StateStopped = '@Resources.Label_StateStopped';
+    resources.Label_StateCompleted = '@Resources.Label_StateCompleted';
 </script>
 }

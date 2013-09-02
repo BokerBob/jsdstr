@@ -28,7 +28,7 @@ namespace JSDstr.Services
 
         private string GetValue(string key, string defValue = "")
         {
-            var settings = _settingsRepository.Entities.Where(x => x.Key == key).SingleOrDefault();
+            var settings = _settingsRepository.Entities.SingleOrDefault(x => x.Key == key);
             if (settings == null)
             {
                 CreateSettings(key, defValue);

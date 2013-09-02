@@ -11,7 +11,7 @@ namespace JSDstr.Interfaces
         void Insert(IEnumerable<TModel> entities);
         void Delete(TModel entity);
         void Delete(IEnumerable<TModel> entities);
-        void Submit();
+        void Submit(bool updateChangedDate = true);
         void Refresh();
     }
 }

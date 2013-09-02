@@ -5,7 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using JSDstr.Interfaces;
+using JSDstr.Models;
 using JSDstr.Services;
+using JSDstr.ViewObjects;
 
 namespace JSDstr.Controllers
 {
@@ -32,15 +34,21 @@ namespace JSDstr.Controllers
         }
 
         [HttpPost, Authorize]
-        public Guid CreateSession()
+        public JsonResult CreateSession()
         {
             return _sessionService.CreateSession(User.Identity.Name);
         }
 
         [HttpPost, Authorize]
-        public bool PingSession(Guid sessionGuid)
+        public JsonResult PingSession(string sessionJson)
         {
-            return _sessionService.PingSession(sessionGuid);
+            return _sessionService.PingSession((SessionViewObject) sessionJson, User.Identity.Name);
+        }
+
+        [HttpPost, Authorize]
+        public JsonResult CancelSession(string sessionJson)
+        {
+            return _sessionService.CancelSession((SessionViewObject)sessionJson, User.Identity.Name);
         }
     }
 }

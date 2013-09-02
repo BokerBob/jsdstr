@@ -8,6 +8,6 @@ namespace JSDstr.Interfaces
 {
     public interface IViewObject<out TModel> where TModel : BaseModel, new()
     {
-        TModel Source { get; }
+        //TModel Source { get; }
     }
 }

@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -95,7 +96,8 @@
     <Compile Include="Repositories\SqlRepository.cs" />
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="ViewObjects\ViewObject.cs" />
+    <Compile Include="ViewObjects\SessionViewObject.cs" />
+    <Compile Include="ViewObjects\BaseViewObject.cs" />
     <Compile Include="ViewObjects\ViewObjectCollection.cs" />
   </ItemGroup>
   <ItemGroup>

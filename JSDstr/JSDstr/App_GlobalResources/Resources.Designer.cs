@@ -150,6 +150,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while cancelling session. Please refresh page.
+        /// </summary>
+        internal static string Error_CancelSession {
+            get {
+                return ResourceManager.GetString("Error_CancelSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while creating session. Please refresh page and try again.
+        /// </summary>
+        internal static string Error_CreateSession {
+            get {
+                return ResourceManager.GetString("Error_CreateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid email.
         /// </summary>
         internal static string Error_Email {
@@ -186,6 +204,42 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ping error. Please refresh page.
+        /// </summary>
+        internal static string Error_PingSession {
+            get {
+                return ResourceManager.GetString("Error_PingSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client session is null. Please refresh page.
+        /// </summary>
+        internal static string Error_SessionClientNull {
+            get {
+                return ResourceManager.GetString("Error_SessionClientNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session state is invalid. Please refresh page and start again.
+        /// </summary>
+        internal static string Error_SessionInvalidState {
+            get {
+                return ResourceManager.GetString("Error_SessionInvalidState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server session is null. Please refresh page and start again.
+        /// </summary>
+        internal static string Error_SessionServerNull {
+            get {
+                return ResourceManager.GetString("Error_SessionServerNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid credentials.
         /// </summary>
         internal static string Error_SignIn {
@@ -209,15 +263,6 @@ namespace Resources {
         internal static string Error_SignUp {
             get {
                 return ResourceManager.GetString("Error_SignUp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An error occured.
-        /// </summary>
-        internal static string Error_StartSession {
-            get {
-                return ResourceManager.GetString("Error_StartSession", resourceCulture);
             }
         }
         
@@ -249,6 +294,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session Info.
+        /// </summary>
+        internal static string Header_SessionInfo {
+            get {
+                return ResourceManager.GetString("Header_SessionInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please sign in.
         /// </summary>
         internal static string Header_SignIn {
@@ -276,11 +330,38 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Changed Date.
+        /// </summary>
+        internal static string Label_ChangedDate {
+            get {
+                return ResourceManager.GetString("Label_ChangedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Date.
+        /// </summary>
+        internal static string Label_CreatedDate {
+            get {
+                return ResourceManager.GetString("Label_CreatedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string Label_Email {
             get {
                 return ResourceManager.GetString("Label_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guid.
+        /// </summary>
+        internal static string Label_Guid {
+            get {
+                return ResourceManager.GetString("Label_Guid", resourceCulture);
             }
         }
         
@@ -326,6 +407,60 @@ namespace Resources {
         internal static string Label_RememberMe {
             get {
                 return ResourceManager.GetString("Label_RememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        internal static string Label_State {
+            get {
+                return ResourceManager.GetString("Label_State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        internal static string Label_StateCompleted {
+            get {
+                return ResourceManager.GetString("Label_StateCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State Message.
+        /// </summary>
+        internal static string Label_StateMessage {
+            get {
+                return ResourceManager.GetString("Label_StateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Started.
+        /// </summary>
+        internal static string Label_StateStarted {
+            get {
+                return ResourceManager.GetString("Label_StateStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopped.
+        /// </summary>
+        internal static string Label_StateStopped {
+            get {
+                return ResourceManager.GetString("Label_StateStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Name.
+        /// </summary>
+        internal static string Label_UserName {
+            get {
+                return ResourceManager.GetString("Label_UserName", resourceCulture);
             }
         }
         
@@ -443,6 +578,33 @@ namespace Resources {
         internal static string Link_Results {
             get {
                 return ResourceManager.GetString("Link_Results", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session was canceled successfully.
+        /// </summary>
+        internal static string Success_CancelSession {
+            get {
+                return ResourceManager.GetString("Success_CancelSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session was created successfully.
+        /// </summary>
+        internal static string Success_CreateSession {
+            get {
+                return ResourceManager.GetString("Success_CreateSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfull ping.
+        /// </summary>
+        internal static string Success_PingSession {
+            get {
+                return ResourceManager.GetString("Success_PingSession", resourceCulture);
             }
         }
         

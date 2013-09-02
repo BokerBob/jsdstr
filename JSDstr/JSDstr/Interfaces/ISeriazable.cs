@@ -7,6 +7,6 @@ namespace JSDstr.Interfaces
 {
     public interface ISeriazable
     {
-        string ToJson();
+        //string ToJson();
     }
 }

@@ -61,13 +61,16 @@ namespace JSDstr.Repositories
             ((Table<TModel>)Entities).DeleteAllOnSubmit(entities);
         }
 
-        public void Submit()
+        public void Submit(bool updateChangedDate = true)
         {
-            foreach (var entity in Entities)
+            if (updateChangedDate)
             {
-                if (entity.IsChanged)
-                    entity.ChangedDate = DateTime.Now;
-                entity.CreateSnapshot();
+                foreach (var entity in Entities)
+                {
+                    if (entity.IsChanged)
+                        entity.ChangedDate = DateTime.Now;
+                    entity.CreateSnapshot();
+                }
             }
             DataContext.SubmitChanges();
         }
