@@ -31,11 +31,8 @@ namespace JSDstr.Models
         public int State { get; set; }
         [Column(UpdateCheck = UpdateCheck.Never)]
         public string StateMessage { get; set; }
+
         [Column(UpdateCheck = UpdateCheck.Never)]
-        public int? DataId { get; set; }
-        [Column(UpdateCheck = UpdateCheck.Never)]
-        public int? ResultId { get; set; }
-        [Column(UpdateCheck = UpdateCheck.Never)]
-        public int? StatisticsId { get; set; }
+        public int CalculationId { get; set; }
     }
 }

@@ -393,12 +393,12 @@ var figue = function () {
             for (var j = 0; j < k; j++)
                 newCentroids[j] = null;
          
-
+         
             for (var i = 0; i < n; i++) {
                 // ---- decomposition #3
                 // const size = 400
                 // =>> vectors (cache), assignments[from...to]
-                // <<= newCetroids
+                // <<= newCetroids 
                 cluster = assignments[i];
                 if (newCentroids[cluster] == null)
                     newCentroids[cluster] = vectors[i];

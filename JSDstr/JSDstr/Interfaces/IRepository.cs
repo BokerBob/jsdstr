@@ -7,8 +7,8 @@ namespace JSDstr.Interfaces
     public interface IRepository<TModel> where TModel : BaseModel
     {
         IQueryable<TModel> Entities { get; }
-        void Insert(TModel entity);
-        void Insert(IEnumerable<TModel> entities);
+        TModel Insert(TModel entity);
+        IQueryable<TModel> Insert(IEnumerable<TModel> entities);
         void Delete(TModel entity);
         void Delete(IEnumerable<TModel> entities);
         void Submit(bool updateChangedDate = true);

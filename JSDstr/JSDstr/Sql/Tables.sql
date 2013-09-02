@@ -10,7 +10,7 @@ create table [dbo].[Settings]
 	[Key] nvarchar(max) not null,
 	[Value] nvarchar(max) not null
 )
-
+drop table session
 create table dbo.Session
 (
 	Id int identity(1,1) primary key,
@@ -21,9 +21,8 @@ create table dbo.Session
 	UserName nvarchar(max) not null,
 	State int not null,
 	StateMessage nvarchar(max) null,
-	DataId int null,
-	ResultId int null,
-	StatisticsId int null
+
+	CalculationId int not null
 )
 
 create table [dbo].[Log]
@@ -107,29 +106,42 @@ create table KmeansCalculation
 	Id int identity(1,1) primary key,
 	CreatedDate datetime default getdate(),
 	ChangedDate datetime default getdate(),
-	Guid uniqueidentifier default NEWID(),
 	K int not null,
-	Repeat bit not null,
 	Iteration int not null,
-	State int not null
+	State int not null,
+	StateMessage nvarchar(max) null
 );
 
-create table Cluster
+create table Centroid
 (
 	Id int identity(1,1) primary key,
 	CreatedDate datetime default getdate(),
 	ChangedDate datetime default getdate(),
-	Latitude decimal(6,3) not null,
-	Longitude decimal(6,3) not null,
-	Intensity int not null,
-	CalculationId int not null
+	V1 decimal(6,3) not null,
+	V2 decimal(6,3) not null,
+	V3 decimal(6,3) not null,
+	CalculationId int not null,
+	Committed bit not null
 );
 
-create table ClusterAssignment
+create table CentroidAssignment
 (
 	Id int identity(1,1) primary key,
 	CreatedDate datetime default getdate(),
 	ChangedDate datetime default getdate(),
-	ClusterId int not null,
-	VectorId int not null
+	CentroidId int null,
+	VectorId int null
+);
+
+create table VectorTask
+(
+	Id int identity(1,1) primary key,
+	CreatedDate datetime default getdate(),
+	ChangedDate datetime default getdate(),
+
+	VectorId int not null,
+	State int not null,
+	Type int not null,
+	SessionGuid uniqueidentifier null,
+	Iteration int not null
 );

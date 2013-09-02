@@ -4,7 +4,7 @@ using System.Data.Linq.Mapping;
 
 namespace JSDstr.Models
 {
-    public class ClusterAssignment : BaseModel
+    public class CentroidAssignment : BaseModel
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public override int Id { get; set; }
@@ -16,18 +16,18 @@ namespace JSDstr.Models
         public override DateTime ChangedDate { get; set; }
 
         [Column]
-        public int ClusterId { get; set; }
+        public int? CentroidId { get; set; }
 
         [Column]
-        public int Vectorid { get; set; }
+        public int? Vectorid { get; set; }
 
-        private EntityRef<Cluster> _cluster;
+        private EntityRef<Centroid> _centroid;
 
-        [Association(Name = "FK_cluster_assignment", Storage = "_cluster", ThisKey = "ClusterId", OtherKey = "Id", IsForeignKey = false)]
-        public Cluster Cluster
+        [Association(Name = "FK_centroid_assignment", Storage = "_centroid", ThisKey = "CentroidId", OtherKey = "Id", IsForeignKey = false)]
+        public Centroid Centroid
         {
-            get { return _cluster.Entity; }
-            set { _cluster.Entity = value; }
+            get { return _centroid.Entity; }
+            set { _centroid.Entity = value; }
         }
 
         private EntityRef<Earthquake> _vector;

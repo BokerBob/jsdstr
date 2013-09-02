@@ -21,8 +21,7 @@ namespace JSDstr.Services
                 Key = key,
                 Value = value
             };
-            _settingsRepository.Insert(settings);
-            return settings;
+            return _settingsRepository.Insert(settings);
         }
 
         private string GetValue(string key, string defValue = "")

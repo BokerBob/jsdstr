@@ -4,7 +4,7 @@ using JSDstr.Models;
 
 namespace JSDstr.ViewObjects
 {
-    public class VectorViewObject : ViewObject<Earthquake>, IClusteredEntity<decimal, decimal, int>
+    public class VectorViewObject : ViewObject<Earthquake>, IClusteredEntity<decimal, decimal, decimal>
     {
         public VectorViewObject()
         {
@@ -13,33 +13,33 @@ namespace JSDstr.ViewObjects
         public VectorViewObject(Earthquake source) : base(source)
         {
             if (!source.Latitude.HasValue)
-                throw new ArgumentNullException("source.Latitude");
+                throw new ArgumentNullException("source.V1");
             if (!source.Longitude.HasValue)
-                throw new ArgumentNullException("source.Longitude");
+                throw new ArgumentNullException("source.V2");
             if (!source.Intensity.HasValue)
-                throw new ArgumentNullException("source.Intensity");
+                throw new ArgumentNullException("source.V3");
             Id = source.Id;
             V1 = source.Latitude.Value;
             V2 = source.Longitude.Value;
             V3 = source.Intensity.Value;
         }
 
-        public VectorViewObject(Cluster source)
+        public VectorViewObject(Centroid source)
         {
             Id = source.Id;
-            V1 = source.Latitude;
-            V2 = source.Longitude;
-            V3 = source.Intensity;
+            V1 = source.V1;
+            V2 = source.V2;
+            V3 = source.V3;
         }
 
         public int Id { get; set; }
         public decimal V1 { get; set; }
         public decimal V2 { get; set; }
-        public int V3 { get; set; }
+        public decimal V3 { get; set; }
 
         public override int GetHashCode()
         {
-            return V1.GetHashCode() ^ V2.GetHashCode() ^ V3;
+            return V1.GetHashCode() ^ V2.GetHashCode() ^ V3.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -48,6 +48,22 @@ namespace JSDstr.ViewObjects
             if (other == null)
                 return false;
             return V1 == other.V1 && V2 == other.V2 && V3 == other.V3;
+        }
+
+        public static VectorViewObject operator +(VectorViewObject a, VectorViewObject b)
+        {
+            a.V1 += b.V1;
+            a.V2 += b.V2;
+            a.V3 += b.V3;
+            return a;
+        }
+
+        public static VectorViewObject operator *(VectorViewObject vector, decimal value)
+        {
+            vector.V1 *= value;
+            vector.V2 *= value;
+            vector.V3 *= value;
+            return vector;
         }
     }
 }

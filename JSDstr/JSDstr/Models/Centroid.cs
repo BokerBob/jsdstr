@@ -4,7 +4,7 @@ using System.Data.Linq.Mapping;
 
 namespace JSDstr.Models
 {
-    public class Cluster : BaseModel
+    public class Centroid : BaseModel
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public override int Id { get; set; }
@@ -16,38 +16,41 @@ namespace JSDstr.Models
         public override DateTime ChangedDate { get; set; }
 
         [Column]
-        public decimal Latitude { get; set; }
+        public decimal V1 { get; set; }
 
         [Column]
-        public decimal Longitude { get; set; }
+        public decimal V2 { get; set; }
 
         [Column]
-        public int Intensity { get; set; }
+        public decimal V3 { get; set; }
 
         [Column]
         public int CalculationId { get; set; }
 
+        [Column]
+        public bool Committed { get; set; }
+
         private EntityRef<KmeansCalculation> _calculation;
 
-        [Association(Name = "FK_calculation_cluster", Storage = "_calculation", ThisKey = "CalculationId", OtherKey = "Id", IsForeignKey = false)]
+        [Association(Name = "FK_calculation_centroid", Storage = "_calculation", ThisKey = "CalculationId", OtherKey = "Id", IsForeignKey = false)]
         public KmeansCalculation Calculation
         {
             get { return _calculation.Entity; }
             set { _calculation.Entity = value; }
         }
 
-        private readonly EntitySet<ClusterAssignment> _clusterAssignments;
+        private readonly EntitySet<CentroidAssignment> _centroidAssignments;
 
-        [Association(Name = "FK_cluster_assignment", Storage = "_clusterAssignments", ThisKey = "Id", OtherKey = "ClusterId", IsForeignKey = false)]
-        public EntitySet<ClusterAssignment> ClusterAssignments
+        [Association(Name = "FK_centroid_assignment", Storage = "_centroidAssignments", ThisKey = "Id", OtherKey = "Centroid", IsForeignKey = false)]
+        public EntitySet<CentroidAssignment> CentroidAssignments
         {
             get
             {
-                return _clusterAssignments;
+                return _centroidAssignments;
             }
             set
             {
-                _clusterAssignments.Assign(value);
+                _centroidAssignments.Assign(value);
             }
         }
     }

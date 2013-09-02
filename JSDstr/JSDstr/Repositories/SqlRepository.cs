@@ -33,7 +33,7 @@ namespace JSDstr.Repositories
             get { return DataContext.GetTable<TModel>().AsQueryable(); }
         }
 
-        public void Insert(TModel entity)
+        public TModel Insert(TModel entity)
         {
             lock(_locker)
             {
@@ -42,13 +42,14 @@ namespace JSDstr.Repositories
                     entity.CreatedDate = entity.ChangedDate = DateTime.Now;
                     ((Table<TModel>) Entities).InsertOnSubmit(entity);
                     DataContext.SubmitChanges();
+                    return entity;
                 }
             }
         }
 
-        public void Insert(IEnumerable<TModel> entities)
+        public IQueryable<TModel> Insert(IEnumerable<TModel> entities)
         {
-            if (entities == null) return;
+            if (entities == null) return null;
             lock (_locker)
             {
                 using (DataContext = new DataContext(ConnectionString))
@@ -60,6 +61,7 @@ namespace JSDstr.Repositories
                     }
                     ((Table<TModel>) Entities).InsertAllOnSubmit(enumerable);
                     DataContext.SubmitChanges();
+                    return enumerable.AsQueryable();
                 }
             }
         }

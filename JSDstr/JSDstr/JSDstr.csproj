@@ -84,6 +84,7 @@
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="Helpers\Singleton.cs" />
+    <Compile Include="Interfaces\ICalculationService.cs" />
     <Compile Include="Interfaces\IClusteredEntity.cs" />
     <Compile Include="Interfaces\IClusterizationService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
@@ -94,13 +95,14 @@
     <Compile Include="Interfaces\IViewObject.cs" />
     <Compile Include="Interfaces\IViewObjectCollection.cs" />
     <Compile Include="Models\BaseModel.cs" />
-    <Compile Include="Models\Cluster.cs" />
-    <Compile Include="Models\ClusterAssignment.cs" />
+    <Compile Include="Models\Centroid.cs" />
+    <Compile Include="Models\CentroidAssignment.cs" />
     <Compile Include="Models\KmeansCalculation.cs" />
     <Compile Include="Models\Earthquake.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\CalculationTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SqlRepository.cs" />
     <Compile Include="Services\BaseService.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="ViewObjects\AssignmentViewObject.cs" />
+    <Compile Include="ViewObjects\CalculationTaskViewObject.cs" />
     <Compile Include="ViewObjects\VectorViewObject.cs" />
     <Compile Include="ViewObjects\SessionViewObject.cs" />
     <Compile Include="ViewObjects\ViewObject.cs" />

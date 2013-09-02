@@ -2,21 +2,21 @@
 
 namespace JSDstr.ViewObjects
 {
-    public class AssignmentViewObject : ViewObject<ClusterAssignment>
+    public class AssignmentViewObject : ViewObject<CentroidAssignment>
     {
         public AssignmentViewObject()
         {
         }
 
-        public AssignmentViewObject(ClusterAssignment source) : base(source)
+        public AssignmentViewObject(CentroidAssignment source) : base(source)
         {
             Id = source.Id;
-            ClusterId = source.ClusterId;
+            CentroidId = source.CentroidId;
             VectorId = source.Vectorid;
         }
 
         public int Id { get; set; }
-        public int ClusterId { get; set; }
-        public int VectorId { get; set; }
+        public int? CentroidId { get; set; }
+        public int? VectorId { get; set; }
     }
 }

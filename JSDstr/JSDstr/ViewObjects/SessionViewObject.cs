@@ -27,8 +27,8 @@ namespace JSDstr.ViewObjects
         public string UserName { get; set; }
         public int State { get; set; }
         public string StateMessage { get; set; }
-        public object Data { get; set; }
-        public object Results { get; set; }
+
+        public CalculationTaskViewObject CalculationTask { get; set; }
 
         public static explicit operator SessionViewObject(string viewObjectJson)
         {
