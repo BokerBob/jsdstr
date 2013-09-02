@@ -252,7 +252,7 @@
                     setTimeout(createSession, startAgainSessionTimeout);
                 }
             }).fail(function (d) {
-                handlers.failCreateSession.fire(d);
+                handlers.failCreateSession.fire(d.statusText);
                 setTimeout(createSession, startAgainSessionTimeout);
             });
         };
@@ -275,7 +275,7 @@
                         pingExecuted = false;
                     }).fail(function (d) {
                         pingExecuted = false;
-                        handlers.failPingSession.fire(d);
+                        handlers.failPingSession.fire(d.statusText);
                     });
                 } else {
                     setTimeout(createSession, startAgainSessionTimeout);
@@ -288,11 +288,12 @@
             if (checkCurrentSession()) {
                 $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed)) {
+                        currentSession = session;
                         handlers.successCompleteSession.fire(session);
                     }
                     setTimeout(createSession, startAgainSessionTimeout);
                 }).fail(function (d) {
-                    handlers.failCompleteSession.fire(d);
+                    handlers.failCompleteSession.fire(d.statusText);
                     setTimeout(createSession, startAgainSessionTimeout);
                 });
             } else {
@@ -308,10 +309,11 @@
             if (checkCurrentSession()) {
                 $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped)) {
+                        currentSession = session;
                         handlers.successCancelSession.fire(session);
                     }
                 }).fail(function (d) {
-                    handlers.failCancelSession.fire(d);
+                    handlers.failCancelSession.fire(d.statusText);
                 });
             }
         };
