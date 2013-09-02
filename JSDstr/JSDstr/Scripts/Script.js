@@ -57,7 +57,7 @@
                 generatedComments.each(function () { this.remove(); });
             }
             else if (typeof source == "string") {
-                var generatedCommentIndex = str.indexOf(generatedСomment);
+                var generatedCommentIndex = source.indexOf(generatedСomment);
                 if (generatedCommentIndex != -1)
                     str = str.slice(0, generatedCommentIndex);
                 return str;
