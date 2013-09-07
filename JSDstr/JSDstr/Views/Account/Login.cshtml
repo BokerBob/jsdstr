@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = Resources.Title_Login;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+       <form class="login">
+            <h4>@Resources.Header_SignIn</h4>
+            <div>
+                <input id="txtSignInEmail" autofocus type="text" class="form-control" placeholder="@Resources.Label_Email" />
+            </div>
+            <div>
+                <input id="txtSignInPwd" type="password" class="form-control" placeholder="@Resources.Label_Password" />
+            </div>
+            <label class="checkbox">
+                <input id='chkRemember' type="checkbox" value="remember-me" /> @Resources.Label_RememberMe
+            </label>
+            <button id="btnSignIn" data-loading-text="@Resources.Label_WaitingSignIn" class="btn btn-success btn-block" type="submit">@Resources.Button_SignIn</button>
+            <br />
+            <div id="msgSignIn" class="alert hide"></div>
+        </form>
+        <hr />
+        <form class="login">          
+            <button id="btnSignInAnonym" data-loading-text="@Resources.Label_WaitingSignIn" class="btn btn-default btn-block" type="submit">@Resources.Button_SignInAnonym</button>
+            <br />
+            <div id="msgSignInAnonym" class="alert hide"></div>
+        </form>
+    </div>
+
+    <div class="col-lg-4">
+        <form class="login">
+            <h4>@Resources.Header_SignUp</h4>
+            <div>
+                <input id="txtSignUpEmail" type="text" class="form-control" placeholder="@Resources.Label_Email" />
+            </div>
+            <div>
+                <input id="txtSignUpPwd" type="password" class="form-control" placeholder="@Resources.Label_Password" />
+            </div>
+            <label class="checkbox">
+                <input id="chkAccept" type="checkbox" value="accept"> @Html.Raw(Resources.Label_AcceptTerms)
+            </label>
+            <button id="btnSignUp" data-loading-text="@Resources.Label_WaitingSignUp" class="btn btn-primary btn-block" type="submit">@Resources.Button_SignUp</button>
+            <br />
+            <div id="msgSignUp" class="alert hide"></div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    Resources = (typeof (Resources) != "undefined" && Resources) || {};
+    Resources.Error_General = '@Resources.Error_General';
+    Resources.Error_Email = '@Resources.Error_Email';
+    Resources.Error_Password = '@Resources.Error_Password';
+    Resources.Error_SignIn = '@Resources.Error_SignIn';
+    Resources.Success_SignIn = '@Resources.Success_SignIn';
+    Resources.Success_SignInAnonym = '@Resources.Success_SignInAnonym';
+    Resources.Error_SignInAnonym = '@Resources.Error_SignInAnonym';
+
+    Resources.Error_NotAcceptedTerms = '@Resources.Error_NotAcceptedTerms';
+    Resources.Success_SignUp = '@Resources.Success_SignUp';
+    Resources.Error_SignUp = '@Resources.Error_SignUp';
+</script>

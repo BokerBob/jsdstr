@@ -47,6 +47,18 @@ namespace JSDstr
             );
 
             routes.MapRoute(
+                "Login",
+                "login",
+                new { controller = "Account", action = "Login" }
+            );
+
+            routes.MapRoute(
+                "Logout",
+                "logout",
+                new { controller = "Account", action = "Logout" }
+            );
+
+            routes.MapRoute(
                 null,
                 "{controller}/{action}/"
             );

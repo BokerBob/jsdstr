@@ -20,20 +20,25 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">@Resources.ProjectName</a>
+            <a class="navbar-brand" href="/">@Resources.Label_Project</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li @(PageContext.Page.Context.Request.Url.AbsolutePath == "/" ? "class=active" : "")><a href="/">@Resources.HomeLink</a></li>
-              <li @(PageContext.Page.Context.Request.Url.AbsolutePath == "/about" ? "class=active" : "")><a href="/about">@Resources.AboutLink</a></li>
-              <li @(PageContext.Page.Context.Request.Url.AbsolutePath == "/processing" ? "class=active" : "")><a href="/processing">@Resources.ProcessingLink</a></li>
-              <li @(PageContext.Page.Context.Request.Url.AbsolutePath == "/results" ? "class=active" : "")><a href="/results">@Resources.ResultsLink</a></li>
+              <li @Html.SetActiveClass("/")><a href="/">@Resources.Link_Home</a></li>
+              <li @Html.SetActiveClass("/about")><a href="/about">@Resources.Link_About</a></li>
+              <li @Html.SetActiveClass("/processing")><a href="/processing">@Resources.Link_Processing</a></li>
+              <li @Html.SetActiveClass("/results")><a href="/results">@Resources.Link_Results</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                @if(User.Identity.IsAuthenticated) 
-                {<li><a href="@("/processing/logout?returnUrl=" + PageContext.Page.Context.Request.Url.AbsolutePath)">@Resources.Logout</a></li>}
+                @{
+                    var isOnline = User.Identity.IsAuthenticated;
+                    var linkUrl = string.Format("/{0}?returnUrl={1}", isOnline ? "logout" : "login",
+                        PageContext.Page.Context.Request.Url.AbsolutePath);
+                    var linkLabel = isOnline ? @Resources.Link_Logout : @Resources.Link_Login;
+                } 
+                <li @Html.SetActiveClass("/login")><a href="@linkUrl">@linkLabel</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.Language <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.Label_Language <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">English</a></li>
                         <li><a href="#">Українська</a></li>
@@ -55,7 +60,7 @@
     </div>
     <div id="footer">
         <div class="container">
-            <p class="text-muted credit">@Resources.FooterText</p>
+            <p class="text-muted credit">@Resources.Content_Footer</p>
         </div>
     </div>
 

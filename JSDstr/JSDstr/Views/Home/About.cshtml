@@ -1,12 +1,16 @@
 ﻿@{
-    ViewBag.Title = Resources.AboutTitle;
+    ViewBag.Title = Resources.Title_About;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@Resources.AboutHeader</h1>
+<h3>@Resources.Header_About</h3>
 
-@Resources.AboutContent
-
-<p>
-    <a class="btn btn-lg btn-primary" href="/processing">@Resources.AboutButton</a>
-</p>
+<div class="row">
+    <div class="col-lg-8">
+        @Html.Raw(Resources.Content_About)
+        <hr />
+        <p>
+            <a class="btn btn-primary" href="/processing">@Resources.Link_AboutReadMore</a>
+        </p>
+    </div>
+</div>

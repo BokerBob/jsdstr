@@ -61,92 +61,47 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Try it.
+        ///   Looks up a localized string similar to Sign in.
         /// </summary>
-        internal static string AboutButton {
+        internal static string Button_SignIn {
             get {
-                return ResourceManager.GetString("AboutButton", resourceCulture);
+                return ResourceManager.GetString("Button_SignIn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Sign in as anonym user.
         /// </summary>
-        internal static string AboutContent {
+        internal static string Button_SignInAnonym {
             get {
-                return ResourceManager.GetString("AboutContent", resourceCulture);
+                return ResourceManager.GetString("Button_SignInAnonym", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About jsDSTR.
+        ///   Looks up a localized string similar to Sign up.
         /// </summary>
-        internal static string AboutHeader {
+        internal static string Button_SignUp {
             get {
-                return ResourceManager.GetString("AboutHeader", resourceCulture);
+                return ResourceManager.GetString("Button_SignUp", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
+        ///   Looks up a localized string similar to &lt;p class=&quot;text-muted&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class=&quot;text-muted&quot;&gt;Lorem ipsum dolor sit ame [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string AboutLink {
+        internal static string Content_About {
             get {
-                return ResourceManager.GetString("AboutLink", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to About jsDSTR - Javascript Distributed System for clasterization.
-        /// </summary>
-        internal static string AboutTitle {
-            get {
-                return ResourceManager.GetString("AboutTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to I&apos;ve read and accept to the &lt;abbr title=&quot;Can be found in About page&quot;&gt;terms&lt;/abbr&gt;.
-        /// </summary>
-        internal static string AcceptTermsCheckBox {
-            get {
-                return ResourceManager.GetString("AcceptTermsCheckBox", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Email.
-        /// </summary>
-        internal static string Email {
-            get {
-                return ResourceManager.GetString("Email", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Registration error. Please contant administrator..
-        /// </summary>
-        internal static string ErrorAuthentification {
-            get {
-                return ResourceManager.GetString("ErrorAuthentification", resourceCulture);
+                return ResourceManager.GetString("Content_About", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Andriy Babets © All rights reserved.
         /// </summary>
-        internal static string FooterText {
+        internal static string Content_Footer {
             get {
-                return ResourceManager.GetString("FooterText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Read more.
-        /// </summary>
-        internal static string HomeButton {
-            get {
-                return ResourceManager.GetString("HomeButton", resourceCulture);
+                return ResourceManager.GetString("Content_Footer", resourceCulture);
             }
         }
         
@@ -159,225 +114,324 @@ namespace Resources {
         ///    Processing are doing on the big array of geographic data.
         ///&lt;/p&gt;.
         /// </summary>
-        internal static string HomeContent {
+        internal static string Content_Home {
             get {
-                return ResourceManager.GetString("HomeContent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to About jsDSTR.
-        /// </summary>
-        internal static string HomeHeader {
-            get {
-                return ResourceManager.GetString("HomeHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Home.
-        /// </summary>
-        internal static string HomeLink {
-            get {
-                return ResourceManager.GetString("HomeLink", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to jsDSTR - Javascript Distributed System for clasterization.
-        /// </summary>
-        internal static string HomeTitle {
-            get {
-                return ResourceManager.GetString("HomeTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid credentials.
-        /// </summary>
-        internal static string InvalidCredentials {
-            get {
-                return ResourceManager.GetString("InvalidCredentials", resourceCulture);
+                return ResourceManager.GetString("Content_Home", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Invalid email.
         /// </summary>
-        internal static string InvalidEmail {
+        internal static string Error_Email {
             get {
-                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+                return ResourceManager.GetString("Error_Email", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid password.
+        ///   Looks up a localized string similar to Some error occured. Please contact site administrator..
         /// </summary>
-        internal static string InvalidPassword {
+        internal static string Error_General {
             get {
-                return ResourceManager.GetString("InvalidPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to English.
-        /// </summary>
-        internal static string Language {
-            get {
-                return ResourceManager.GetString("Language", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Login.
-        /// </summary>
-        internal static string Login {
-            get {
-                return ResourceManager.GetString("Login", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sign in.
-        /// </summary>
-        internal static string LoginTitle {
-            get {
-                return ResourceManager.GetString("LoginTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Logout.
-        /// </summary>
-        internal static string Logout {
-            get {
-                return ResourceManager.GetString("Logout", resourceCulture);
+                return ResourceManager.GetString("Error_General", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to You didn&apos;t accept terms.
         /// </summary>
-        internal static string NotAcceptedTerms {
+        internal static string Error_NotAcceptedTerms {
             get {
-                return ResourceManager.GetString("NotAcceptedTerms", resourceCulture);
+                return ResourceManager.GetString("Error_NotAcceptedTerms", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password.
+        ///   Looks up a localized string similar to Invalid password.
         /// </summary>
-        internal static string Password {
+        internal static string Error_Password {
             get {
-                return ResourceManager.GetString("Password", resourceCulture);
+                return ResourceManager.GetString("Error_Password", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processing.
+        ///   Looks up a localized string similar to Invalid credentials.
         /// </summary>
-        internal static string ProcessingLink {
+        internal static string Error_SignIn {
             get {
-                return ResourceManager.GetString("ProcessingLink", resourceCulture);
+                return ResourceManager.GetString("Error_SignIn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to JSDstr.
+        ///   Looks up a localized string similar to Anonym authorization error. Please contant administrator..
         /// </summary>
-        internal static string ProjectName {
+        internal static string Error_SignInAnonym {
             get {
-                return ResourceManager.GetString("ProjectName", resourceCulture);
+                return ResourceManager.GetString("Error_SignInAnonym", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remember me.
+        ///   Looks up a localized string similar to Registration error. Please contant administrator..
         /// </summary>
-        internal static string RememberMeCheckBox {
+        internal static string Error_SignUp {
             get {
-                return ResourceManager.GetString("RememberMeCheckBox", resourceCulture);
+                return ResourceManager.GetString("Error_SignUp", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Results.
+        ///   Looks up a localized string similar to About jsDSTR.
         /// </summary>
-        internal static string ResultsLink {
+        internal static string Header_About {
             get {
-                return ResourceManager.GetString("ResultsLink", resourceCulture);
+                return ResourceManager.GetString("Header_About", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Result of clasterization.
+        ///   Looks up a localized string similar to About jsDSTR.
         /// </summary>
-        internal static string ResultsTitle {
+        internal static string Header_Home {
             get {
-                return ResourceManager.GetString("ResultsTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sign in as anonym user.
-        /// </summary>
-        internal static string SignInAnonymButton {
-            get {
-                return ResourceManager.GetString("SignInAnonymButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sign in.
-        /// </summary>
-        internal static string SignInButton {
-            get {
-                return ResourceManager.GetString("SignInButton", resourceCulture);
+                return ResourceManager.GetString("Header_Home", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Please sign in.
         /// </summary>
-        internal static string SignInHeader {
+        internal static string Header_SignIn {
             get {
-                return ResourceManager.GetString("SignInHeader", resourceCulture);
+                return ResourceManager.GetString("Header_SignIn", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Sign up.
         /// </summary>
-        internal static string SignUpButton {
+        internal static string Header_SignUp {
             get {
-                return ResourceManager.GetString("SignUpButton", resourceCulture);
+                return ResourceManager.GetString("Header_SignUp", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sign up.
+        ///   Looks up a localized string similar to I&apos;ve read and accept to the &lt;abbr title=&quot;Can be found in About page&quot;&gt;terms&lt;/abbr&gt;.
         /// </summary>
-        internal static string SignUpHeader {
+        internal static string Label_AcceptTerms {
             get {
-                return ResourceManager.GetString("SignUpHeader", resourceCulture);
+                return ResourceManager.GetString("Label_AcceptTerms", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You&apos;ve successfully registered. Please check your email..
+        ///   Looks up a localized string similar to Email.
         /// </summary>
-        internal static string SuccessAuthentification {
+        internal static string Label_Email {
             get {
-                return ResourceManager.GetString("SuccessAuthentification", resourceCulture);
+                return ResourceManager.GetString("Label_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        internal static string Label_Language {
+            get {
+                return ResourceManager.GetString("Label_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        internal static string Label_Login {
+            get {
+                return ResourceManager.GetString("Label_Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Label_Password {
+            get {
+                return ResourceManager.GetString("Label_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSDstr.
+        /// </summary>
+        internal static string Label_Project {
+            get {
+                return ResourceManager.GetString("Label_Project", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember me.
+        /// </summary>
+        internal static string Label_RememberMe {
+            get {
+                return ResourceManager.GetString("Label_RememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authentication....
+        /// </summary>
+        internal static string Label_WaitingSignIn {
+            get {
+                return ResourceManager.GetString("Label_WaitingSignIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration....
+        /// </summary>
+        internal static string Label_WaitingSignUp {
+            get {
+                return ResourceManager.GetString("Label_WaitingSignUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string Link_About {
+            get {
+                return ResourceManager.GetString("Link_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Try it ».
+        /// </summary>
+        internal static string Link_AboutReadMore {
+            get {
+                return ResourceManager.GetString("Link_AboutReadMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Home.
+        /// </summary>
+        internal static string Link_Home {
+            get {
+                return ResourceManager.GetString("Link_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read more ».
+        /// </summary>
+        internal static string Link_HomeReadMore {
+            get {
+                return ResourceManager.GetString("Link_HomeReadMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        internal static string Link_Login {
+            get {
+                return ResourceManager.GetString("Link_Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        internal static string Link_Logout {
+            get {
+                return ResourceManager.GetString("Link_Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing.
+        /// </summary>
+        internal static string Link_Processing {
+            get {
+                return ResourceManager.GetString("Link_Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Results.
+        /// </summary>
+        internal static string Link_Results {
+            get {
+                return ResourceManager.GetString("Link_Results", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Success authorization.
         /// </summary>
-        internal static string SuccessAuthorization {
+        internal static string Success_SignIn {
             get {
-                return ResourceManager.GetString("SuccessAuthorization", resourceCulture);
+                return ResourceManager.GetString("Success_SignIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success anonym authorization.
+        /// </summary>
+        internal static string Success_SignInAnonym {
+            get {
+                return ResourceManager.GetString("Success_SignInAnonym", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve successfully registered. Please check your email..
+        /// </summary>
+        internal static string Success_SignUp {
+            get {
+                return ResourceManager.GetString("Success_SignUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About jsDSTR - Javascript Distributed System for clasterization.
+        /// </summary>
+        internal static string Title_About {
+            get {
+                return ResourceManager.GetString("Title_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to jsDSTR - Javascript Distributed System for clasterization.
+        /// </summary>
+        internal static string Title_Home {
+            get {
+                return ResourceManager.GetString("Title_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign in.
+        /// </summary>
+        internal static string Title_Login {
+            get {
+                return ResourceManager.GetString("Title_Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result of clasterization.
+        /// </summary>
+        internal static string Title_Results {
+            get {
+                return ResourceManager.GetString("Title_Results", resourceCulture);
             }
         }
     }

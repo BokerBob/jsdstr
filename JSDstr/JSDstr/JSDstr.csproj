@@ -71,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProcessingController.cs" />
     <Compile Include="Global.asax.cs">
@@ -83,11 +84,17 @@
     <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\ISeriazable.cs" />
+    <Compile Include="Interfaces\ISessionService.cs" />
+    <Compile Include="Interfaces\ISettingsService.cs" />
     <Compile Include="Interfaces\IViewObject.cs" />
     <Compile Include="Interfaces\IViewObjectCollection.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SqlRepository.cs" />
+    <Compile Include="Services\SessionService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
     <Compile Include="ViewObjects\ViewObject.cs" />
     <Compile Include="ViewObjects\ViewObjectCollection.cs" />
   </ItemGroup>
@@ -140,7 +147,9 @@
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
     <Content Include="Scripts\Script.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -163,7 +172,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Sql\" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +184,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Processing\Results.cshtml" />
-    <Content Include="Views\Processing\Login.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Processing\Processing.cshtml" />
     <Content Include="Views\Shared\Statistics.cshtml" />
   </ItemGroup>

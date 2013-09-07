@@ -11,42 +11,12 @@ namespace JSDstr.Controllers
     {
         public ActionResult Index()
         {
-            if(!User.Identity.IsAuthenticated && (Session["IsAuthorized"] == null || (bool)Session["IsAuthorized"] == false))
-                return View("Login");
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToRoute("Login", new { returnUrl = "/processing" });
             ViewBag.RenderStatistics = true;
             return View("Processing");
         }
-
-        public ActionResult Login() 
-        {
-            return View("Login");
-        }
-
-        [HttpPost]
-        public ActionResult Logout(string returnUrl) 
-        {
-            FormsAuthentication.SignOut();
-            return RedirectPermanent(returnUrl);
-        }
-
-        [HttpPost]
-        public bool SignIn(string email, string pwd, bool remember) 
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pwd))
-                return false;
-            Session["IsAuthorized"] = true;
-            return true;
-        }
-
-        [HttpPost]
-        public bool SignUp(string email, string pwd)
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pwd))
-                return false;
-            Session["IsAuthorized"] = true;
-            return true;
-        }
-
+        
         public ActionResult Results() 
         {
             ViewBag.RenderStatistics = true;

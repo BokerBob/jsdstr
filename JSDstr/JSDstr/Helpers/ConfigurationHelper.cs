@@ -4,7 +4,7 @@ namespace JSDstr.Helpers
 {
     public static class ConfigurationHelper
     {
-        public const string ConnectionStringName = "db_conn";
+        public const string ConnectionStringName = "ApplicationServices";
 
         public static string ConnectionString
         {

@@ -9,7 +9,7 @@ namespace JSDstr.Models
     {
         private long _hashCode;
 
-        public abstract int ID { get; set; }
+        public abstract int Id { get; set; }
         public abstract DateTime CreatedDate { get; set; }
         public abstract DateTime ChangedDate { get; set; }
 
@@ -23,7 +23,7 @@ namespace JSDstr.Models
         {
             unchecked
             {
-                return ID ^ CreatedDate.Ticks ^ ChangedDate.Ticks;
+                return Id ^ CreatedDate.Ticks ^ ChangedDate.Ticks;
             }
         }
     }

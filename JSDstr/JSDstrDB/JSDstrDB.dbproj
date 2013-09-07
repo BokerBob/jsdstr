@@ -157,5 +157,8 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\Statistics.table.sql">
       <SubType>Code</SubType>
     </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Settings.table.sql">
+      <SubType>Code</SubType>
+    </Build>
   </ItemGroup>
 </Project>

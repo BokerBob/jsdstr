@@ -17,7 +17,7 @@ namespace JSDstr.Controllers
         public ActionResult About()
         {
             ViewBag.RenderStatistics = true;
-            ViewBag.UseJumbotron = true;
+            //ViewBag.UseJumbotron = true;
             return View("About");
         }
     }

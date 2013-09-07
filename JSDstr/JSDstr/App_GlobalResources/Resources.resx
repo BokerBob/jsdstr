@@ -117,37 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutButton" xml:space="preserve">
-    <value>Try it</value>
+  <data name="Button_SignIn" xml:space="preserve">
+    <value>Sign in</value>
   </data>
-  <data name="AboutContent" xml:space="preserve">
-    <value />
+  <data name="Button_SignInAnonym" xml:space="preserve">
+    <value>Sign in as anonym user</value>
   </data>
-  <data name="AboutHeader" xml:space="preserve">
-    <value>About jsDSTR</value>
+  <data name="Button_SignUp" xml:space="preserve">
+    <value>Sign up</value>
   </data>
-  <data name="AboutLink" xml:space="preserve">
-    <value>About</value>
+  <data name="Content_About" xml:space="preserve">
+    <value>&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;</value>
   </data>
-  <data name="AboutTitle" xml:space="preserve">
-    <value>About jsDSTR - Javascript Distributed System for clasterization</value>
-  </data>
-  <data name="AcceptTermsCheckBox" xml:space="preserve">
-    <value>I've read and accept to the &lt;abbr title="Can be found in About page"&gt;terms&lt;/abbr&gt;</value>
-  </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
-  </data>
-  <data name="ErrorAuthentification" xml:space="preserve">
-    <value>Registration error. Please contant administrator.</value>
-  </data>
-  <data name="FooterText" xml:space="preserve">
+  <data name="Content_Footer" xml:space="preserve">
     <value>Andriy Babets © All rights reserved</value>
   </data>
-  <data name="HomeButton" xml:space="preserve">
-    <value>Read more</value>
-  </data>
-  <data name="HomeContent" xml:space="preserve">
+  <data name="Content_Home" xml:space="preserve">
     <value>&lt;p&gt;
     jsDSTR is a javascript distributed system for clasterization big data. 
 &lt;/p&gt;
@@ -156,76 +141,109 @@
     Processing are doing on the big array of geographic data.
 &lt;/p&gt;</value>
   </data>
-  <data name="HomeHeader" xml:space="preserve">
-    <value>About jsDSTR</value>
-  </data>
-  <data name="HomeLink" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="HomeTitle" xml:space="preserve">
-    <value>jsDSTR - Javascript Distributed System for clasterization</value>
-  </data>
-  <data name="InvalidCredentials" xml:space="preserve">
-    <value>Invalid credentials</value>
-  </data>
-  <data name="InvalidEmail" xml:space="preserve">
+  <data name="Error_Email" xml:space="preserve">
     <value>Invalid email</value>
   </data>
-  <data name="InvalidPassword" xml:space="preserve">
-    <value>Invalid password</value>
+  <data name="Error_General" xml:space="preserve">
+    <value>Some error occured. Please contact site administrator.</value>
   </data>
-  <data name="Language" xml:space="preserve">
-    <value>English</value>
-  </data>
-  <data name="Login" xml:space="preserve">
-    <value>Login</value>
-  </data>
-  <data name="LoginTitle" xml:space="preserve">
-    <value>Sign in</value>
-  </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
-  </data>
-  <data name="NotAcceptedTerms" xml:space="preserve">
+  <data name="Error_NotAcceptedTerms" xml:space="preserve">
     <value>You didn't accept terms</value>
   </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
+  <data name="Error_Password" xml:space="preserve">
+    <value>Invalid password</value>
   </data>
-  <data name="ProcessingLink" xml:space="preserve">
-    <value>Processing</value>
+  <data name="Error_SignIn" xml:space="preserve">
+    <value>Invalid credentials</value>
   </data>
-  <data name="ProjectName" xml:space="preserve">
-    <value>JSDstr</value>
+  <data name="Error_SignInAnonym" xml:space="preserve">
+    <value>Anonym authorization error. Please contant administrator.</value>
   </data>
-  <data name="RememberMeCheckBox" xml:space="preserve">
-    <value>Remember me</value>
+  <data name="Error_SignUp" xml:space="preserve">
+    <value>Registration error. Please contant administrator.</value>
   </data>
-  <data name="ResultsLink" xml:space="preserve">
-    <value>Results</value>
+  <data name="Header_About" xml:space="preserve">
+    <value>About jsDSTR</value>
   </data>
-  <data name="ResultsTitle" xml:space="preserve">
-    <value>Result of clasterization</value>
+  <data name="Header_Home" xml:space="preserve">
+    <value>About jsDSTR</value>
   </data>
-  <data name="SignInAnonymButton" xml:space="preserve">
-    <value>Sign in as anonym user</value>
-  </data>
-  <data name="SignInButton" xml:space="preserve">
-    <value>Sign in</value>
-  </data>
-  <data name="SignInHeader" xml:space="preserve">
+  <data name="Header_SignIn" xml:space="preserve">
     <value>Please sign in</value>
   </data>
-  <data name="SignUpButton" xml:space="preserve">
+  <data name="Header_SignUp" xml:space="preserve">
     <value>Sign up</value>
   </data>
-  <data name="SignUpHeader" xml:space="preserve">
-    <value>Sign up</value>
+  <data name="Label_AcceptTerms" xml:space="preserve">
+    <value>I've read and accept to the &lt;abbr title="Can be found in About page"&gt;terms&lt;/abbr&gt;</value>
   </data>
-  <data name="SuccessAuthentification" xml:space="preserve">
+  <data name="Label_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Label_Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Label_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Label_Project" xml:space="preserve">
+    <value>JSDstr</value>
+  </data>
+  <data name="Label_RememberMe" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="Label_WaitingSignIn" xml:space="preserve">
+    <value>Authentication...</value>
+  </data>
+  <data name="Label_WaitingSignUp" xml:space="preserve">
+    <value>Registration...</value>
+  </data>
+  <data name="Link_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Link_AboutReadMore" xml:space="preserve">
+    <value>Try it »</value>
+  </data>
+  <data name="Link_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Link_HomeReadMore" xml:space="preserve">
+    <value>Read more »</value>
+  </data>
+  <data name="Link_Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Link_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Link_Processing" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="Link_Results" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="Success_SignIn" xml:space="preserve">
+    <value>Success authorization</value>
+  </data>
+  <data name="Success_SignInAnonym" xml:space="preserve">
+    <value>Success anonym authorization</value>
+  </data>
+  <data name="Success_SignUp" xml:space="preserve">
     <value>You've successfully registered. Please check your email.</value>
   </data>
-  <data name="SuccessAuthorization" xml:space="preserve">
-    <value>Success authorization</value>
+  <data name="Title_About" xml:space="preserve">
+    <value>About jsDSTR - Javascript Distributed System for clasterization</value>
+  </data>
+  <data name="Title_Home" xml:space="preserve">
+    <value>jsDSTR - Javascript Distributed System for clasterization</value>
+  </data>
+  <data name="Title_Login" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Title_Results" xml:space="preserve">
+    <value>Result of clasterization</value>
   </data>
 </root>

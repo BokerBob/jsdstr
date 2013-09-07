@@ -110,10 +110,16 @@ body {
 
 /* login form */
 
-.form-signin .form-signin-heading, .form-signin .checkbox{
+.login h4, .login .checkbox{
     margin-bottom: 10px;
 }
 
-.form-signin .checkbox{
+.login .checkbox{
     font-weight: normal;
+}
+
+/* processing */
+
+.processing button{
+    width: 150px;
 }
