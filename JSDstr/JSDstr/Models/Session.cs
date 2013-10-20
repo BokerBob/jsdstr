@@ -13,6 +13,7 @@ namespace JSDstr.Models
         Completed = 3
     }
 
+    [Table]
     public class Session : BaseModel
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
@@ -22,6 +23,8 @@ namespace JSDstr.Models
         [Column]
         public override DateTime ChangedDate { get; set; }
 
+        [Column]
+        public Guid Guid { get; set; }
         [Column]
         public string UserName { get; set; }
         [Column]

@@ -15,15 +15,10 @@ namespace JSDstr.Services
 
         private const int ThreadSleep = 100;
 
-        private Session GetActiveSession(string userName) 
+        private void CheckSession(object sessionGuid)
         {
-            return _sessionRepository.Entities.SingleOrDefault(x => x.UserName == userName && x.State == (int)SessionState.Started);
-        }
-
-        private void CheckSession(object sessionId) 
-        {
-            var sessionIdInt = (int)sessionId;
-            var session = _sessionRepository.Entities.SingleOrDefault(x => x.Id == sessionIdInt);
+            var guid = (Guid) sessionGuid;
+            var session = _sessionRepository.Entities.SingleOrDefault(x => x.Guid == guid);
             if (session != null)
             {
                 if (session.State == (int)SessionState.Started)
@@ -54,25 +49,26 @@ namespace JSDstr.Services
             }
         }
 
-        public bool CreateSession(string userName)
+        public Guid CreateSession(string userName)
         {
             var session = new Session
             {
                 UserName = userName,
                 State = (int)SessionState.Started,
                 DataId = 0,
-                StatisticsId = 0
+                StatisticsId = 0,
+                Guid = Guid.NewGuid()
             };
             _sessionRepository.Insert(session);
             var thread = new Thread(CheckSession);
-            thread.Start(session.Id); // todo: get id of inserted element at insert
-            return true;
+            thread.Start(session.Guid); // todo: get id of inserted element at insert
+            return session.Guid;
             // todo: implement throad for checking session state
         }
 
-        public bool PingSession(string userName)
+        public bool PingSession(Guid sessionGuid)
         {
-            var session = GetActiveSession(userName);
+            var session = _sessionRepository.Entities.SingleOrDefault(x => x.Guid == sessionGuid && x.State == (int) SessionState.Started);
             if (session != null)
             {
                 session.ChangedDate = DateTime.Now;
@@ -86,9 +82,9 @@ namespace JSDstr.Services
             }
         }
         
-        public bool CompleteSession(string userName)
+        public bool CompleteSession(Guid sessionGuid)
         {
-            var session = GetActiveSession(userName);
+            var session = _sessionRepository.Entities.SingleOrDefault(x => x.Guid == sessionGuid && x.State == (int)SessionState.Started);
             if (session != null)
             {
                 session.ChangedDate = DateTime.Now;

@@ -88,6 +88,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start session.
+        /// </summary>
+        internal static string Button_StartSession {
+            get {
+                return ResourceManager.GetString("Button_StartSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop session.
+        /// </summary>
+        internal static string Button_StopSession {
+            get {
+                return ResourceManager.GetString("Button_StopSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;p class=&quot;text-muted&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class=&quot;text-muted&quot;&gt;Lorem ipsum dolor sit ame [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Content_About {
@@ -117,6 +135,17 @@ namespace Resources {
         internal static string Content_Home {
             get {
                 return ResourceManager.GetString("Content_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click start button for beginning of calculation above. &lt;br /&gt;
+        ///            You will become a little node in the great process. &lt;br /&gt;
+        ///            Improve our world now!.
+        /// </summary>
+        internal static string Content_Processing {
+            get {
+                return ResourceManager.GetString("Content_Processing", resourceCulture);
             }
         }
         
@@ -175,11 +204,20 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registration error. Please contant administrator..
+        ///   Looks up a localized string similar to Email is already registered.
         /// </summary>
         internal static string Error_SignUp {
             get {
                 return ResourceManager.GetString("Error_SignUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured.
+        /// </summary>
+        internal static string Error_StartSession {
+            get {
+                return ResourceManager.GetString("Error_StartSession", resourceCulture);
             }
         }
         
@@ -198,6 +236,15 @@ namespace Resources {
         internal static string Header_Home {
             get {
                 return ResourceManager.GetString("Header_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Improve your world now!.
+        /// </summary>
+        internal static string Header_Processing {
+            get {
+                return ResourceManager.GetString("Header_Processing", resourceCulture);
             }
         }
         
@@ -283,6 +330,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saving results....
+        /// </summary>
+        internal static string Label_WaitingCompleteSession {
+            get {
+                return ResourceManager.GetString("Label_WaitingCompleteSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authentication....
         /// </summary>
         internal static string Label_WaitingSignIn {
@@ -297,6 +353,24 @@ namespace Resources {
         internal static string Label_WaitingSignUp {
             get {
                 return ResourceManager.GetString("Label_WaitingSignUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session starting....
+        /// </summary>
+        internal static string Label_WaitingStartSession {
+            get {
+                return ResourceManager.GetString("Label_WaitingStartSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session cancelling....
+        /// </summary>
+        internal static string Label_WaitingStopSession {
+            get {
+                return ResourceManager.GetString("Label_WaitingStopSession", resourceCulture);
             }
         }
         
@@ -423,6 +497,15 @@ namespace Resources {
         internal static string Title_Login {
             get {
                 return ResourceManager.GetString("Title_Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing.
+        /// </summary>
+        internal static string Title_Processing {
+            get {
+                return ResourceManager.GetString("Title_Processing", resourceCulture);
             }
         }
         

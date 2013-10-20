@@ -18,11 +18,13 @@ namespace JSDstr.Controllers
             return View("Login");
         }
 
-        [HttpPost]
+        [Authorize]
         public ActionResult Logout(string returnUrl)
         {
             FormsAuthentication.SignOut();
-            return RedirectPermanent(returnUrl);
+            if(!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+            return Redirect("/");
         }
 
         [HttpPost]
@@ -72,13 +74,10 @@ namespace JSDstr.Controllers
             try
             {
                 var user = Membership.CreateUser(email, pwd, email);
-                if (user != null)
+                if (Membership.ValidateUser(email, pwd))
                 {
-                    if (Membership.ValidateUser(email, pwd))
-                    {
-                        FormsAuthentication.SetAuthCookie(email, true);
-                        return true;
-                    }
+                    FormsAuthentication.SetAuthCookie(email, true);
+                    return true;
                 }
             }
             catch (Exception e)
@@ -86,12 +85,6 @@ namespace JSDstr.Controllers
                 return false;
             }
             return false;
-        }
-
-        public ActionResult LogOut(string returnUrl)
-        {
-            FormsAuthentication.SignOut();
-            return Redirect(returnUrl);
         }
     }
 }

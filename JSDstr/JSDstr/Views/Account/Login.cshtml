@@ -47,17 +47,20 @@
     </div>
 </div>
 
+@section script
+{
 <script type="text/javascript">
-    Resources = (typeof (Resources) != "undefined" && Resources) || {};
-    Resources.Error_General = '@Resources.Error_General';
-    Resources.Error_Email = '@Resources.Error_Email';
-    Resources.Error_Password = '@Resources.Error_Password';
-    Resources.Error_SignIn = '@Resources.Error_SignIn';
-    Resources.Success_SignIn = '@Resources.Success_SignIn';
-    Resources.Success_SignInAnonym = '@Resources.Success_SignInAnonym';
-    Resources.Error_SignInAnonym = '@Resources.Error_SignInAnonym';
+    var resources = jsd.resources;
+    resources.Error_General = '@Resources.Error_General';
+    resources.Error_Email = '@Resources.Error_Email';
+    resources.Error_Password = '@Resources.Error_Password';
+    resources.Error_SignIn = '@Resources.Error_SignIn';
+    resources.Success_SignIn = '@Resources.Success_SignIn';
+    resources.Success_SignInAnonym = '@Resources.Success_SignInAnonym';
+    resources.Error_SignInAnonym = '@Resources.Error_SignInAnonym';
 
-    Resources.Error_NotAcceptedTerms = '@Resources.Error_NotAcceptedTerms';
-    Resources.Success_SignUp = '@Resources.Success_SignUp';
-    Resources.Error_SignUp = '@Resources.Error_SignUp';
+    resources.Error_NotAcceptedTerms = '@Resources.Error_NotAcceptedTerms';
+    resources.Success_SignUp = '@Resources.Success_SignUp';
+    resources.Error_SignUp = '@Resources.Error_SignUp';
 </script>
+}

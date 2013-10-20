@@ -209,14 +209,15 @@ PRINT N'Creating [dbo].[Session]...';
 
 GO
 CREATE TABLE [dbo].[Session] (
-    [Id]           INT            IDENTITY (1, 1) NOT NULL,
-    [CreatedDate]  DATETIME       NULL,
-    [ChangedDate]  DATETIME       NULL,
-    [UserName]     NVARCHAR (MAX) NOT NULL,
-    [State]        INT            NOT NULL,
-    [DateId]       INT            NOT NULL,
-    [ResultId]     INT            NULL,
-    [StatisticsId] INT            NOT NULL,
+    [Id]           INT              IDENTITY (1, 1) NOT NULL,
+    [CreatedDate]  DATETIME         NULL,
+    [ChangedDate]  DATETIME         NULL,
+    [Guid]         UNIQUEIDENTIFIER NOT NULL,
+    [UserName]     NVARCHAR (MAX)   NOT NULL,
+    [State]        INT              NOT NULL,
+    [DateId]       INT              NOT NULL,
+    [ResultId]     INT              NULL,
+    [StatisticsId] INT              NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC) WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON, PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF)
 );
 

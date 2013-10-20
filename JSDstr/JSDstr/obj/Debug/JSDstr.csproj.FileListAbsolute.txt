@@ -8,3 +8,13 @@ C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstr\bin\N
 C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstr\bin\Newtonsoft.Json.pdb
 C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstr\bin\Newtonsoft.Json.xml
 C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstr\obj\Debug\JSDstr.csprojResolveAssemblyReference.cache
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\JSDstr.dll
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\JSDstr.pdb
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\EntityFramework.dll
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\Newtonsoft.Json.dll
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\EntityFramework.xml
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\Newtonsoft.Json.pdb
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\bin\Newtonsoft.Json.xml
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\obj\Debug\JSDstr.dll
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\obj\Debug\JSDstr.pdb
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstr\obj\Debug\JSDstr.csprojResolveAssemblyReference.cache

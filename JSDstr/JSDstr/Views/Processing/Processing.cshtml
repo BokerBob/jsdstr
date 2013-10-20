@@ -1,17 +1,27 @@
 ﻿@{
-    ViewBag.Title = "ProcessingView";
+    ViewBag.Title = Resources.Title_Processing;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row">
     <div class="col-lg-6 processing">
-        <h3>Improve your world now!</h3>
+        <h3>@Resources.Header_Processing</h3>
         <p class="text-muted">
-            Click start button for beginning of calculation above. <br />
-            You will become a little node in the great process. <br />
-            Improve our world now!
+            @Html.Raw(Resources.Content_Processing)
         </p>
         <hr />
-        <button id="btnAction" data-loading-text="Starting..." class="btn btn-success" type="submit">Start</button>
+        <button id="btnProcessing" data-starting-text="@Resources.Label_WaitingStartSession" data-stopping-text="@Resources.Label_WaitingStopSession" data-compleating-text="@Resources.Label_WaitingCompleteSession" class="btn btn-success" type="submit">@Resources.Button_StartSession</button>
+        <br/><br/>
+        <div id="msgProcessing" class="alert hide"></div>
     </div>
 </div>
+
+@section script
+{
+<script type="text/javascript">
+    var resources = jsd.resources;
+    resources.Button_StartSession = '@Resources.Button_StartSession';
+    resources.Button_StopSession = '@Resources.Button_StopSession';
+    resources.Error_StartSession = '@Resources.Error_StartSession';
+</script>
+}

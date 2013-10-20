@@ -8,8 +8,8 @@ namespace JSDstr.Interfaces
 {
     public interface ISessionService
     {
-        bool CreateSession(string userName);
-        bool PingSession(string userName);
-        bool CompleteSession(string userName);
+        Guid CreateSession(string userName);
+        bool PingSession(Guid sessionGuid);
+        bool CompleteSession(Guid sessionGuid);
     }
 }

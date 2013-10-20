@@ -6,3 +6,11 @@ C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstrDB\sql
 C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstrDB\sql\debug\JSDstrDB.deploymanifest
 C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstrDB\sql\debug\JSDstrDB.dbschema
 C:\Users\Andriy Babets\documents\visual studio 2010\Projects\JSDstr\JSDstrDB\obj\Debug\JSDstrDB.dbschema
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB_Script.PreDeployment.sql
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB_Script.PostDeployment.sql
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB_Database.sqlsettings
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB_Database.sqldeployment
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB_Database.sqlcmdvars
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB.deploymanifest
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\sql\debug\JSDstrDB.dbschema
+C:\Users\Andriy Babets\Desktop\jsDSTR\jsdstr\JSDstr\JSDstrDB\obj\Debug\JSDstrDB.dbschema

@@ -126,6 +126,12 @@
   <data name="Button_SignUp" xml:space="preserve">
     <value>Sign up</value>
   </data>
+  <data name="Button_StartSession" xml:space="preserve">
+    <value>Start session</value>
+  </data>
+  <data name="Button_StopSession" xml:space="preserve">
+    <value>Stop session</value>
+  </data>
   <data name="Content_About" xml:space="preserve">
     <value>&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;</value>
   </data>
@@ -140,6 +146,11 @@
     The main idea is to use browser as a processing node in calculations.
     Processing are doing on the big array of geographic data.
 &lt;/p&gt;</value>
+  </data>
+  <data name="Content_Processing" xml:space="preserve">
+    <value>Click start button for beginning of calculation above. &lt;br /&gt;
+            You will become a little node in the great process. &lt;br /&gt;
+            Improve our world now!</value>
   </data>
   <data name="Error_Email" xml:space="preserve">
     <value>Invalid email</value>
@@ -160,13 +171,19 @@
     <value>Anonym authorization error. Please contant administrator.</value>
   </data>
   <data name="Error_SignUp" xml:space="preserve">
-    <value>Registration error. Please contant administrator.</value>
+    <value>Email is already registered</value>
+  </data>
+  <data name="Error_StartSession" xml:space="preserve">
+    <value>An error occured</value>
   </data>
   <data name="Header_About" xml:space="preserve">
     <value>About jsDSTR</value>
   </data>
   <data name="Header_Home" xml:space="preserve">
     <value>About jsDSTR</value>
+  </data>
+  <data name="Header_Processing" xml:space="preserve">
+    <value>Improve your world now!</value>
   </data>
   <data name="Header_SignIn" xml:space="preserve">
     <value>Please sign in</value>
@@ -195,11 +212,20 @@
   <data name="Label_RememberMe" xml:space="preserve">
     <value>Remember me</value>
   </data>
+  <data name="Label_WaitingCompleteSession" xml:space="preserve">
+    <value>Saving results...</value>
+  </data>
   <data name="Label_WaitingSignIn" xml:space="preserve">
     <value>Authentication...</value>
   </data>
   <data name="Label_WaitingSignUp" xml:space="preserve">
     <value>Registration...</value>
+  </data>
+  <data name="Label_WaitingStartSession" xml:space="preserve">
+    <value>Session starting...</value>
+  </data>
+  <data name="Label_WaitingStopSession" xml:space="preserve">
+    <value>Session cancelling...</value>
   </data>
   <data name="Link_About" xml:space="preserve">
     <value>About</value>
@@ -242,6 +268,9 @@
   </data>
   <data name="Title_Login" xml:space="preserve">
     <value>Sign in</value>
+  </data>
+  <data name="Title_Processing" xml:space="preserve">
+    <value>Processing</value>
   </data>
   <data name="Title_Results" xml:space="preserve">
     <value>Result of clasterization</value>
