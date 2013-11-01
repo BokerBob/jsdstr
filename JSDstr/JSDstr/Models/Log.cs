@@ -25,6 +25,8 @@ namespace JSDstr.Models
         [Column]
         public string UserName { get; set; }
         [Column]
+        public string Context { get; set; }
+        [Column]
         public int Type { get; set; }
     }
 }

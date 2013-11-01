@@ -18,21 +18,21 @@ namespace JSDstr.Models
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public override int Id { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public override DateTime CreatedDate { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public override DateTime ChangedDate { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public Guid Guid { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public string UserName { get; set; }
-        [Column]
-        public int State { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
+        public SessionState State { get; set; }
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public string StateMessage { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public int CalculationId { get; set; }
     }
 }

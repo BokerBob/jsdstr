@@ -20,22 +20,10 @@ namespace JSDstr.Models
         [Column]
         public int? Vectorid { get; set; }
 
-        //private EntityRef<Centroid> _centroid;
+        [Column]
+        public int CalculationId { get; set; }
 
-        //[Association(Storage = "_centroid", ThisKey = "CentroidId", OtherKey = "Id", IsForeignKey = false)]
-        //public Centroid Centroid
-        //{
-        //    get { return _centroid.Entity; }
-        //    set { _centroid.Entity = value; }
-        //}
-
-        //private EntityRef<Earthquake> _vector;
-
-        //[Association(Storage = "_vector", ThisKey = "VectorId", OtherKey = "Id", IsForeignKey = false)]
-        //public Earthquake Vector
-        //{
-        //    get { return _vector.Entity; }
-        //    set { _vector.Entity = value; }
-        //}
+        [Column]
+        public int Iteration { get; set; }
     }
 }

@@ -177,6 +177,60 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculation queue is busy. Another attempt....
+        /// </summary>
+        internal static string Error_CalculationBusy {
+            get {
+                return ResourceManager.GetString("Error_CalculationBusy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculation process is already completed. Thank you..
+        /// </summary>
+        internal static string Error_CalculationCompleted {
+            get {
+                return ResourceManager.GetString("Error_CalculationCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculation task returned error. Another attempt....
+        /// </summary>
+        internal static string Error_CalculationError {
+            get {
+                return ResourceManager.GetString("Error_CalculationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculation process is failed. Please try again later..
+        /// </summary>
+        internal static string Error_CalculationFailed {
+            get {
+                return ResourceManager.GetString("Error_CalculationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculation object is invalid. Another attempt....
+        /// </summary>
+        internal static string Error_CalculationInvalid {
+            get {
+                return ResourceManager.GetString("Error_CalculationInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculation task returned null. Another attempt....
+        /// </summary>
+        internal static string Error_CalculationNull {
+            get {
+                return ResourceManager.GetString("Error_CalculationNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel session error. Calculation was stopped..
         /// </summary>
         internal static string Error_CancelSession {
@@ -240,7 +294,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Creating session was failed with max attempts count. Please try again later.
+        ///   Looks up a localized string similar to Creating session was failed with max attempts count. Please try again later..
         /// </summary>
         internal static string Error_MaxAttemptsCreateSession {
             get {

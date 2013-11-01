@@ -11,12 +11,6 @@ namespace JSDstr.Models
         Cancelled = 3
     }
 
-    public enum VectorTaskType
-    {
-        Assignment = 2,
-        UpdateCentroids = 3
-    }
-
     [Table]
     public class VectorTask : BaseModel
     {
@@ -36,7 +30,7 @@ namespace JSDstr.Models
         public VectorTaskState State { get; set; }
 
         [Column]
-        public VectorTaskType Type { get; set; }
+        public CalculationState Type { get; set; }
 
         [Column]
         public Guid? SessionGuid { get; set; }

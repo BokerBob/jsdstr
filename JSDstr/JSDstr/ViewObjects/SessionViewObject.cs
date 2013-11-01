@@ -19,14 +19,16 @@ namespace JSDstr.ViewObjects
             UserName = source.UserName;
             State = source.State;
             StateMessage = source.StateMessage;
+            CalculationId = source.CalculationId;
         }
 
         public DateTime CreatedDate { get; set; }
         public DateTime ChangedDate { get; set; }
         public Guid Guid { get; set; }
         public string UserName { get; set; }
-        public int State { get; set; }
+        public SessionState State { get; set; }
         public string StateMessage { get; set; }
+        public int CalculationId { get; set; }
 
         public CalculationTaskViewObject CalculationTask { get; set; }
 

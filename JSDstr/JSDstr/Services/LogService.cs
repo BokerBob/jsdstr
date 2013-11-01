@@ -12,7 +12,8 @@ namespace JSDstr.Services
 
         public static void Log(string message, LogType type = LogType.Info)
         {
-            var userName = HttpContext.Current.User.Identity.Name;
+            var user = HttpContext.Current.User;
+            var userName = user != null ? user.Identity.Name : null;
             var log = new Log
             {
                 Message = message,

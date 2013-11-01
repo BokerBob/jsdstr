@@ -55,7 +55,7 @@ namespace JSDstr.Services
         private readonly IRepository<KmeansCalculation> _calculationRepository = new SqlRepository<KmeansCalculation>();
         private readonly IRepository<Earthquake> _earthquakeRepository = new SqlRepository<Earthquake>();
         private readonly IRepository<Centroid> _centroidRepository = new SqlRepository<Centroid>();
-        private readonly IRepository<CentroidAssignment> _centroidAssignmentRepository = new SqlRepository<CentroidAssignment>();
+        private readonly IRepository<CentroidAssignment> _assignmentRepository = new SqlRepository<CentroidAssignment>();
         private readonly IRepository<VectorTask> _taskRepository = new SqlRepository<VectorTask>();
         private readonly ISettingsService _settingsService = new SettingsService();
 
@@ -75,110 +75,127 @@ namespace JSDstr.Services
 
         private int N { get { return _vectors.Length; } }
         private int K { get { return _calculation.K; } }
+        private int MaxIterations { get { return _calculation.MaxIterations; } }
 
-        public const int SlotCapacity = 50;
-        public const int MaxIterations = 10;
+        private readonly object _locker = new object();
 
-        private static readonly CalculationTaskViewObject SuccessfulCalculationTask = new CalculationTaskViewObject
+        private int _assignmentsSlotCapacity;
+        private int _updateCentroidsSlotCapacity;
+
+        private CalculationTaskViewObject SuccessfulCalculationTask
         {
-            State = (int) KmeansCalculationState.Successful
-        };
+            get
+            {
+                return new CalculationTaskViewObject(_calculation)
+                {
+                    State = CalculationState.Successful,
+                    SessionGuid = _calculationTask.SessionGuid,
+                    VectorsCached = _calculationTask.VectorsCached
+                };
+            }
+        }
 
         #endregion
 
         #region interface
         public CalculationTaskViewObject GetTask(CalculationTaskViewObject calculationTask)
         {
-            try
+            lock (_locker)
             {
-                Init(calculationTask);
-                switch (_calculation.State)
+                try
                 {
-                    case (int) KmeansCalculationState.Started:
-                        return Start();
-                    case (int) KmeansCalculationState.AssignmentLoop:
-                        return StartAssignmentStep();
-                    case (int) KmeansCalculationState.UpdateCentroidsLoop:
-                        return StartUpdateCentroidsStep();
-                    case (int) KmeansCalculationState.Completed:
-                        return Completed();
-                    case (int) KmeansCalculationState.Failed:
-                        return Failed("Calculation failed");
-                    default:
-                        return Error("Invalid calculation state");
+                    Init(calculationTask, true);
+                    switch (_calculation.State)
+                    {
+                        case CalculationState.Started:
+                            return Start();
+                        case CalculationState.AssignmentLoop:
+                            return StartAssignmentStep();
+                        case CalculationState.UpdateCentroidsLoop:
+                            return StartUpdateCentroidsStep();
+                        case CalculationState.Completed:
+                            return Completed();
+                        case CalculationState.Failed:
+                            return Failed("Calculation failed");
+                        default:
+                            return Error("Invalid calculation state");
+                    }
                 }
-            }
-            catch (CalculationFailedException ex)
-            {
-                return HandleCalculationFailed(ex);
-            }
-            catch (Exception ex)
-            {
-                return Error(ex.Message);
+                catch (CalculationFailedException ex)
+                {
+                    return HandleCalculationFailed(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error(ex.Message);
+                }
             }
         }
 
         public CalculationTaskViewObject CompleteTask(CalculationTaskViewObject calculationTask)
         {
-            try
+            lock (_locker)
             {
-                Init(calculationTask);
-                switch (_calculation.State)
+                try
                 {
-                    case (int) KmeansCalculationState.AssignmentLoop:
-                        return CompleteAssignmentStep();
-                    case (int) KmeansCalculationState.UpdateCentroidsLoop:
-                        return CompleteUpdateCentroidsStep();
-                    case (int) KmeansCalculationState.Failed:
-                        return Failed("Calculation failed");
-                    default:
-                        return Error("Invalid calculation state");
+                    Init(calculationTask);
+                    switch (_calculation.State)
+                    {
+                        case CalculationState.AssignmentLoop:
+                            return CompleteAssignmentStep();
+                        case CalculationState.UpdateCentroidsLoop:
+                            return CompleteUpdateCentroidsStep();
+                        case CalculationState.Failed:
+                            return Failed("Calculation failed");
+                        default:
+                            return Error("Invalid calculation state");
+                    }
                 }
-            }
-            catch (CalculationFailedException ex)
-            {
-                return HandleCalculationFailed(ex);
-            }
-            catch (Exception ex)
-            {
-                return Error(ex.Message);
+                catch (CalculationFailedException ex)
+                {
+                    return HandleCalculationFailed(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error(ex.Message);
+                }
             }
         }
 
         public CalculationTaskViewObject CancelTask(CalculationTaskViewObject calculationTask)
         {
-            try
+            lock(_locker)
             {
-                Init(calculationTask);
-                if (calculationTask.State == (int) KmeansCalculationState.AssignmentLoop ||
-                    calculationTask.State == (int) KmeansCalculationState.UpdateCentroidsLoop)
+                try
                 {
-                    var sessionTasks = _tasksSource.Where(x =>
-                        x.SessionGuid == _calculationTask.SessionGuid);
-                    if (sessionTasks.Any())
+                    Init(calculationTask);
+                    if (_calculation.State == CalculationState.AssignmentLoop ||
+                        _calculation.State == CalculationState.UpdateCentroidsLoop)
                     {
-                        _taskRepository.BeginContext();
-                        foreach (var sessionTask in sessionTasks)
+                        RefreshTasks();
+                        var sessionTasks = _tasksSource.Where(x =>
+                            x.SessionGuid == _calculationTask.SessionGuid);
+                        if (sessionTasks.Any())
                         {
-                            sessionTask.State = VectorTaskState.Cancelled;
-                            sessionTask.SessionGuid = null;
+                            foreach (var sessionTask in sessionTasks)
+                            {
+                                sessionTask.State = VectorTaskState.Cancelled;
+                                sessionTask.SessionGuid = null;
+                            }
+                            _taskRepository.Submit();
                         }
-                        _taskRepository.Submit();
+                        return SuccessfulCalculationTask;
                     }
-                    return SuccessfulCalculationTask;
-                }
-                else
-                {
                     return Error("Invalid calculation state for CancelTask");
                 }
-            }
-            catch (CalculationFailedException ex)
-            {
-                return HandleCalculationFailed(ex);
-            }
-            catch (Exception ex)
-            {
-                return Error(ex.Message);
+                catch (CalculationFailedException ex)
+                {
+                    return HandleCalculationFailed(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error(ex.Message);
+                }
             }
         } 
         #endregion
@@ -186,6 +203,9 @@ namespace JSDstr.Services
         #region steps
         private CalculationTaskViewObject Start()
         {
+            _centroids = GetRandomVectors();
+            SaveCentroids(true, true);
+            _assignments = GetEmptyAssignments();
             return StartMainLoop();
         }
 
@@ -199,15 +219,17 @@ namespace JSDstr.Services
             RefreshCalculation();
             _calculation.Iteration++;
             _calculationRepository.Submit();
+            SaveCentroids(true, true);
+            //SaveAssignments(true);
             return StartAssignmentLoop(getTask);
         }
 
         private CalculationTaskViewObject StartAssignmentLoop(bool getTask)
         {
             RefreshCalculation();
-            _calculation.State = (int) KmeansCalculationState.AssignmentLoop;
+            _calculation.State = CalculationState.AssignmentLoop;
             _calculationRepository.Submit();
-            _tasksSource = GetTasks(true);
+            SaveTasks(true);
             return getTask ? StartAssignmentStep() : SuccessfulCalculationTask;
         }
 
@@ -218,28 +240,23 @@ namespace JSDstr.Services
 
         private CalculationTaskViewObject CompleteAssignmentStep()
         {
-            _assignments = SaveAssignments(_calculationTask.Assignments);
+            MergeAssignments(_calculationTask.Assignments);
+            CompleteSessionTasks();
             return GetNextStep();
         }
 
         private CalculationTaskViewObject CompleteAssignmentLoop()
         {
-            var k = K;
-            _newCentroids = new VectorViewObject[k];
-            for (var i = 0; i < k; i++)
-            {
-                _newCentroids[i] = new VectorViewObject();
-            }
-            _newCentroids = SaveCentroids(_newCentroids, false);
             return StartUpdateCentroidsLoop();
         }
 
         private CalculationTaskViewObject StartUpdateCentroidsLoop()
         {
             RefreshCalculation();
-            _calculation.State = (int) KmeansCalculationState.UpdateCentroidsLoop;
+            _calculation.State = CalculationState.UpdateCentroidsLoop;
             _calculationRepository.Submit();
-            GetTasks(true);
+            SaveCentroids(false, true);
+            SaveTasks(true);
             return SuccessfulCalculationTask;
         }
 
@@ -250,6 +267,8 @@ namespace JSDstr.Services
 
         private CalculationTaskViewObject CompleteUpdateCentroidsStep()
         {
+            if(_calculationTask.Centroids.Length != K)
+                throw new InvalidOperationException("UpdateCentroids: results length != K");
             foreach (var centroid in _calculationTask.Centroids)
             {
                 var newCentroid = _newCentroids.SingleOrDefault(x => x.Id == centroid.Id);
@@ -258,8 +277,9 @@ namespace JSDstr.Services
                     var i = Array.IndexOf(_newCentroids, newCentroid);
                     _newCentroids[i] += centroid;
                 }
-                _newCentroids = SaveCentroids(_newCentroids, false);
             }
+            SaveCentroids(false, false);
+            CompleteSessionTasks();
             return GetNextStep();
         }
 
@@ -274,8 +294,8 @@ namespace JSDstr.Services
                     nextIteration = true;
                 _centroids[i] = _newCentroids[i];
             }
-            _newCentroids = SaveCentroids(_newCentroids, false);
-            _centroids = SaveCentroids(_centroids);
+            SaveCentroids(false, false);
+            SaveCentroids(true, false);
 
             return CompleteMainStep(nextIteration);
         }
@@ -304,49 +324,74 @@ namespace JSDstr.Services
             _calculation.StateMessage = isMaxIterations ? 
                 string.Format("Max iteration: {0}", MaxIterations) : 
                 "Not difference between iterations";
-            _calculation.State = (int) KmeansCalculationState.Completed;
+            _calculation.State = CalculationState.Completed;
             _calculationRepository.Submit();
-            return new CalculationTaskViewObject(_calculation);
+            return new CalculationTaskViewObject(_calculation)
+            {
+                SessionGuid = _calculationTask.SessionGuid,
+                VectorsCached = _calculationTask.VectorsCached
+            };
         }
 
         private CalculationTaskViewObject Completed()
         {
-            return new CalculationTaskViewObject(_calculation);
+            return new CalculationTaskViewObject(_calculation)
+            {
+                SessionGuid = _calculationTask.SessionGuid,
+                VectorsCached = _calculationTask.VectorsCached
+            };
         }
 
         private CalculationTaskViewObject Failed(string message)
         {
-            RefreshCalculation();
-            _settingsService.CurrentCalculationId = 0;
             if (_calculation != null)
             {
-                _calculation.State = (int) KmeansCalculationState.Failed;
+                RefreshCalculation();
+                _calculation.State = CalculationState.Failed;
                 _calculation.StateMessage = message;
                 _calculationRepository.Submit();
-                return new CalculationTaskViewObject(_calculation);
+                _calculationTask = new CalculationTaskViewObject(_calculation)
+                {
+                    SessionGuid = _calculationTask.SessionGuid,
+                    VectorsCached = _calculationTask.VectorsCached
+                };
             }
             else
             {
-                return Error(message);
+                _calculationTask = Error(message);
             }
+            ClearCalculation();
+            return _calculationTask;
         }
 
         private CalculationTaskViewObject Error(string error)
         {
-            return new CalculationTaskViewObject
-            {
-                State = (int) KmeansCalculationState.Error,
-                StateMessage = error
-            };
+            return _calculation != null
+                ? new CalculationTaskViewObject(_calculation)
+                {
+                    State = CalculationState.Error,
+                    StateMessage = error,
+                    SessionGuid = _calculationTask.SessionGuid,
+                    VectorsCached = _calculationTask.VectorsCached
+                }
+                : new CalculationTaskViewObject
+                {
+                    State = CalculationState.Error,
+                    StateMessage = error,
+                    SessionGuid = _calculationTask.SessionGuid,
+                    VectorsCached = _calculationTask.VectorsCached
+                };
         }
         #endregion
 
         #region init
-        private void Init(CalculationTaskViewObject calculationTask)
+        private void Init(CalculationTaskViewObject calculationTask, bool fromGet = false)
         {
             _calculationTask = calculationTask;
-            InitCalculation();
-            if (_calculation.State != (int)KmeansCalculationState.Completed && _calculation.State != (int) KmeansCalculationState.Failed)
+            _assignmentsSlotCapacity = _settingsService.AssignmentsSlotCapacity;
+            _updateCentroidsSlotCapacity = _settingsService.UpdateCentroidsSlotCapacity;
+            InitCalculation(fromGet);
+            if (_calculation.State != CalculationState.Completed && _calculation.State != CalculationState.Failed)
             {
                 InitVectors();
                 InitCentroids();
@@ -355,18 +400,21 @@ namespace JSDstr.Services
             }
         }
 
-        private void InitCalculation()
+        private void InitCalculation(bool fromGet)
         {
-            if (_calculation == null)
+            var currentCalculationId = _settingsService.CurrentCalculationId;
+            if (_calculation == null || _calculation.Id != currentCalculationId)
             {
-                var currentCalculationId = _settingsService.CurrentCalculationId;
-                if (currentCalculationId == 0) // calculation was never started, create new
+                if (currentCalculationId == 0)
                 {
+                    if(!fromGet)
+                        throw new Exception("Init create wasn't performed from GetTask");
                     _calculation = new KmeansCalculation
                     {
                         Iteration = -1,
                         K = _settingsService.KmeansK,
-                        State = (int) KmeansCalculationState.Started
+                        MaxIterations = _settingsService.MaxIterations,
+                        State = CalculationState.Started
                     };
                     _calculation = _calculationRepository.Insert(_calculation);
                     _settingsService.CurrentCalculationId = _calculation.Id;
@@ -404,22 +452,14 @@ namespace JSDstr.Services
         {
             if (_centroids == null || _centroidsSource == null)
             {
-                if (_calculation.State == (int) KmeansCalculationState.Started)
+                if (_calculation.State == CalculationState.AssignmentLoop)
                 {
-                    var centroids = GetRandomVectors();
-                    if(centroids == null)
-                        throw new CalculationFailedException("GetRandomVectors null");
-                    _centroids = SaveCentroids(centroids);
+                    GetCentroids(true);
                 }
-                else if (_calculation.State == (int)KmeansCalculationState.AssignmentLoop || _calculation.State == (int) KmeansCalculationState.UpdateCentroidsLoop)
+                else if (_calculation.State == CalculationState.UpdateCentroidsLoop)
                 {
-                    _centroidsSource = GetCentroids();
-                    _centroids = _centroidsSource.Select(x => new VectorViewObject(x)).ToArray();
-                    if (_calculation.State == (int) KmeansCalculationState.UpdateCentroidsLoop)
-                    {
-                        _newCentroidsSource = GetCentroids(false);
-                        _newCentroids = _newCentroidsSource.Select(x => new VectorViewObject(x)).ToArray();
-                    }
+                    GetCentroids(true);
+                    GetCentroids(false);
                 }
             }
         }
@@ -428,26 +468,9 @@ namespace JSDstr.Services
         {
             if (_assignments == null || _assignmentsSource == null)
             {
-                if (_calculation.State == (int) KmeansCalculationState.Started)
+                if(_calculation.State == CalculationState.UpdateCentroidsLoop)
                 {
-                    var assignments = _vectors.Select(x => new AssignmentViewObject
-                    {
-                        VectorId = x.Id
-                    }).ToArray();
-                    _assignments = SaveAssignments(assignments);
-                }
-                else
-                {
-                    _centroidAssignmentRepository.BeginContext();
-                    var centroidIds = _centroids.Select(x => x.Id);
-                    var source = _centroidAssignmentRepository.Entities.Where(x => x.CentroidId.HasValue && centroidIds.Contains(x.CentroidId.Value));
-                    var c = source.Count();
-                    if (c != N)
-                    {
-                        throw new CalculationFailedException("Invalid number of assignments for current calculation");
-                    }
-                    _assignmentsSource = source;
-                    _assignments = source.Select(x => new AssignmentViewObject(x)).ToArray();
+                    GetAssignments();
                 }
             }
         }
@@ -456,9 +479,9 @@ namespace JSDstr.Services
         {
             if (_tasksSource == null)
             {
-                if (_calculation.State == (int)KmeansCalculationState.AssignmentLoop || _calculation.State == (int)KmeansCalculationState.UpdateCentroidsLoop)
+                if (_calculation.State == CalculationState.AssignmentLoop || _calculation.State == CalculationState.UpdateCentroidsLoop)
                 {
-                    _tasksSource = GetTasks(false);
+                    //_tasksSource = GetTasks();
                 }
             }
         }        
@@ -466,159 +489,69 @@ namespace JSDstr.Services
 
         #region get-save-handle
 
-        private IQueryable<Centroid> GetCentroids(bool committed = true)
+        // db => source, viewobjects
+        private void GetCentroids(bool committed)
         {
-            var source = _centroidRepository.Entities.Where(x => x.CalculationId == _calculation.Id && x.Committed == committed);
+            var source = _centroidRepository.Entities.Where(x =>
+                        x.CalculationId == _calculation.Id &&
+                        x.Iteration == _calculation.Iteration &&
+                        x.Committed == committed);
             var c = source.Count();
             if (c != K)
                 throw new CalculationFailedException("Invalid number of centroids for current calculation");
-            return source;
-        }
-
-        private VectorViewObject[] SaveCentroids(VectorViewObject[] centroids, bool committed = true)
-        {
-            if (centroids == null)
-                throw new ArgumentNullException("centroids");
-            if (_centroidsSource == null)
+            if (committed)
             {
-                var calculationId = _calculation.Id;
-                var centroidsSource = centroids.Select(x => new Centroid
-                {
-                    CalculationId = calculationId,
-                    V1 = x.V1,
-                    V2 = x.V2,
-                    V3 = x.V3,
-                    Committed = committed
-                }).AsQueryable();
-                _centroidsSource = _centroidRepository.Insert(centroidsSource); // get inserted entities and save to source
+                _centroidsSource = source;
+                _centroids = _centroidsSource.Select(x => new VectorViewObject(x)).ToArray();
             }
             else
             {
+                _newCentroidsSource = source;
+                _newCentroids = _newCentroidsSource.Select(x => new VectorViewObject(x)).ToArray();
+            }
+        }
+
+        private Centroid GetCentroidFromViewObject(VectorViewObject viewObject, bool committed)
+        {
+            return new Centroid
+            {
+                Id = viewObject.Id,
+                V1 = viewObject.V1,
+                V2 = viewObject.V2,
+                V3 = viewObject.V3,
+                Committed = committed,
+                CalculationId = _calculation.Id,
+                Iteration = _calculation.Iteration
+            };
+        }
+
+        // viewobjects => db, source
+        private void SaveCentroids(bool committed, bool createNew)
+        {
+            if (!createNew)
+            {
+                var newCentroids = _centroids;
                 _centroidRepository.BeginContext();
-                var centroidsForInsert = new List<Centroid>();
-                foreach (var centroid in centroids) // !!! optimize
-                {
-                    var c = centroid;
-                    var centroidSource = _centroidsSource.FirstOrDefault(x => x.Id == c.Id);
-                    if (centroidSource != null)
-                    {
-                        centroidSource.V1 = c.V1;
-                        centroidSource.V2 = c.V2;
-                        centroidSource.V3 = c.V3;
-                        centroidSource.Committed = committed;
-                    }
-                    else
-                    {
-                        centroidSource = new Centroid
-                        {
-                            CalculationId = _calculation.Id,
-                            V1 = c.V1,
-                            V2 = c.V2,
-                            V3 = c.V3,
-                            Committed = committed
-                        };
-                        centroidsForInsert.Add(centroidSource);
-                    }
-                }
-                if (centroidsForInsert.Any())
-                {
-                    _centroidRepository.Insert(centroidsForInsert);
-                }
-                _centroidRepository.Submit();
+                if(_centroidsSource == null)
+                    GetCentroids(committed);
+                _centroidRepository.Delete(_centroidsSource);
+                _centroidsSource = null;
+                _centroids = newCentroids;
             }
-            return centroids;
-        }
-
-        private AssignmentViewObject[] SaveAssignments(AssignmentViewObject[] assignments)
-        {
-            if (assignments == null)
-                throw new ArgumentNullException("assignments");
-            _centroidAssignmentRepository.BeginContext();
-            if (_assignmentsSource == null)
+            var source = _centroids.Select(x => GetCentroidFromViewObject(x, committed)).AsQueryable();
+            source = _centroidRepository.Insert(source);
+            if (committed)
             {
-                var assignmentsSource = assignments.Where(x => x.CentroidId.HasValue).Select(x => new CentroidAssignment
-                {
-                    CentroidId = x.CentroidId.Value,
-                    Vectorid = x.VectorId
-                }).AsQueryable();
-                _assignmentsSource = _centroidAssignmentRepository.Insert(assignmentsSource); // get inserted entities and save to source
+                _centroidsSource = source;
+                _centroids = _centroidsSource.Select(x => new VectorViewObject(x)).ToArray();
             }
             else
             {
-                var assignmentsForInsert = new List<CentroidAssignment>();
-                foreach (var assignment in assignments) // !!! optimize
-                {
-                    var a = assignment;
-                    var assignmentSource = _assignmentsSource.FirstOrDefault(x => x.Id == a.Id);
-                    if (assignmentSource != null)
-                    {
-                        assignmentSource.CentroidId = a.CentroidId;
-                        assignmentSource.Vectorid = a.VectorId;
-                    }
-                    else
-                    {
-                        assignmentSource = new CentroidAssignment
-                        {
-                            CentroidId = a.CentroidId,
-                            Vectorid = a.VectorId
-                        };
-                        assignmentsForInsert.Add(assignmentSource);
-                    }
-                }
-                if (assignmentsForInsert.Any())
-                {
-                    _centroidAssignmentRepository.Insert(assignmentsForInsert);
-                }
-                _centroidAssignmentRepository.Submit();
+                _newCentroidsSource = source;
+                _newCentroids = _newCentroidsSource.Select(x => new VectorViewObject(x)).ToArray();
             }
-            return assignments;
         }
-
-        private IQueryable<VectorTask> GetTasks(bool create)
-        {
-            if (create)
-            {
-                _taskRepository.BeginContext();
-                var forDelete = _taskRepository.Entities.Where(x =>
-                    x.CalculationId == _calculation.Id &&
-                    x.Iteration == _calculation.Iteration &&
-                    x.Type == (VectorTaskType)_calculation.State);
-                _taskRepository.Delete(forDelete);
-                var tasks = _vectors.Select(x => new VectorTask
-                {
-                    Vectorid = x.Id,
-                    SessionGuid = null,
-                    State = VectorTaskState.Idle,
-                    Type = (VectorTaskType) _calculation.State,
-                    CalculationId = _calculation.Id,
-                    Iteration = _calculation.Iteration
-                });
-                return _taskRepository.Insert(tasks);
-            }
-            _taskRepository.BeginContext();
-            var tasksSource = _taskRepository.Entities.Where(x =>
-                x.SessionGuid == _calculationTask.SessionGuid &&
-                x.Type == (VectorTaskType) _calculation.State &&
-                x.CalculationId == _calculation.Id &&
-                x.Iteration == _calculation.Iteration);
-            if (!tasksSource.Any() || tasksSource.Count() != N)
-            {
-                //_taskRepository.Delete(tasksSource);
-                //var tasks = _vectors.Select(x => new VectorTask
-                //{
-                //    Vectorid = x.Id,
-                //    SessionGuid = null,
-                //    State = VectorTaskState.Idle,
-                //    Type = (VectorTaskType)_calculation.State,
-                //    CalculationId = _calculation.Id,
-                //    Iteration = _calculation.Iteration
-                //});
-                //_tasksSource = _taskRepository.Insert(tasks);
-                throw new CalculationFailedException("Tasks count != N");
-            }
-            return tasksSource;
-        }
-
+        
         private VectorViewObject[] GetRandomVectors()
         {
             var n = N;
@@ -633,7 +566,7 @@ namespace JSDstr.Services
             while (selected < k)
             {
                 if (tested == n)
-                    return null;
+                    throw new InvalidOperationException("tested == n");
                 var randomIndex = rand.Next(0, n - 1);
                 if (testedIndexes.Contains(randomIndex))
                     continue;
@@ -661,74 +594,217 @@ namespace JSDstr.Services
             return selectedVectors;
         }
 
+        // db => source, viewobjects
+        private void GetAssignments()
+        {
+            var source = _assignmentRepository.Entities.Where(x =>
+                        x.CalculationId == _calculation.Id &&
+                        x.Iteration == _calculation.Iteration);
+            //var c = source.Count();
+            //if (c != N)
+            //    throw new CalculationFailedException("Invalid number of assignments for current calculation");
+            _assignmentsSource = source;
+            _assignments = _assignmentsSource.Select(x => new AssignmentViewObject(x)).ToArray();
+        }
+
+        private CentroidAssignment GetAssignmentFromViewObject(AssignmentViewObject viewObject)
+        {
+            var calculationId = _calculation.Id;
+            var iteration = _calculation.Iteration;
+            return new CentroidAssignment
+            {
+                Id = viewObject.Id,
+                CentroidId = viewObject.CentroidId,
+                Vectorid = viewObject.VectorId,
+                CalculationId = calculationId,
+                Iteration = iteration
+            };
+        }
+        
+        // viewobjects => db, source
+        private void SaveAssignments(bool createNew)
+        {
+            if (!createNew)
+            {
+                var newAssignments = _assignments;
+                _assignmentRepository.BeginContext();
+                if (_assignmentsSource == null)
+                    GetAssignments();
+                _assignmentRepository.Delete(_assignmentsSource);
+                _assignmentsSource = null;
+                _assignments = newAssignments;
+            }
+            var source = _assignments.Select(GetAssignmentFromViewObject).AsQueryable();
+            source = _assignmentRepository.Insert(source);
+            _assignmentsSource = source;
+            _assignments = _assignmentsSource.Select(x => new AssignmentViewObject(x)).ToArray();
+        }
+
+        private void MergeAssignments(AssignmentViewObject[] mergeWith)
+        {
+            /*RefreshAssignments();
+            foreach (var assignmentViewObject in mergeWith)
+            {
+                var viewObject = assignmentViewObject;
+                var assignmentSource = _assignmentsSource.FirstOrDefault(x => x.Id == viewObject.Id);
+                if (assignmentSource != null)
+                {
+                    assignmentSource.Vectorid = viewObject.VectorId;
+                    assignmentSource.CentroidId = viewObject.CentroidId;
+                }
+            }
+            _assignmentRepository.Submit();*/
+            if (mergeWith.Length != _assignmentsSlotCapacity)
+                throw new InvalidOperationException("MergeAssignments: results length != SlotCapacity");
+            _assignmentRepository.Insert(mergeWith.Select(GetAssignmentFromViewObject));
+            GetAssignments();
+        }
+
+        private AssignmentViewObject[] GetEmptyAssignments()
+        {
+            return _vectors.Select(x => new AssignmentViewObject
+            {
+                VectorId = x.Id
+            }).ToArray();
+        }
+
+        // db => source, viewobjects
+        private void GetTasks()
+        {
+            _taskRepository.BeginContext();
+            var tasksSource = _taskRepository.Entities.Where(x =>
+                x.Type == _calculation.State &&
+                x.CalculationId == _calculation.Id &&
+                x.Iteration == _calculation.Iteration);
+            if (tasksSource.Count() != N)
+            {
+                throw new CalculationFailedException("Invalid number of tasks for current calculation");
+            }
+            _tasksSource = tasksSource;
+        }
+
+        // viewobjects => db, source
+        private void SaveTasks(bool createNew)
+        {
+            if (!createNew)
+            {
+                _taskRepository.BeginContext();
+                if (_tasksSource == null)
+                    GetTasks();
+                _taskRepository.Delete(_tasksSource);
+                _tasksSource = null;
+            }
+            var tasks = _vectors.Select(x => new VectorTask
+            {
+                Vectorid = x.Id,
+                SessionGuid = null,
+                State = VectorTaskState.Idle,
+                Type = _calculation.State,
+                CalculationId = _calculation.Id,
+                Iteration = _calculation.Iteration
+            });
+            _tasksSource = _taskRepository.Insert(tasks);
+        }
+
         private CalculationTaskViewObject GetNextTask()
         {
+            RefreshTasks();
             if (_tasksSource.All(x => x.State == VectorTaskState.Completed))
             {
                 return Error("All tasks are completed, but next iteration isn't started");
             }
-            else
+            var tasks = _tasksSource.ToArray();
+            var taskIndex = -1;
+            var slotCapacity = _calculation.State == CalculationState.AssignmentLoop
+                ? _assignmentsSlotCapacity
+                : _updateCentroidsSlotCapacity;
+            foreach (var task in _tasksSource.
+                Where(x => x.State == VectorTaskState.Idle || x.State == VectorTaskState.Cancelled).Take(slotCapacity))
             {
-                _taskRepository.BeginContext();
-                var tasks = _tasksSource.ToArray();
-                var idleTasks = tasks.Where(x => x.State == VectorTaskState.Idle || x.State == VectorTaskState.Cancelled)
-                        .Take(SlotCapacity).ToArray();
-                if (idleTasks.Any())
-                {
-                    var taskIndex = Array.IndexOf(tasks, idleTasks.First());
-                    foreach (var task in idleTasks)
-                    {
-                        task.State = VectorTaskState.Started;
-                        task.SessionGuid = _calculationTask.SessionGuid;
-                    }
-                    _taskRepository.Submit();
-
-                    _calculationTask.Vectors = !_calculationTask.VectorsCached ? _vectors : null;
-                    _calculationTask.Centroids = _centroids;
-                    _calculationTask.SlotStart = taskIndex;
-                    _calculationTask.SlotCapacity = SlotCapacity;
-                    _calculationTask.State = _calculation.State;
-                    if (_calculation.State == (int) KmeansCalculationState.UpdateCentroidsLoop)
-                        _calculationTask.Assignments = _assignments;
-                    return _calculationTask;
-                }
-                else
-                {
-                    _calculationTask = new CalculationTaskViewObject()
-                    {
-                        State = (int) KmeansCalculationState.Busy
-                    };
-                    return _calculationTask;
-                }
+                if (taskIndex == -1)
+                    taskIndex = Array.IndexOf(tasks, task);
+                task.State = VectorTaskState.Started;
+                task.SessionGuid = _calculationTask.SessionGuid;
             }
+            if (taskIndex >= 0)
+            {
+                _taskRepository.Submit();
+                AssignmentViewObject[] taskAssignments = null;
+                if (_calculation.State == CalculationState.UpdateCentroidsLoop)
+                    taskAssignments = _assignments.Skip(taskIndex).Take(slotCapacity).ToArray();
+                _calculationTask = new CalculationTaskViewObject(_calculation)
+                {
+                    Vectors = !_calculationTask.VectorsCached ? _vectors : null,
+                    Centroids = _centroids,
+                    SlotStart = taskIndex,
+                    SlotCapacity = slotCapacity,
+                    Assignments =  taskAssignments,
+                    SessionGuid =  _calculationTask.SessionGuid,
+                    VectorsCached = _calculationTask.VectorsCached
+                };
+                return _calculationTask;
+            }
+            _calculationTask = new CalculationTaskViewObject(_calculation)
+            {
+                State = CalculationState.Busy,
+                SessionGuid = _calculationTask.SessionGuid,
+                VectorsCached = _calculationTask.VectorsCached
+            };
+            return _calculationTask;
+        }
+
+        private void CompleteSessionTasks()
+        {
+            RefreshTasks();
+            var tasks = _tasksSource.Where(x => x.SessionGuid == _calculationTask.SessionGuid);
+            foreach (var vectorTask in tasks)
+            {
+                vectorTask.State = VectorTaskState.Completed;
+            }
+            _taskRepository.Submit();
         }
 
         private CalculationTaskViewObject GetNextStep()
         {
+            GetTasks();
             if (_tasksSource.All(x => x.State == VectorTaskState.Completed))
             {
-                if (_calculation.State == (int) KmeansCalculationState.AssignmentLoop)
+                if (_calculation.State == CalculationState.AssignmentLoop)
                     return CompleteAssignmentLoop();
-                else if (_calculation.State == (int) KmeansCalculationState.UpdateCentroidsLoop)
+                if (_calculation.State == CalculationState.UpdateCentroidsLoop)
                     return CompleteUpdateCentroidsLoop();
-                else
-                    return Error("Invalid calculation state");
+                return Error("Invalid calculation state");
             }
-            else
-            {
-                return SuccessfulCalculationTask;
-            }
+            return SuccessfulCalculationTask;
         }
 
         private void RefreshCalculation()
         {
-            if (_calculation != null)
-            {
-                _calculationRepository.BeginContext();
-                _calculation = _calculationRepository.Entities.FirstOrDefault(x => x.Id == _calculation.Id);
-                if(_calculation == null)
-                    throw new NullReferenceException("_calculation");
-            }
+            _calculationRepository.BeginContext();
+            _calculation = _calculationRepository.Entities.FirstOrDefault(x => x.Id == _calculation.Id);
+            if (_calculation == null)
+                throw new NullReferenceException("_calculation");
+        }
+
+        private void RefreshAssignments()
+        {
+            _assignmentRepository.BeginContext();
+            GetAssignments();
+        }
+
+        private void RefreshTasks()
+        {
+            _taskRepository.BeginContext();
+            GetTasks();
+        }
+
+        private void ClearCalculation()
+        {
+            _settingsService.CurrentCalculationId = 0;
+            _calculation = null;
+            _vectors = null;
+            _centroids = null;
+            _assignments = null;
         }
 
         private CalculationTaskViewObject HandleCalculationFailed(CalculationFailedException ex)

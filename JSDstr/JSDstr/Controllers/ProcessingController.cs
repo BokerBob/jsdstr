@@ -34,9 +34,9 @@ namespace JSDstr.Controllers
         }
 
         [HttpPost, Authorize]
-        public JsonResult CreateSession()
+        public JsonResult CreateSession(string sessionJson)
         {
-            return _sessionService.CreateSession(User.Identity.Name);
+            return _sessionService.CreateSession((SessionViewObject)sessionJson, User.Identity.Name);
         }
 
         [HttpPost, Authorize]

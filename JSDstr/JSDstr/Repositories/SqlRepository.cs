@@ -86,7 +86,7 @@ namespace JSDstr.Repositories
                 GetTable(DataContext).DeleteOnSubmit(entity);
                 DataContext.SubmitChanges();
                 DataContext.Dispose();
-                DataContext = null;
+                BeginContext();
             }
         }
 
@@ -105,7 +105,7 @@ namespace JSDstr.Repositories
                 GetTable(DataContext).DeleteAllOnSubmit(source);
                 DataContext.SubmitChanges();
                 DataContext.Dispose();
-                DataContext = null;
+                BeginContext();
             }
         }
 
@@ -130,7 +130,7 @@ namespace JSDstr.Repositories
                 }
                 DataContext.SubmitChanges();
                 DataContext.Dispose();
-                DataContext = null;
+                BeginContext();
             }
         }
 

@@ -63,6 +63,24 @@
                     source = source.slice(0, generatedCommentIndex);
                 return source;
             }
+            return source;
+        },
+
+        saveToStorage: function(key, value) {
+            if (key == null)
+                return null;
+            if (typeof(Storage) === "undefined")
+                return null;
+            localStorage[key] = value;
+            return value;
+        },
+
+        getFromStorage: function (key) {
+            if (key == null)
+                return null;
+            if (typeof (Storage) === "undefined")
+                return null;
+            return localStorage[key];
         }
     };
 
@@ -102,8 +120,11 @@
 
         setButtonState: function ($btn, cssClass, title, state, dataState) {
             if ($btn != null) {
-                if (state != null)
+                if (state != null) {
                     $btn.button(state);
+                    if (state == 'reset')
+                        $btn.removeAttr('disabled');
+                }
                 if (cssClass != null)
                     $btn.attr('class', '').addClass('btn').addClass(cssClass);
                 if (title != null)
@@ -141,37 +162,44 @@
             failSessionServerNull: $.Callbacks(),
             failSessionInvalidState: $.Callbacks(),
 
-            failSessionCalculation: $.Callbacks()
+            failSessionCalculation: $.Callbacks(),
+
+            failCalculationNull: $.Callbacks(),
+            failCalculationCompleted: $.Callbacks(),
+            failCalculationFailed: $.Callbacks(),
+            failCalculationError: $.Callbacks(),
+            failCalculationBusy: $.Callbacks(),
+            failCalculationInvalid: $.Callbacks(),
+
+            successTask: $.Callbacks()
         };
 
         var currentSession;
 
-        var checkCurrentSession = function () {
+        var checkCurrentSession = function (disableHandler) {
             if (!$.isPlainObject(currentSession)) {
-                handlers.failSessionClientNull.fire();
+                if(!disableHandler)
+                    handlers.failSessionClientNull.fire();
                 return false;
             }
             return true;
         };
 
-        var checkSession = function (session, stateShouldBe) {
+        var checkSession = function (session, stateShouldBe, taskType, disableHandler) {
             if (!$.isPlainObject(session)) {
-                handlers.failSessionServerNull.fire();
+                if (!disableHandler)
+                    handlers.failSessionServerNull.fire();
+                return false;
+            }
+            else if (taskType != null && !checkCalculationTask(session, taskType)) {
                 return false;
             }
             else if (stateShouldBe != null && session.State != stateShouldBe) {
-                handlers.failSessionInvalidState.fire(session);
+                if (!disableHandler)
+                    handlers.failSessionInvalidState.fire(session);
                 return false;
             }
             return true;
-        };
-
-        var calculation = function (data) {
-            var sum = 0;
-            for (var i = 0; i <= 10000000000; i++) {
-                sum += i;
-            }
-            return sum;
         };
 
         var worker;
@@ -180,6 +208,7 @@
         var createSessionAttempts = 0;
         var pingSessionAttempts = 0;
         var calculationSessionAttempts = 0;
+        var cancelCreateSession = false;
 
         var checkCreateSessionMaxAttempts = function () {
             if (createSessionAttempts >= maxSessionAttempts) {
@@ -213,26 +242,243 @@
             return true;
         };
 
-        var createSession = function () {            
+        var checkCalculationTask = function (session, taskType) {
+            if (!$.isPlainObject(session.CalculationTask)) {
+                handlers.failCalculationNull.fire(session);
+                return false;
+            }
+            var task = session.CalculationTask;
+            switch (task.State) {
+                case Processing.calculationState.Started:
+                    handlers.failCalculationError.fire(session);
+                    return false;
+                case Processing.calculationState.AssignmentLoop:
+                    if (taskType == sessionTaskType.get) {
+                        return true;
+                    }
+                    handlers.failCalculationError.fire(session);
+                    return false;
+                case Processing.calculationState.UpdateCentroidsLoop:
+                    if (taskType == sessionTaskType.get) {
+                        return true;
+                    }
+                    handlers.failCalculationError.fire(session);
+                    return false;
+                case Processing.calculationState.Completed:
+                    if (taskType == sessionTaskType.get) {
+                        cancelCreateSession = true;
+                    }
+                    handlers.failCalculationCompleted.fire(session);
+                case Processing.calculationState.Failed:
+                    if (taskType == sessionTaskType.get) {
+                        cancelCreateSession = true;
+                    }
+                    handlers.failCalculationFailed.fire(session);
+                    return false;
+                case Processing.calculationState.Successful:
+                    if (taskType == sessionTaskType.get) {
+                        handlers.failCalculationError.fire(session);
+                        return false;
+                    }
+                    return true;
+                case Processing.calculationState.Error:
+                    handlers.failCalculationError.fire(session);
+                    return false;
+                case Processing.calculationState.Busy:
+                    if (taskType == sessionTaskType.get) {
+                        handlers.failCalculationBusy.fire(session);
+                    } else {
+                        handlers.failCalculationError.fire(session);
+                    }
+                    return false;
+                default:
+                    handlers.failCalculationError.fire(session);
+                    return false;
+            }
+        };
+
+        var vectorsStoreKey = "jsdKmeansVectors";
+
+        var Kmeans = function (task) {
+            if (!$.isPlainObject(task))
+                throw "Kmeans: task is null";
+            if (task.State != Processing.calculationState.AssignmentLoop && task.State != Processing.calculationState.UpdateCentroidsLoop)
+                throw "Kmeans: invalid task state";
+            if (task.VectorsCached) {
+                var vectorsJson = helpers.getFromStorage(vectorsStoreKey);
+                if (vectorsJson != null) {
+                    task.Vectors = JSON.parse(vectorsJson);
+                } else {
+                    task.VectorsCached = false;
+                    throw "Kmeans: no vectors in cache";
+                }
+            } else if (task.Vectors == null) {
+                throw "Kmeans: vectors is null";
+            } else {
+                if(helpers.saveToStorage(vectorsStoreKey, JSON.stringify(task.Vectors)) != null)
+                    task.VectorsCached = true;
+            }
+            if (Number(task.SlotStart) == NaN || task.SlotStart < 0)
+                throw "Kmeans: slotstart is invalid";
+            if (Number(task.SlotCapacity) == NaN || task.SlotCapacity <= 0)
+                throw "Kmeans: slotcapacity is invalid";
+            if (Number(task.K) == NaN || task.K <= 0 || task.K > task.Vectors.length)
+                throw "Kmeans: k is invalid";
+
+            if (task.State == Processing.calculationState.AssignmentLoop) {
+                if (task.Centroids == null || task.Centroids.length != task.K)
+                    throw "Kmeans: centroids is invalid";
+                this.execute = function (d) {
+                    function euclidianDistance(a, b) { // correct distance for coordinates
+                        var ds = (a.V1 - b.V1) * (a.V1 - b.V1) +
+                            (a.V1 - b.V2) * (a.V1 - b.V2) +
+                            (a.V1 - b.V3) * (a.V1 - b.V3);
+                        ds = Math.sqrt(ds);
+                        return ds;
+                    };
+
+                    var n = d.vectors.length;
+                    var assignments = new Array(n);
+                    for (var i = 0; i < n; i++) {
+                        var vector = d.vectors[i];
+                        var mindist = Number.MAX_VALUE;
+                        var best = 0;
+                        for (var j = 0; j < d.k; j++) {
+                            var dist = euclidianDistance(d.centroids[j], vector);
+                            if (dist < mindist) {
+                                mindist = dist;
+                                best = j;
+                            }
+                        }
+                        assignments[i] = {
+                            CentroidId: d.centroids[best].Id,
+                            VectorId: vector.Id
+                        };
+                    }
+                    return assignments;
+                };
+                this.handleResults = function (d) {
+                    task.Vectors = null;
+                    task.Centroids = null;
+                    task.Assignments = d;
+                };
+            }
+            else if (task.State == Processing.calculationState.UpdateCentroidsLoop) {
+                if (task.Assignments == null)
+                    throw "Kmeans: assignments is invalid";
+                this.execute = function (d) {
+                    function addVectors(a, b) {
+                        return {
+                            Id: a.Id,
+                            V1: a.V1 + b.V1,
+                            V2: a.V2 + b.V2,
+                            V3: a.V3 + b.V3
+                        };
+                    };
+                    var n = d.vectors.length;
+                    var centroids = new Array(d.k);
+                    for (var i = 0; i < n; i++) {
+                        var centroidId = d.assignments[i].CentroidId;
+                        var cluster = 0;
+                        for (var j = 0; j < d.K; j++) {
+                            if (d.centroids[j].Id == centroidId) {
+                                cluster = j;
+                                break;
+                            }
+                        }
+                        if (centroids[cluster] == null)
+                            centroids[cluster] = d.vectors[i];
+                        else
+                            centroids[cluster] = addVectors(centroids[cluster], d.vectors[i]);
+                    }
+                    return centroids;
+                };
+                this.handleResults = function (d) {
+                    task.Vectors = null;
+                    task.Centroids = d;
+                    task.Assignments = null;
+                };
+            }
+
+            this.getData = function () {
+                return {
+                    vectors: task.Vectors.slice(task.SlotStart, task.SlotStart + task.SlotCapacity),
+                    centroids: task.Centroids,
+                    assignments: task.Assignments,
+                    k: task.K
+                };
+            };
+
+            this.task = task;
+        };
+
+        var sessionTaskType = {
+            get: 1,
+            complete: 2,
+            cancel: 3
+        };
+
+        var cloneSessionWithoutTask = function (session) {
+            if (!$.isPlainObject(session))
+                return session;
+            var clone = {
+                CreatedDate: session.CreatedDate,
+                ChangedDate: session.ChangedDate,
+                Guid: session.Guid,
+                UserName: session.UserName,
+                State: session.State,
+                StateMessage: session.StateMessage,
+                CalculationId: session.CalculationId,
+                CalculationTask: session.CalculationTask != null ? {
+                    SessionGuid: session.CalculationTask.SessionGuid,
+                    State: session.CalculationTask.State,
+                    StateMessage: session.CalculationTask.StateMessage,
+                    VectorsCached: session.CalculationTask.VectorsCached
+                } : {
+                    VectorsCached: helpers.getFromStorage(vectorsStoreKey) != null
+                }
+            };
+            return clone;
+        };
+
+        var createSession = function () {
             if (worker != null)
                 worker.close();
             timerStarted = false;
+            if (cancelCreateSession) {
+                cancelCreateSession = false;
+                return;
+            }
             if (!checkCreateSessionMaxAttempts() || !checkPingSessionMaxAttempts() || !checkCalculateSessionMaxAttempts())
                 return;
             handlers.beforeCreateSession.fire();
             createSessionAttempts++;
             requestExecuted = true;
-            $.post('/processing/createsession', function (session) {
-                if (checkSession(session, Processing.sessionState.Started)) {
-                    currentSession = session;
-                    handlers.successCreateSession.fire(session);
-                    createSessionAttempts = 0;
-
-                    worker = cw(calculation);
-                    worker.data(currentSession.Data).then(function (data) {
+            var sessionClone;
+            if (currentSession == null) {
+                sessionClone = {
+                    CalculationTask: {
+                        VectorsCached: helpers.getFromStorage(vectorsStoreKey) != null
+                    }
+                };
+            } else {
+                sessionClone = cloneSessionWithoutTask(currentSession);
+            }
+            
+            $.post('/processing/createsession?sessionjson=' + JSON.stringify(sessionClone), function (session) {
+                if (checkSession(session, Processing.sessionState.Started, sessionTaskType.get)) {
+                    try {
+                        var kmeans = new Kmeans(session.CalculationTask);
+                    } catch (ex) {
+                        handlers.failCalculationInvalid.fire(ex, session);
+                        createSession();
+                        return;
+                    }
+                    worker = cw(kmeans.execute);
+                    worker.data(kmeans.getData()).then(function (d) {
                         if (checkCurrentSession()) {
+                            kmeans.handleResults(d);
                             calculationSessionAttempts = 0;
-                            //currentSession.Results = data;
                             completeSession();
                         } else {
                             createSession();
@@ -244,6 +490,9 @@
                             createSession();
                         }
                     });
+                    currentSession = session;
+                    handlers.successCreateSession.fire(session);
+                    createSessionAttempts = 0;
                     requestExecuted = false;
 
                     timerStarted = true;
@@ -265,8 +514,9 @@
                 pingSessionAttempts++;
                 if (checkCurrentSession()) {
                     requestExecuted = true;
-                    $.post('/processing/pingsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
-                        if (checkCurrentSession() && checkSession(session, currentSession.State)) {
+                    var sessionClone = cloneSessionWithoutTask(currentSession);
+                    $.post('/processing/pingsession?sessionjson=' + JSON.stringify(sessionClone), function (session) {
+                        if (checkCurrentSession(true) && checkSession(session, currentSession.State, null, true)) {
                             pingSessionAttempts = 0;
                             currentSession = session;
                             handlers.successPingSession.fire(session);
@@ -290,7 +540,7 @@
                 requestExecuted = true;
                 $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                     requestExecuted = false;
-                    if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed)) {
+                    if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed, sessionTaskType.complete)) {
                         currentSession = session;
                         handlers.successCompleteSession.fire(session);
                     }
@@ -313,9 +563,10 @@
                 worker.close();
             if (checkCurrentSession()) {
                 requestExecuted = true;
-                $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(currentSession), function (session) {
+                var sessionClone = cloneSessionWithoutTask(currentSession);
+                $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(sessionClone), function (session) {
                     requestExecuted = false;
-                    if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped)) {
+                    if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped, sessionTaskType.cancel)) {
                         currentSession = session;
                         handlers.successCancelSession.fire(session);
                     }
@@ -348,6 +599,17 @@
         Stopped: 2,
         Completed: 3
     };
+    Processing.calculationState = {
+        Started: 1,
+        AssignmentLoop: 2,
+        UpdateCentroidsLoop: 3,
+        Completed: 4,
+        Failed: 5,
+
+        Successful: 6,
+        Error: 7,
+        Busy: 8
+    };
 
     var account = {
         signIn: function (email, pwd, remember, success, fail) {
@@ -362,7 +624,7 @@
     };
 
     var ready = function () {
-        (function Init() {
+        (function init() {
             helpers.clearFromSomeeGeneratedScript($('body'));
         })();
 
@@ -392,16 +654,17 @@
                 $pwd.parent().removeClass(ui.errorClass);
             if (error == '') {
                 $btn.button('loading');
+                $btn.attr('disabled', 'disabled');
                 account.signIn(email, pwd, remember, function (d) {
                     $btn.button('reset');
                     d = helpers.clearFromSomeeGeneratedScript(d);
                     if (d == "True") {
                         ui.setAlertState($alert, resources.Success_SignIn, true);
                         setTimeout(helpers.returnBack, ui.messageDelay);
-                        $btn.attr('disabled', 'disabled');
                     } else {
                         ui.setAlertState($alert, resources.Error_SignIn, false);
                         $email.focus();
+                        $btn.removeAttr('disabled');
                     }
                 }, function () {
                     $btn.button('reset');
@@ -441,16 +704,17 @@
             }
             if (error == '') {
                 $btn.button('loading');
+                $btn.attr('disabled', 'disabled');
                 account.signUp(email, pwd, function (d) {
                     $btn.button('reset');
                     d = helpers.clearFromSomeeGeneratedScript(d);
                     if (d == "") {
                         ui.setAlertState($alert, resources.Success_SignUp, true);
                         setTimeout(helpers.returnBack, ui.messageDelay);
-                        $btn.attr('disabled', 'disabled');
                     } else {
                         ui.setAlertState($alert, d, false);
                         $email.focus();
+                        $btn.removeAttr('disabled');
                     }
                 }, function () {
                     $btn.button('reset');
@@ -465,15 +729,16 @@
             var $alert = $("#msgSignInAnonym");
             var $btn = $(this);
             $btn.button('loading');
+            $btn.attr('disabled', 'disabled');
             account.signInAnonym(function (d) {
                 $btn.button('reset');
                 d = helpers.clearFromSomeeGeneratedScript(d);
                 if (d == 'True') {
                     ui.setAlertState($alert, resources.Success_SignInAnonym, true);
                     setTimeout(helpers.returnBack, ui.messageDelay);
-                    $btn.attr('disabled', 'disabled');
                 } else {
                     ui.setAlertState($alert, resources.Error_SignInAnonym, false);
+                    $btn.removeAttr('disabled');
                 }
             }, function () {
                 $btn.button('reset');
@@ -488,9 +753,15 @@
             var processing = new Processing();
             processing.handlers.beforeCreateSession.add(function () {
                 $btn.button('starting');
+                setTimeout(function () {
+                    $btn.attr('disabled', 'disabled');
+                }, 0);
             });
             processing.handlers.beforeCancelSession.add(function () {
                 $btn.button('stopping');
+                setTimeout(function () {
+                    $btn.attr('disabled', 'disabled');
+                }, 0);
             });
 
             processing.handlers.failMaxAttemptsCreateSession.add(function (maxAttempts) {
@@ -536,7 +807,7 @@
 
             processing.handlers.successCancelSession.add(function (session) {
                 ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
-                ui.setAlertState($alert, resources.Success_CancelSession, "alert-warning");
+                ui.setAlertState($alert, resources.Success_CancelSession, 'alert-warning');
                 updateProcessingInfo(session, true);
                 console.log('Success cancel session: ' + JSON.stringify(session));
             });
@@ -559,7 +830,6 @@
                 updateProcessingInfo(null, false);
                 console.log('Fail complete session: ' + JSON.stringify(data));
             });
-
 
             processing.handlers.failSessionClientNull.add(function () {
                 ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
@@ -585,6 +855,44 @@
                 updateProcessingInfo(null, false);
                 console.log('Fail session calculation: ' + error);
             });
+
+            processing.handlers.failCalculationBusy.add(function (session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CalculationBusy, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail calculation busy: ' + JSON.stringify(session));
+            });
+            processing.handlers.failCalculationCompleted.add(function (session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CalculationCompleted, 'alert-warning');
+                updateProcessingInfo(null, false);
+                console.log('Fail calculation completed: ' + JSON.stringify(session));
+            });
+            processing.handlers.failCalculationError.add(function (session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CalculationError, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail calculation error: ' + JSON.stringify(session));
+            });
+            processing.handlers.failCalculationFailed.add(function (session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CalculationFailed, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail calculation failed: ' + JSON.stringify(session));
+            });
+            processing.handlers.failCalculationInvalid.add(function (ex, session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CalculationInvalid, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail calculation invalid: ' + ex + '; session: ' + JSON.stringify(session));
+            });
+            processing.handlers.failCalculationNull.add(function (session) {
+                ui.setButtonState($btn, 'btn-success', resources.Button_StartSession, 'reset', 'start');
+                ui.setAlertState($alert, resources.Error_CalculationNull, false);
+                updateProcessingInfo(null, false);
+                console.log('Fail calculation null: ' + JSON.stringify(session));
+            });
+
             return processing;
         };
 

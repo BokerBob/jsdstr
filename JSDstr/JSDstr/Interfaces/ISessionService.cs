@@ -9,7 +9,7 @@ namespace JSDstr.Interfaces
 {
     public interface ISessionService
     {
-        SessionViewObject CreateSession(string loggedUser);
+        SessionViewObject CreateSession(SessionViewObject sessionViewObject, string loggedUser);
         SessionViewObject PingSession(SessionViewObject sessionViewObject, string loggedUser);
         SessionViewObject CancelSession(SessionViewObject sessionViewObject, string loggedUser);
         SessionViewObject CompleteSession(SessionViewObject sessionViewObject, string loggedUser);

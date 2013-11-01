@@ -161,6 +161,24 @@
   <data name="Content_ServerError" xml:space="preserve">
     <value />
   </data>
+  <data name="Error_CalculationBusy" xml:space="preserve">
+    <value>Calculation queue is busy. Another attempt...</value>
+  </data>
+  <data name="Error_CalculationCompleted" xml:space="preserve">
+    <value>Calculation process is already completed. Thank you.</value>
+  </data>
+  <data name="Error_CalculationError" xml:space="preserve">
+    <value>Calculation task returned error. Another attempt...</value>
+  </data>
+  <data name="Error_CalculationFailed" xml:space="preserve">
+    <value>Calculation process is failed. Please try again later.</value>
+  </data>
+  <data name="Error_CalculationInvalid" xml:space="preserve">
+    <value>Calculation object is invalid. Another attempt...</value>
+  </data>
+  <data name="Error_CalculationNull" xml:space="preserve">
+    <value>Calculation task returned null. Another attempt...</value>
+  </data>
   <data name="Error_CancelSession" xml:space="preserve">
     <value>Cancel session error. Calculation was stopped.</value>
   </data>
@@ -183,7 +201,7 @@
     <value>Calculation session was failed with max attempts count. Please try again later.</value>
   </data>
   <data name="Error_MaxAttemptsCreateSession" xml:space="preserve">
-    <value>Creating session was failed with max attempts count. Please try again later</value>
+    <value>Creating session was failed with max attempts count. Please try again later.</value>
   </data>
   <data name="Error_MaxAttemptsPingSession" xml:space="preserve">
     <value>Ping session was failed with max attempts count. Please try again later.</value>

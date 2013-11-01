@@ -6,7 +6,7 @@ using JSDstr.Annotations;
 
 namespace JSDstr.Models
 {
-    public enum KmeansCalculationState
+    public enum CalculationState
     {
         Started = 1,
         AssignmentLoop = 2,
@@ -20,7 +20,7 @@ namespace JSDstr.Models
     }
 
     [Table]
-    public class KmeansCalculation : BaseModel//, INotifyPropertyChanged
+    public class KmeansCalculation : BaseModel
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public override int Id { get; set; }
@@ -29,19 +29,19 @@ namespace JSDstr.Models
         [Column]
         public override DateTime ChangedDate { get; set; }
 
-        [Column(UpdateCheck = UpdateCheck.Always)]
+        [Column]
         public int K { get; set; }
 
-        [Column(UpdateCheck = UpdateCheck.Always)]
+        [Column]
         public int Iteration { get; set; }
 
-        [Column(UpdateCheck = UpdateCheck.Always)]
-        public int State { get; set; }
+        [Column]
+        public int MaxIterations { get; set; }
 
-        [Column(UpdateCheck = UpdateCheck.Always)]
+        [Column]
+        public CalculationState State { get; set; }
+
+        [Column]
         public string StateMessage { get; set; }
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-        
     }
 }

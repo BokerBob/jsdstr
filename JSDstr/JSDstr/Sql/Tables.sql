@@ -34,6 +34,7 @@ create table [dbo].[Log]
 	
 	Message nvarchar(max) not null,
 	UserName nvarchar(max) null,
+	Context nvarchar(max) null,
 	Type int not null
 );
 drop table Earthquake;
@@ -109,6 +110,7 @@ create table KmeansCalculation
 	ChangedDate datetime default getdate(),
 	K int not null,
 	Iteration int not null,
+	MaxIterations int not null,
 	State int not null,
 	StateMessage nvarchar(max) null
 );
@@ -122,6 +124,7 @@ create table Centroid
 	V2 decimal(6,3) not null,
 	V3 decimal(6,3) not null,
 	CalculationId int not null,
+	Iteration int not null,
 	Committed bit not null
 );
 drop table CentroidAssignment
@@ -131,8 +134,11 @@ create table CentroidAssignment
 	CreatedDate datetime default getdate(),
 	ChangedDate datetime default getdate(),
 	CentroidId int null,
-	VectorId int null
+	VectorId int null,
+	CalculationId int not null,
+	Iteration int not null,
 );
+
 drop table VectorTask
 create table VectorTask
 (
@@ -147,4 +153,16 @@ create table VectorTask
 	CalculationId int not null,
 	Iteration int not null
 );
+
 select * from KmeansCalculation
+where Id = 47;
+select * from Centroid
+where CalculationId = 47;
+select * from CentroidAssignment
+where CalculationId = 47;
+select * from VectorTask
+where CalculationId = 47 and Type = 3 and State = 1
+select * from Session
+where CalculationId = 47 and Guid = '7B61B8DD-DF0F-4080-8EF6-7CA696410922'
+
+select * from settings
