@@ -4,6 +4,9 @@ using System.Data.Linq.Mapping;
 
 namespace JSDstr.Models
 {
+    // idle-started-completed
+    //              |
+    //              cancelled-started-completed
     public enum TaskState
     {
         Idle = 0,

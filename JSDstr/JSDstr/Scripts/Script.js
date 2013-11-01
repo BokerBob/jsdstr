@@ -1,4 +1,5 @@
-﻿(function () {
+﻿
+(function () {
     Date.prototype.format = function (format) //author: meizz
     {
         var o = {
@@ -269,6 +270,7 @@
                         cancelCreateSession = true;
                     }
                     handlers.failCalculationCompleted.fire(session);
+                    return false;
                 case Processing.calculationState.Failed:
                     if (taskType == sessionTaskType.get) {
                         cancelCreateSession = true;
@@ -351,7 +353,8 @@
                             }
                         }
                         assignments[i] = {
-                            С: best,
+                            Id: 0,
+                            C: best,
                             V: i
                         };
                     }
@@ -380,7 +383,7 @@
                     var n = d.vectors.length;
                     var centroids = new Array(d.k);
                     for (var i = 0; i < n; i++) {
-                        var cluster = d.assignments[i];
+                        var cluster = d.assignments[i].C;
                         if (centroids[cluster] == null)
                             centroids[cluster] = d.vectors[i];
                         else
@@ -554,6 +557,7 @@
         var cancelSession = function () {
             handlers.beforeCancelSession.fire();
             timerStarted = false;
+            cancelCreateSession = true;
             if (worker != null)
                 worker.close();
             if (checkCurrentSession()) {

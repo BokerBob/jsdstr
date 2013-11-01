@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI;
 using JSDstr.Helpers;
 using JSDstr.Interfaces;
 using JSDstr.Models;
@@ -278,10 +279,12 @@ namespace JSDstr.Services
             for (var i = 0; i < _newCentroids.Length; i++)
             {
                 var clusterSize = _assignments.Count(x => x.C == i);
+                if (clusterSize == 0)
+                    clusterSize = 1;
                 _newCentroids[i] *= (decimal)(1.0 / clusterSize);
                 if (!Equals(_newCentroids[i], _centroids[i]))
                     nextIteration = true;
-                _centroids[i] = _newCentroids[i];
+                _centroids[i] = _centroids[i].CopyFrom(_newCentroids[i]);
             }
             SaveCentroids(false, false);
             SaveCentroids(true, false);
@@ -398,7 +401,7 @@ namespace JSDstr.Services
                         throw new Exception("Init create wasn't performed from GetTask");
                     _calculation = new KmeansCalculation
                     {
-                        Iteration = -1,
+                        Iteration = 0,
                         K = _settingsService.KmeansK,
                         MaxIterations = _settingsService.MaxIterations,
                         State = CalculationState.Started
@@ -602,7 +605,6 @@ namespace JSDstr.Services
             if (mergeWith.Length > _assignmentsSlotCapacity)
                 throw new InvalidOperationException("MergeAssignments: results length != SlotCapacity");
             _assignmentRepository.Insert(mergeWith.Select(GetAssignmentFromViewObject));
-            GetAssignments();
         }
 
         private AssignmentViewObject[] GetEmptyAssignments()
@@ -628,9 +630,16 @@ namespace JSDstr.Services
 
         private void TerminateUnassignedTasks()
         {
-            var tasks = _taskRepository.Entities.Where(x => x.State == TaskState.Started).ToArray();
-            var sessions = _sessionRepository.Entities.Where(x => x.State != SessionState.Started).ToArray();
-            var unassignedTasks = tasks.Join(sessions, t => t.SessionGuid,s => s.Guid, (t, s) => t).ToArray();
+            var tasks = _taskRepository.Entities.Where(x =>
+                x.CalculationId == _calculation.Id &&
+                x.Iteration == _calculation.Iteration &&
+                x.Type == _calculation.State &&
+                x.State == TaskState.Started).ToArray();
+            var sessions = _sessionRepository.Entities.Where(x =>
+                x.CalculationId == _calculation.Id &&
+                x.State != SessionState.Started).ToArray();
+            var unassignedTasks = tasks.Join(sessions, 
+                t => t.SessionGuid,s => s.Guid, (t, s) => t).ToArray();
             foreach (var unassignedTask in unassignedTasks)
             {
                 unassignedTask.SessionGuid = null;
@@ -639,26 +648,39 @@ namespace JSDstr.Services
             _taskRepository.Save(unassignedTasks);
         }
 
-        private CalculationTaskViewObject GetNextTask()
+        private TaskState[] GetTaskPlan()
         {
             GetTasks();
-            int slotCapacity;
-            var taskPlan = new TaskState[N];
-            for(var i = 0; i < N; i++)
-                taskPlan[i] = TaskState.Idle;
+            var taskPlan = new KeyValuePair<TaskState, DateTime>[N];
             foreach (var task in _tasks)
             {
                 var slotStart = task.SlotStart;
-                slotCapacity = task.SlotCapacity;
+                var slotCapacity = task.SlotCapacity;
                 var state = task.State;
+                var changedDate = task.ChangedDate;
                 for (var j = 0; j < slotCapacity && slotStart + j < N; j++)
-                    taskPlan[j] = state;
+                {
+                    var k = slotStart + j;
+                    if (taskPlan[k].Value == default(DateTime) || taskPlan[k].Value < changedDate)
+                        taskPlan[k] = new KeyValuePair<TaskState, DateTime>(state, changedDate);
+                }
             }
+            return taskPlan.Select(x => x.Key).ToArray();
+        }
+
+        private CalculationTaskViewObject GetNextTask()
+        {
+            var taskPlan = GetTaskPlan();
             if (taskPlan.All(x => x == TaskState.Completed))
             {
-                return Error("All tasks are completed, but next iteration isn't started");
+                //return Error("All tasks are completed, but next iteration isn't started");
+                if (_calculation.State == CalculationState.AssignmentLoop)
+                    return CompleteAssignmentLoop();
+                if (_calculation.State == CalculationState.UpdateCentroidsLoop)
+                    return CompleteUpdateCentroidsLoop();
+                return Error("Invalid calculation state");
             }
-            slotCapacity = _calculation.State == CalculationState.AssignmentLoop
+            var slotCapacity = _calculation.State == CalculationState.AssignmentLoop
                 ? _assignmentsSlotCapacity
                 : _updateCentroidsSlotCapacity;
             var taskIndex = -1;
@@ -709,18 +731,19 @@ namespace JSDstr.Services
 
         private void CompleteSessionTasks()
         {
-            var completedTasks = _tasks.Where(x => x.SessionGuid == _calculationTask.SessionGuid).ToArray();
-            foreach (var vectorTask in completedTasks)
+            GetTasks();
+            var completedTask = _tasks.FirstOrDefault(x => x.SessionGuid == _calculationTask.SessionGuid);
+            if(completedTask != null)
             {
-                vectorTask.State = TaskState.Completed;
+                completedTask.State = TaskState.Completed;
             }
-            _taskRepository.Save(completedTasks);
+            _taskRepository.Save(completedTask);
         }
 
         private CalculationTaskViewObject GetNextStep()
         {
-            GetTasks();
-            if (_tasks.All(x => x.State == TaskState.Completed))
+            var taskPlan = GetTaskPlan();
+            if (taskPlan.All(x => x == TaskState.Completed))
             {
                 if (_calculation.State == CalculationState.AssignmentLoop)
                     return CompleteAssignmentLoop();

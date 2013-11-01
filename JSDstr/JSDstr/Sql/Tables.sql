@@ -162,23 +162,31 @@ declare @type int;
 select @type = State
 from KmeansCalculation
 where id = @id;
-select * from Centroid
-where CalculationId = @id;
+declare @iteration int;
+select @iteration = Iteration
+from KmeansCalculation
+where id = @id;
 select * from KmeansCalculation
 where ID = @id
-select COUNT(*) from Task
+select * from CentroidAssignment
+where CalculationId = @id and Iteration = @iteration;
+select * from Centroid
+where CalculationId = @id and Iteration = @iteration;
+select COUNT(*) as 'Idle' from Task
 where CalculationId = @id and Type = @type and State = 0;
-select COUNT(*), SessionGuid from Task
+select SessionGuid as 'Started' from Task
 where CalculationId = @id and Type = @type and State = 1
 group by SessionGuid;
-select COUNT(*), SessionGuid from Task
+select SessionGuid as 'Completed' from Task
 where CalculationId = @id and Type = @type and State = 2
 group by SessionGuid;
-select COUNT(*) from Task
+select  COUNT(*) as 'Cancelled' from Task
 where CalculationId = @id and Type = @type and State = 3;
 
 select * from Session
-where Guid = 'B6BD7B25-4802-466B-8832-107411D0AA33'
+where Guid = '0982114a-1c2e-409c-a6c8-ab4f51e1e299'
+select * from Task
+where CalculationId = 120 and Iteration = 0 and type = 2
 
 delete from KmeansCalculation
 delete from Centroid

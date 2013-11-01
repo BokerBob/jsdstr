@@ -51,6 +51,20 @@ namespace JSDstr.ViewObjects
             return V1 == other.V1 && V2 == other.V2 && V3 == other.V3;
         }
 
+        public VectorViewObject CopyFrom(VectorViewObject vector)
+        {
+            if (vector == null)
+                return this;
+            var res = new VectorViewObject
+            {
+                Id = Id,
+                V1 = vector.V1,
+                V2 = vector.V2,
+                V3 = vector.V3
+            };
+            return res;
+        }
+
         public static VectorViewObject operator +(VectorViewObject a, VectorViewObject b)
         {
             a.V1 += b.V1;
