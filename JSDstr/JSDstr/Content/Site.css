@@ -123,3 +123,62 @@ body {
 .processing button{
     width: 150px;
 }
+
+/* chart */
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+#statistics .chart {
+
+}
+
+#map {
+    height: 400px;
+}
+
+.clusters, .clusters svg {
+  position: absolute;
+}
+
+.clusters svg {
+  width: 60px;
+  height: 20px;
+  padding-right: 100px;
+  font: 10px sans-serif;
+}
+
+.clusters circle {
+  stroke: black;
+  stroke-width: 0.5px;
+}
+
+.clusters .group-0 circle {
+    fill: green;
+}
+
+.clusters .group-1 circle {
+    fill: brown;
+}
+
+.clusters .group-2 circle {
+    fill: yellow;
+}
+
+.clusters  circle {
+    fill: red;
+}

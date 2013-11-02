@@ -10,6 +10,8 @@ namespace JSDstr.Interfaces
         int GetAnonymUsersCount();
         void SetAnonymUsersCount(int count);
 
+        int TotalUsersCount { get; set; }
+
         int CurrentCalculationId { get; set; }
 
         int KmeansK { get; }

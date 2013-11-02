@@ -6,7 +6,7 @@ namespace JSDstr.ViewObjects
 {
     public class StatisticsViewObject : ViewObject<KmeansCalculation>
     {
-        public StatisticsViewObject()
+        public StatisticsViewObject(KmeansCalculation source) : base(source)
         {
             CalculationId = Source.Id;
             CalculationCreatedDate = Source.CreatedDate;
@@ -17,6 +17,7 @@ namespace JSDstr.ViewObjects
             CalculationState = Source.State;
         }
 
+        public bool UserSignedIn { get; set; }
         public DateTime? UserFirstSessionDate { get; set; }
         public DateTime? UserLastSessionDate { get; set; }
         public int UserTotalSessionCount { get; set; }
@@ -26,15 +27,15 @@ namespace JSDstr.ViewObjects
         public int UserAverageProcessingSpeed { get; set; }
         public int UserMaxProcessingSpeed { get; set; }
 
-        public KeyValuePair<DateTime, int> UsersCount { get; set; }
-        public KeyValuePair<DateTime, int> OnlineUsersCount { get; set; }
-        public int TodayUsersCount { get; set; }
-        public KeyValuePair<DateTime, int> SessionsCount { get; set; }
+        public KeyValuePair<DateTime, int>[] OnlineUsersCount { get; set; }
+        public int TotalUsersCount { get; set; }
+        public int TodayOnlineUsersCount { get; set; }
+        public KeyValuePair<DateTime, int>[] SessionsCount { get; set; }
+        public int TotalSessionsCount { get; set; }
         public int TodaySessionsCount { get; set; }
-        public KeyValuePair<DateTime, int> Productivity { get; set; }
-        public int AverageProductivity { get; set; }
-        public int MaxProductivity { get; set; }
-        public int[] TaskState { get; set; }
+        public KeyValuePair<DateTime, int>[] Productivity { get; set; }
+
+        public TaskState[] TaskPlan { get; set; }
 
         public int CalculationId { get; set; }
         public DateTime CalculationCreatedDate { get; set; }

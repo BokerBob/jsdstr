@@ -12,7 +12,8 @@ namespace JSDstr.Models
         Idle = 0,
         Started = 1,
         Completed = 2,
-        Cancelled = 3
+        Cancelled = 3,
+        Current = 4
     }
 
     [Table]

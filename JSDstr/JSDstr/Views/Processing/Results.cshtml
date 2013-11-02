@@ -1,6 +1,18 @@
-﻿@{
+﻿@model JSDstr.ViewObjects.ClusterizationResultViewObject[]
+@{
     ViewBag.Title = @Resources.Title_Results;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ResultsView</h2>
+<div id="results">
+    <h2>Results</h2>
+    <div id="map"></div>
+</div>
+
+@section script
+{
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script type="text/javascript">
+        jsd.clusterizationResults.drawClusters(JSON.parse('@Html.Raw(@Json.Encode(Model))'));
+    </script>
+}

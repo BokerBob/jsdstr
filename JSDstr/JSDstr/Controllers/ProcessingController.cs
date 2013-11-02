@@ -14,6 +14,8 @@ namespace JSDstr.Controllers
     public class ProcessingController : Controller
     {
         private readonly ISessionService _sessionService = new SessionService();
+        private readonly IStatisticsService _statisticsService = new StatisticsService();
+        private readonly IClusterizationResultsService _clusterizationResultsService = new ClusterizationResultsService();
 
         [Authorize]
         public ActionResult Index()
@@ -25,7 +27,7 @@ namespace JSDstr.Controllers
         public ActionResult Results() 
         {
             ViewBag.RenderStatistics = true;
-            return View("Results");
+            return View("Results", _clusterizationResultsService.GetClusterizationResults());
         }
 
         public ActionResult Statistics() 
@@ -58,9 +60,9 @@ namespace JSDstr.Controllers
         }
         
         [HttpPost]
-        public JsonResult GetStatistics()
+        public JsonResult GetStatistics(Guid? sessionGuid)
         {
-
+            return _statisticsService.GetStatistics(sessionGuid);
         }
     }
 }

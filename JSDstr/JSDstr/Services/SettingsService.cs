@@ -13,6 +13,7 @@ namespace JSDstr.Services
         private readonly IRepository<Settings> _settingsRepository = new SqlRepository<Settings>();
 
         private const string AnonymUsersCountKey = "AnonymUsersCount";
+        private const string TotalUsersCountKey = "TotalUsersCount";
         private const string CurrentCalculationIdKey = "CurrentCalculationId";
         private const string KmeansKKey = "KmeansK";
         private const string MaxIterationsKey = "MaxIterations";
@@ -98,6 +99,34 @@ namespace JSDstr.Services
             catch (Exception ex)
             {
                 Log(ex);
+            }
+        }
+
+        public int TotalUsersCount
+        {
+            get
+            {
+                try
+                {
+                    var value = Convert.ToInt32(GetValue(TotalUsersCountKey, "0"));
+                    return value;
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                    return 0;
+                }
+            }
+            set
+            {
+                try
+                {
+                    SetValue(TotalUsersCountKey, value.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
             }
         }
 

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 using JSDstr.Models;
+using JSDstr.Repositories;
 using JSDstr.Services;
 using JSDstr.Interfaces;
 
@@ -10,6 +12,16 @@ namespace JSDstr.Controllers
     public class AccountController : Controller
     {
         private readonly ISettingsService _settingsService = new SettingsService();
+        private readonly IRepository<UserActivity> _userActivityRepository = new SqlRepository<UserActivity>();
+
+        private void SaveUserActivity(string userName)
+        {
+            var userActivity =
+                _userActivityRepository.Entities.FirstOrDefault(
+                    x => x.CreatedDate.Date == DateTime.Now.Date && x.UserName == userName);
+            if (userActivity == null)
+                _userActivityRepository.Insert(new UserActivity {UserName = userName});
+        }
 
         public ActionResult Login()
         {
@@ -41,6 +53,7 @@ namespace JSDstr.Controllers
                 FormsAuthentication.SetAuthCookie(email, remember);
                 LogService.Log(string.Format("User signed in. Email: [{0}], Pwd: [{1}], Remember: [{2}]", email,
                     pwd, remember));
+                SaveUserActivity(email);
                 return true;
             }
             LogService.Log(string.Format(
@@ -65,6 +78,8 @@ namespace JSDstr.Controllers
                     FormsAuthentication.SetAuthCookie(email, false);
                     _settingsService.SetAnonymUsersCount(anonymUsersCount);
                     LogService.Log(string.Format("Anonym user signed in. Email: [{0}], Pwd: [{1}]", email, pwd));
+                    _settingsService.TotalUsersCount = _settingsService.TotalUsersCount + 1;
+                    SaveUserActivity(email);
                     return true;
                 }
                 LogService.Log(string.Format(
@@ -98,6 +113,8 @@ namespace JSDstr.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(email, true);
                     LogService.Log(string.Format("Created user signed in. Email: [{0}], Pwd: [{1}]", email, pwd));
+                    _settingsService.TotalUsersCount = _settingsService.TotalUsersCount + 1;
+                    SaveUserActivity(email);
                     return "";
                 }
                 LogService.Log(string.Format(

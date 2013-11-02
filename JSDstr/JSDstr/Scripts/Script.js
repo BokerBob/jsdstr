@@ -622,6 +622,107 @@
         Error: 7,
         Busy: 8
     };
+    Processing.calculationStateLookup = {        
+        1: "Started",
+        2: "AssignmentLoop",
+        3: "UpdateCentroidsLoop",
+        4: "Completed",
+        5: "Failed"
+    };
+
+    var Statistics = function (currentProcessing) {
+        var processing = currentProcessing;
+        var started = false;
+        var executed = false;
+        var refreshTime = 1000;
+        var refreshStatistics = function (success, fail) {
+            if (started) {
+                getStatistics(success, fail);
+                setTimeout(function () {
+                    refreshStatistics(success, fail);
+                }, refreshTime);
+            }
+        };
+        var getStatistics = function (success, fail) {
+            if (executed)
+                return;
+            executed = true;
+            var sessionParam = "";
+            if (processing != null && processing.currentSession != null)
+                sessionParam = "?currentSession=" + processing.currentSession.Guid;
+            $.post('/processing/getstatistics' + sessionParam, function (d) {
+                executed = false;
+                if ($.isFunction(success)) {
+                    success(d);
+                }
+            }).fail(function (d) {
+                executed = false;
+                if ($.isFunction(fail)) {
+                    fail(d);
+                }
+            });
+        };
+
+        this.start = function (success, fail) {
+            started = true;
+            refreshStatistics(success, fail);
+        };
+        this.stop = function (success, fail) {
+            started = false;
+            if ($.isFunction(success))
+                success();
+        };
+    };
+
+    var clusterizationResults = {
+        drawClusters: function (data) {
+            var map = new google.maps.Map(d3.select("#map").node(), {
+                zoom: 1,
+                center: new google.maps.LatLng(0, 0),
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            });
+            var overlay = new google.maps.OverlayView();
+            overlay.onAdd = function () {
+                var layer = d3.select(this.getPanes().overlayLayer).append("div")
+                .attr("class", "clusters");
+
+                // Draw each marker as a separate SVG element.
+                // We could use a single SVG, but what size would it have?
+                overlay.draw = function () {
+                    var projection = this.getProjection(),
+                    padding = 10;
+                    var marker = layer.selectAll("svg")
+                        .data(d3.entries(data))
+                        .each(transform) // update existing markers
+                        .enter().append("svg:svg")
+                        .each(transform);
+                    // Add a circle.
+                    
+
+//                    // Add a label.
+//                    marker.append("svg:text")
+//                    .attr("x", padding + 7)
+//                    .attr("y", padding)
+//                    .attr("dy", ".31em")
+                    //                    .text(function (d) { return d.value.LocationName; });
+
+                    function transform(d) {
+                        var t = new google.maps.LatLng(d.value.Latitude, d.value.Longitude);
+                        t = projection.fromLatLngToDivPixel(t);
+                        return d3.select(this)
+                            .style("left", (t.x - padding) + "px")
+                            .style("top", (t.y - padding) + "px")
+                            .attr("class", "marker group-" + d.value.EarthquakeGroup)
+                            .append("svg:circle")
+                            .attr("r", d.value.Intensity * 0.3)
+                            .attr("cx", padding)
+                            .attr("cy", padding);
+                    }
+                };
+            };
+            overlay.setMap(map);
+        }
+    };
 
     var account = {
         signIn: function (email, pwd, remember, success, fail) {
@@ -923,7 +1024,7 @@
                 var changedDate = helpers.parseDate(session.ChangedDate);
                 $createdDate.html(createdDate.format(ui.dateTimeFormat));
                 $changedDate.html(changedDate.format(ui.dateTimeFormat));
-                $duration.html((changedDate - createdDate)/1000 + " sec");
+                $duration.html((changedDate - createdDate) / 1000 + " sec");
                 $guid.html(session.Guid);
                 $userName.html(session.UserName);
                 var state = "";
@@ -942,15 +1043,15 @@
                 if (session.CalculationTask != null) {
                     var calculationState = "";
                     switch (session.CalculationTask.CalculationState) {
-                    case Processing.calculationState.AssignmentLoop:
-                        calculationState = "Assignment Loop";
-                        break;
-                    case Processing.calculationState.UpdateCentroidsLoop:
-                        calculationState = "Update Centroids Loop";
-                        break;
-                    default:
-                        calculationState = "Error";
-                        break;
+                        case Processing.calculationState.AssignmentLoop:
+                            calculationState = "Assignment Loop";
+                            break;
+                        case Processing.calculationState.UpdateCentroidsLoop:
+                            calculationState = "Update Centroids Loop";
+                            break;
+                        default:
+                            calculationState = "Error";
+                            break;
                     }
                     $dataRange.html(session.Results).parent().removeClass('hide');
                     var vectorsTotal = session.CalculationTask.N;
@@ -990,6 +1091,134 @@
                 currentProcessing.stopProcessing();
             }
         });
+        var noneValue = "none";
+        function updateStatistics(d) {
+            var $statistics = $('#statistics');
+            if (d == null) {
+                $statistics.css('display', 'none');
+                return;
+            }
+            var $calculationCreatedDate = $('#lblCalculationCreatedDate');
+            var $calculationVectorsCount = $('#lblCalculationVectorsCount');
+            var $calculationClustersCount = $('#lblCalculationClustersCount');
+            var $calculationState = $('#lblCalculationState');
+            var $calculationIteration = $('#lblCalculationIteration');
+
+            var $totalUsersCount = $('#lblTotalUsersCount');
+            var $todayOnlineUsersCount = $('#lblTodayOnlineUsersCount');
+            var $totalSessionsCount = $('#lblTotalSessionsCount');
+            var $todaySessionsCount = $('#lblTodaySessionsCount');
+
+            $calculationCreatedDate.html(helpers.parseDate(d.CalculationCreatedDate).format(ui.dateTimeFormat));
+            $calculationVectorsCount.html(d.N);
+            $calculationClustersCount.html(d.K);
+            $calculationState.html(Processing.calculationStateLookup[d.CalculationState]);
+            $calculationIteration.html(d.Iteration + " of " + d.MaxIterations);
+            
+            $totalUsersCount.html(d.TotalUsersCount);
+            $todayOnlineUsersCount.html(d.TodayOnlineUsersCount);
+            $totalSessionsCount.html(d.TotalSessionsCount);
+            $todaySessionsCount.html(d.TodaySessionsCount);
+
+            if (!d.UserSignedIn) {
+                $('.userStatistics').addClass('hide');
+            } else {
+                var $userFirstSessionDate = $('#lblUserFirstSessionDate');
+                var $userLastSessionDate = $('#lblUserLastSessionDate');
+                var $userTotalSessionCount = $('#lblUserTotalSessionCount');
+                var $userTodaySessionCount = $('#lblUserTodaySessionCount');
+                var $userTotalDataProcessed = $('#lblUserTotalDataProcessed');
+                var $userTodayDataProcessed = $('#lblUserTodayDataProcessed');
+                var $userAverageProcessingSpeed = $('#lblUserAverageProcessingSpeed');
+                var $userMaxProcessingSpeed = $('#lblUserMaxProcessingSpeed');
+
+                if (d.UserFirstSessionDate != null)
+                    $userFirstSessionDate.html(helpers.parseDate(d.UserFirstSessionDate).format(ui.dateTimeFormat));
+                else
+                    $userFirstSessionDate.html(noneValue);
+
+                if (d.UserLastSessionDate != null)
+                    $userLastSessionDate.html(helpers.parseDate(d.UserLastSessionDate).format(ui.dateTimeFormat));
+                else
+                    $userLastSessionDate.html(noneValue);
+
+                $userTotalSessionCount.html(d.UserTotalSessionCount);
+                $userTodaySessionCount.html(d.UserTodaySessionCount);
+                $userTotalDataProcessed.html(d.UserTotalDataProcessed);
+                $userTodayDataProcessed.html(d.UserTodayDataProcessed);
+                $userAverageProcessingSpeed.html(d.UserAverageProcessingSpeed);
+                $userMaxProcessingSpeed.html(d.UserMaxProcessingSpeed);
+            }
+            drawChart(d.OnlineUsersCount, "svgOnlineUsersCount", '#chartOnlineUsersCount', 'Users');
+            drawChart(d.SessionsCount, "svgSessionsCount", '#chartSessionsCount', 'Sessions');
+            //drawOnlineUsersCountChart(d.OnlineUsersCount, "svgOnlineUsersCount", $('#chartOnlineUsersCount')[0]);
+            $statistics.fadeIn();
+        }
+
+        function drawChart(data, id, wrapper, title) {
+            var $wrapper = $(wrapper);
+            $wrapper.find('#' + id).remove();
+            var margin = { top: 0, right: 0, bottom: 0, left: 30 };
+            var width = 320 - margin.left - margin.right;
+            var height = 100 - margin.top - margin.bottom;
+            var parseDate = helpers.parseDate;
+            var x = d3.time.scale()
+                .range([0, width]);
+            var y = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+            var line = d3.svg.line()
+                .x(function (d) { return x(d.Key); })
+                .y(function (d) { return y(d.Value); });
+            wrapper = d3.select(wrapper);
+            var svg = wrapper.append("svg")
+                .attr("id", id)
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); ;
+            data.forEach(function (d) {
+                d.Key = parseDate(d.Key);
+                d.Value = +d.Value;
+            });
+            x.domain(d3.extent(data, function (d) { return d.Key; }));
+            y.domain(d3.extent(data, function (d) { return d.Value; }));
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text(title);
+
+            svg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line);
+        }
+
+        var statistics = new Statistics(currentProcessing);
+        if ($('#statistics').length) {
+            statistics.start(function (d) {
+                updateStatistics(d);
+            },
+            function (d) {
+                console.log("Statistics error: " + d);
+            });
+        }
     };
 
     window.JSD = function () {
@@ -997,6 +1226,7 @@
         this.validation = validation;
         this.Processing = Processing;
         this.resources = resources;
+        this.clusterizationResults = clusterizationResults;
 
         $(document).ready(ready);
     };

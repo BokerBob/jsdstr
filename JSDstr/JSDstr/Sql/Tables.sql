@@ -149,6 +149,15 @@ create table Task
 	SlotCapacity int not null
 );
 
+create table dbo.UserActivity
+(
+	Id int identity(1,1) primary key,
+	CreatedDate datetime default getdate(),
+	ChangedDate datetime default getdate(),
+	
+	UserName nvarchar(max) not null
+)
+
 select Id, YEAR, MONTH, DAY, LOCATION_NAME, LATITUDE, LONGITUDE, INTENSITY
 from Earthquake
 where INTENSITY is not null and LATITUDE is not null and LONGITUDE is not null
