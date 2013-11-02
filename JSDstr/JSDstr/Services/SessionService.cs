@@ -252,6 +252,7 @@ namespace JSDstr.Services
                     {
                         session.State = SessionState.Completed;
                         session.StateMessage = "Completed successfull";
+                        session.CalculationTime = sessionViewObject.CalculationTime;
                         logMsg = string.Format("Session [{0}] complete successfull", session.Guid);
                     }
                     else

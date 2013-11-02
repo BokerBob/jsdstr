@@ -14,6 +14,9 @@ namespace JSDstr.ViewObjects
             StateMessage = source.StateMessage;
             K = source.K;
             CalculationId = source.Id;
+            Iteration = source.Iteration;
+            MaxIterations = source.MaxIterations;
+            CalculationState = source.State;
         }
 
         public Guid SessionGuid { get; set; }
@@ -23,13 +26,17 @@ namespace JSDstr.ViewObjects
 
         public VectorViewObject[] Vectors { get; set; }
         public VectorViewObject[] Centroids { get; set; }
-        public AssignmentViewObject[] Assignments { get; set; }
+        public int[] Assignments { get; set; }
 
         public bool VectorsCached { get; set; }
         public int SlotStart { get; set; }
         public int SlotCapacity { get; set; }
 
-        public int K { get; set; }
         public int CalculationId { get; set; }
+        public int N { get; set; }
+        public int K { get; set; }
+        public int Iteration { get; set; }
+        public int MaxIterations { get; set; }
+        public CalculationState CalculationState { get; set; }
     }
 }

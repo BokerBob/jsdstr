@@ -33,6 +33,9 @@ namespace JSDstr.Models
         public string StateMessage { get; set; }
 
         [Column(UpdateCheck = UpdateCheck.Never)]
+        public int CalculationTime { get; set; }
+
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public int CalculationId { get; set; }
     }
 }

@@ -10,8 +10,7 @@ create table [dbo].[Settings]
 	[Key] nvarchar(max) not null,
 	[Value] nvarchar(max) not null
 )
-select * from [Settings]
-drop table session
+
 create table dbo.Session
 (
 	Id int identity(1,1) primary key,
@@ -22,6 +21,7 @@ create table dbo.Session
 	UserName nvarchar(max) not null,
 	State int not null,
 	StateMessage nvarchar(max) null,
+	CalculationTime int not null,
 
 	CalculationId int not null
 )
@@ -37,7 +37,7 @@ create table [dbo].[Log]
 	Context nvarchar(max) null,
 	Type int not null
 );
-drop table Earthquake;
+
 create table [dbo].Earthquake
 (
 	Id int identity(1,1) primary key,
@@ -98,11 +98,6 @@ create table [dbo].Earthquake
 	TOTAL_HOUSES_DAMAGED_DESCRIPTION int null,
 );
 
-select Id, YEAR, MONTH, DAY, LOCATION_NAME, LATITUDE, LONGITUDE, INTENSITY
-from Earthquake
-where INTENSITY is not null and LATITUDE is not null and LONGITUDE is not null
-order by INTENSITY desc, Year 
-
 create table KmeansCalculation
 (
 	Id int identity(1,1) primary key,
@@ -127,7 +122,7 @@ create table Centroid
 	Iteration int not null,
 	Committed bit not null
 );
-drop table CentroidAssignment
+
 create table CentroidAssignment
 (
 	Id int identity(1,1) primary key,
@@ -154,6 +149,10 @@ create table Task
 	SlotCapacity int not null
 );
 
+select Id, YEAR, MONTH, DAY, LOCATION_NAME, LATITUDE, LONGITUDE, INTENSITY
+from Earthquake
+where INTENSITY is not null and LATITUDE is not null and LONGITUDE is not null
+order by INTENSITY desc, Year 
 
 declare @id int;
 select @id = Value from Settings
@@ -192,6 +191,14 @@ delete from KmeansCalculation
 delete from Centroid
 delete from CentroidAssignment
 delete from Session
+
+drop table Centroid;
+drop table CentroidAssignment;
+drop table Earthquake;
+drop table KmeansCalculation;
+drop table Log;
+drop table Session;
+drop table Task;
 
 update Settings
 set value = '0'

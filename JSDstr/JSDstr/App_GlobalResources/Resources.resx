@@ -275,6 +275,12 @@
   <data name="Label_Data" xml:space="preserve">
     <value>Data</value>
   </data>
+  <data name="Label_DataRange" xml:space="preserve">
+    <value>Data range</value>
+  </data>
+  <data name="Label_Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
   <data name="Label_Email" xml:space="preserve">
     <value>Email</value>
   </data>

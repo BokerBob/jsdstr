@@ -337,11 +337,11 @@
                         var dV3 = Math.abs(a.V3 - b.V3);
                         var maxdV1 = 180;
                         var maxdV2 = 360;
-                        if (dV1 > maxdV1/2)
+                        if (dV1 > maxdV1 / 2)
                             dV1 = maxdV1 - dV1;
-                        if (dV2 > maxdV2/2)
+                        if (dV2 > maxdV2 / 2)
                             dV2 = maxdV2 - dV2;
-                        ds = Math.sqrt(dV1 * dV1 + dV2 * dV2 + dV3 * dV3);
+                        var ds = Math.sqrt(dV1 * dV1 + dV2 * dV2 + dV3 * dV3);
                         return ds;
                     };
 
@@ -358,11 +358,7 @@
                                 best = j;
                             }
                         }
-                        assignments[i] = {
-                            Id: 0,
-                            C: best,
-                            V: i
-                        };
+                        assignments[i] = best;
                     }
                     return assignments;
                 };
@@ -389,7 +385,7 @@
                     var n = d.vectors.length;
                     var centroids = new Array(d.k);
                     for (var i = 0; i < n; i++) {
-                        var cluster = d.assignments[i].C;
+                        var cluster = d.assignments[i];
                         if (centroids[cluster] == null)
                             centroids[cluster] = d.vectors[i];
                         else
@@ -445,6 +441,14 @@
             return clone;
         };
 
+        var setCurrentSessionWithOldTask = function (session) {
+            if (!$.isPlainObject(session))
+                return;
+            var oldCalculationTask = currentSession.CalculationTask;
+            currentSession = session;
+            currentSession.CalculationTask = oldCalculationTask;
+        };
+
         var createSession = function () {
             if (worker != null)
                 worker.close();
@@ -479,10 +483,13 @@
                         return;
                     }
                     worker = cw(kmeans.execute);
+                    var startTime = new Date();
                     worker.data(kmeans.getData()).then(function (d) {
+                        var calculationTime = (new Date() - startTime);
                         if (checkCurrentSession()) {
                             kmeans.handleResults(d);
                             calculationSessionAttempts = 0;
+                            currentSession.CalculationTime = calculationTime;
                             completeSession();
                         } else {
                             createSession();
@@ -522,7 +529,7 @@
                     $.post('/processing/pingsession?sessionjson=' + JSON.stringify(sessionClone), function (session) {
                         if (checkCurrentSession(true) && checkSession(session, currentSession.State, null, true)) {
                             pingSessionAttempts = 0;
-                            currentSession = session;
+                            setCurrentSessionWithOldTask(session);
                             handlers.successPingSession.fire(session);
                         } else {
                             //createSession();
@@ -545,7 +552,7 @@
                 $.post('/processing/completesession?sessionjson=' + JSON.stringify(currentSession), function (session) {
                     requestExecuted = false;
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Completed, sessionTaskType.complete)) {
-                        currentSession = session;
+                        setCurrentSessionWithOldTask(session);
                         handlers.successCompleteSession.fire(session);
                     }
                     requestExecuted = false;
@@ -572,7 +579,7 @@
                 $.post('/processing/cancelsession?sessionjson=' + JSON.stringify(sessionClone), function (session) {
                     requestExecuted = false;
                     if (checkCurrentSession() && checkSession(session, Processing.sessionState.Stopped, sessionTaskType.cancel)) {
-                        currentSession = session;
+                        setCurrentSessionWithOldTask(session);
                         handlers.successCancelSession.fire(session);
                     }
                 }).fail(function (d) {
@@ -906,14 +913,17 @@
             if (show && $.isPlainObject(session)) {
                 var $createdDate = $('#lblCreatedDate');
                 var $changedDate = $('#lblChangedDate');
+                var $duration = $('#lblDuration');
                 var $guid = $('#lblGuid');
                 var $userName = $('#lblUserName');
                 var $state = $('#lblState');
-                var $stateMessage = $('#lblStateMessage');
-                var $data = $('#lblData');
+                var $dataRange = $('#lblDataRange');
 
-                $createdDate.html(helpers.parseDate(session.CreatedDate).format(ui.dateTimeFormat));
-                $changedDate.html(helpers.parseDate(session.ChangedDate).format(ui.dateTimeFormat));
+                var createdDate = helpers.parseDate(session.CreatedDate);
+                var changedDate = helpers.parseDate(session.ChangedDate);
+                $createdDate.html(createdDate.format(ui.dateTimeFormat));
+                $changedDate.html(changedDate.format(ui.dateTimeFormat));
+                $duration.html((changedDate - createdDate)/1000 + " sec");
                 $guid.html(session.Guid);
                 $userName.html(session.UserName);
                 var state = "";
@@ -929,11 +939,31 @@
                         break;
                 }
                 $state.html(state);
-                $stateMessage.html(session.StateMessage);
-                if (session.Results != null) {
-                    $data.html(session.Results).parent().removeClass('hide');
+                if (session.CalculationTask != null) {
+                    var calculationState = "";
+                    switch (session.CalculationTask.CalculationState) {
+                    case Processing.calculationState.AssignmentLoop:
+                        calculationState = "Assignment Loop";
+                        break;
+                    case Processing.calculationState.UpdateCentroidsLoop:
+                        calculationState = "Update Centroids Loop";
+                        break;
+                    default:
+                        calculationState = "Error";
+                        break;
+                    }
+                    $dataRange.html(session.Results).parent().removeClass('hide');
+                    var vectorsTotal = session.CalculationTask.N;
+                    var fromRange = session.CalculationTask.SlotStart;
+                    var toRange = fromRange + session.CalculationTask.SlotCapacity;
+                    if (toRange > vectorsTotal)
+                        toRange = vectorsTotal;
+                    $dataRange.html("" + fromRange + ".." + toRange +
+                        " vectors (total: " + vectorsTotal + ")</br>iteration: " +
+                        session.CalculationTask.Iteration + " of " + session.CalculationTask.MaxIterations +
+                        ", " + calculationState + "");
                 } else {
-                    $data.parent().addClass('hide');
+                    $dataRange.parent().addClass('hide');
                 }
 
                 $sessionInfo.removeClass('hide');

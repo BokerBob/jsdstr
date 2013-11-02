@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI;
 using JSDstr.Helpers;
 using JSDstr.Interfaces;
 using JSDstr.Models;
@@ -65,7 +64,7 @@ namespace JSDstr.Services
         private VectorViewObject[] _vectors;
         private VectorViewObject[] _centroids;
         private VectorViewObject[] _newCentroids;
-        private AssignmentViewObject[] _assignments;
+        private int[] _assignments;
         private Task[] _tasks;
 
         private CalculationTaskViewObject _calculationTask;
@@ -87,7 +86,8 @@ namespace JSDstr.Services
                 {
                     State = CalculationState.Successful,
                     SessionGuid = _calculationTask.SessionGuid,
-                    VectorsCached = _calculationTask.VectorsCached
+                    VectorsCached = _calculationTask.VectorsCached,
+                    N = N
                 };
             }
         }
@@ -202,7 +202,6 @@ namespace JSDstr.Services
         {
             _centroids = GetRandomVectors();
             SaveCentroids(true, true);
-            _assignments = GetEmptyAssignments();
             return StartMainLoop();
         }
 
@@ -216,7 +215,6 @@ namespace JSDstr.Services
             _calculation.Iteration++;
             _calculationRepository.Save(_calculation);
             SaveCentroids(true, true);
-            //SaveAssignments(true);
             return StartAssignmentLoop(getTask);
         }
 
@@ -234,7 +232,7 @@ namespace JSDstr.Services
 
         private CalculationTaskViewObject CompleteAssignmentStep()
         {
-            MergeAssignments(_calculationTask.Assignments);
+            MergeAssignments(_calculationTask.Assignments, _calculationTask.SlotStart, _calculationTask.SlotCapacity);
             CompleteSessionTasks();
             return GetNextStep();
         }
@@ -278,7 +276,7 @@ namespace JSDstr.Services
             var nextIteration = false;
             for (var i = 0; i < _newCentroids.Length; i++)
             {
-                var clusterSize = _assignments.Count(x => x.C == i);
+                var clusterSize = _assignments.Count(x => x == i);
                 if (clusterSize == 0)
                     clusterSize = 1;
                 _newCentroids[i] *= (decimal)(1.0 / clusterSize);
@@ -320,7 +318,8 @@ namespace JSDstr.Services
             return new CalculationTaskViewObject(_calculation)
             {
                 SessionGuid = _calculationTask.SessionGuid,
-                VectorsCached = _calculationTask.VectorsCached
+                VectorsCached = _calculationTask.VectorsCached,
+                N = N
             };
         }
 
@@ -329,7 +328,8 @@ namespace JSDstr.Services
             return new CalculationTaskViewObject(_calculation)
             {
                 SessionGuid = _calculationTask.SessionGuid,
-                VectorsCached = _calculationTask.VectorsCached
+                VectorsCached = _calculationTask.VectorsCached,
+                N = N
             };
         }
 
@@ -393,7 +393,7 @@ namespace JSDstr.Services
         private void InitCalculation(bool fromGet)
         {
             var currentCalculationId = _settingsService.CurrentCalculationId;
-            if (_calculation == null || _calculation.Id != currentCalculationId)
+            if (_calculation == null || _calculation.Id != currentCalculationId || currentCalculationId == 0)
             {
                 if (currentCalculationId == 0)
                 {
@@ -583,39 +583,36 @@ namespace JSDstr.Services
             var c = source.Count();
             if (c > N)
                 throw new CalculationFailedException("Invalid number of assignments for current calculation");
-            _assignments = source.Select(x => new AssignmentViewObject(x)).ToArray();
-        }
-
-        private CentroidAssignment GetAssignmentFromViewObject(AssignmentViewObject viewObject)
-        {
-            var calculationId = _calculation.Id;
-            var iteration = _calculation.Iteration;
-            return new CentroidAssignment
+            var centroidsPositions = new Dictionary<int, int>(K);
+            for (int i = 0; i < _centroids.Length; i++)
             {
-                Id = viewObject.Id,
-                CentroidId = viewObject.C,
-                Vectorid = viewObject.V,
-                CalculationId = calculationId,
-                Iteration = iteration
-            };
+                centroidsPositions.Add(_centroids[i].Id, i);
+            }
+            _assignments = source.Where(x => x.CentroidId.HasValue)
+                .OrderBy(x => x.Vectorid)
+                .Select(x => centroidsPositions[x.CentroidId.Value])
+                .ToArray();
         }
 
-        private void MergeAssignments(AssignmentViewObject[] mergeWith)
+        private void MergeAssignments(int[] mergeWith, int slotStart, int slotCapacity)
         {
-            if (mergeWith.Length > _assignmentsSlotCapacity)
+            if (mergeWith.Length > slotCapacity)
                 throw new InvalidOperationException("MergeAssignments: results length != SlotCapacity");
-            _assignmentRepository.Insert(mergeWith.Select(GetAssignmentFromViewObject));
-        }
-
-        private AssignmentViewObject[] GetEmptyAssignments()
-        {
-            var assignments = new AssignmentViewObject[N];
-            for (var i = 0; i < N; i++)
-                assignments[i] = new AssignmentViewObject()
+            var l = slotStart + slotCapacity;
+            if (l > _vectors.Length)
+                l = _vectors.Length;
+            var assignments = new List<CentroidAssignment>();
+            for (var i = slotStart; i < l; i++)
+            {
+                assignments.Add(new CentroidAssignment
                 {
-                    V = i
-                };
-            return assignments;
+                    CalculationId = _calculation.Id,
+                    Iteration = _calculation.Iteration,
+                    CentroidId = _centroids[mergeWith[i - slotStart]].Id,
+                    Vectorid = _vectors[i].Id
+                });
+            }
+            _assignmentRepository.Insert(assignments);
         }
 
         // db => source, viewobjects
@@ -705,7 +702,7 @@ namespace JSDstr.Services
                     Type = _calculation.State
                 };
                 _taskRepository.Insert(task);
-                AssignmentViewObject[] taskAssignments = null;
+                int[] taskAssignments = null;
                 if (_calculation.State == CalculationState.UpdateCentroidsLoop)
                     taskAssignments = _assignments.Skip(taskIndex).Take(slotCapacity).ToArray();
                 _calculationTask = new CalculationTaskViewObject(_calculation)
@@ -716,7 +713,8 @@ namespace JSDstr.Services
                     SlotCapacity = slotCapacity,
                     Assignments =  taskAssignments,
                     SessionGuid =  _calculationTask.SessionGuid,
-                    VectorsCached = _calculationTask.VectorsCached
+                    VectorsCached = _calculationTask.VectorsCached,
+                    N = N
                 };
                 return _calculationTask;
             }
@@ -724,7 +722,8 @@ namespace JSDstr.Services
             {
                 State = CalculationState.Busy,
                 SessionGuid = _calculationTask.SessionGuid,
-                VectorsCached = _calculationTask.VectorsCached
+                VectorsCached = _calculationTask.VectorsCached,
+                N = N
             };
             return _calculationTask;
         }

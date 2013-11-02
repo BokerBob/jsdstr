@@ -23,6 +23,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+      </Objects>
+    </PublishDatabaseSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -113,6 +117,7 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="ViewObjects\AssignmentViewObject.cs" />
     <Compile Include="ViewObjects\CalculationTaskViewObject.cs" />
+    <Compile Include="ViewObjects\StatisticsViewObject.cs" />
     <Compile Include="ViewObjects\VectorViewObject.cs" />
     <Compile Include="ViewObjects\SessionViewObject.cs" />
     <Compile Include="ViewObjects\ViewObject.cs" />

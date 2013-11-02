@@ -1,0 +1,267 @@
+JSDstr
+
+Goal: distribute computing clasterization of cities population in the world
+
+-UI-
+
+*admin with navigation
+*background can be with rotated cubs
+should info customer about unsupported browser and show list of browsers what support
+logout button and logged user email
+
+MASTER
+
+  Menu
+- Info (start page) [/about]
+- Calculation [/processing]
+- Results [/results]
+
+  Statistics stick
+  3 languages (English, Ukrainian, Russian) *
+  Footer with copyright
+  All via https *
+
+INFO
+
+- Info about project (goal, algorithm) with button 'Start' which redirects to CALCULATION
+
+CALCULATION
+
+- User can sign in / sign up (with email and pwd). It's not necessary (anonym calculation). [/processing]. *
+- After sign up (and license agriement accept) user recieves email with info and pwd * (or authorization by user key ot 3rd party services)
+- After sign in 'Start/Stop' button is present and changed action url (via url history)
+- After stop - thanks (maybe implement resume calculation after stop), statistics
+- Calculation info:
+	- Session number (before start)
+	- Session start time (session created time)
+	- Data interval (coordinates, country...) (no?...)
+	- Data volume processed
+	- Current data (map fragment)
+	- Speed (nodes/sec)
+	- Session status (new, started, processing, get data, saving data, stopped)
+	- CPU usage, memory etc (?...)
+- Progress bar with percents for current task
+- Auto authorization for user and start processing [/processing?email=t@gmail.com&pwd=kkk@kk.com&action=start] (maybe replace credentials in url after login)
+- Auto start processing for anonym user [/processing?email=anonym&action=start]
+- If close while processing - propose to stay on page
+
+RESULTS
+
+- Statistics tab
+- Analysis of data (result image with calculated areas and current calculations)
+- Graphics with speed, number of users, users online
+
+STATISTICS STICK
+
+  Dynamic refresh
+- Count of users during all time
+- Count of users sessions during all time
+- Count of users online
+- Count of data pages processed
+- Overral time of execution
+- Amount of data processed
+- Peak power (Flops/Intel processors)
+- Current power (Flops/Intel processors)
+
+
+-REALIZATION-
+
+DATABASE
+
+MSSQl, linqtosql
+
+[dbo.GeoData]
+	Id int pk
+	Name nvarchar(max)
+	Latitude decimal
+	Longitude decimal
+	Population bigint
+	... other column if necessary
+[dbo.DataClaster]
+	Id int pk
+	CreatedDate datetime
+	Path nvarchar(100) ;; 1/1120/11130
+[dbo.DataClaster2GeoData]
+	DataClasterId int fk
+	GeoDataId int fk
+[dbo.User]
+[dbo.Session]
+	Id int pk
+	GeoDataIdStart int fk
+	GeoDataIdEnd int fk
+	UserId int null
+	CreatedDate datetime
+	CompletedDate datetime null
+	StatusId int [created started stopped completed]
+	DataClasterId int null
+	CalculationSpeed int
+	ProcessedDataVolume int
+	LastPingDate datetime
+[dbo.Statistics] ;; for period from CreatedDate + 1 minute
+	Id int pk
+	CreatedDate datetime
+	UsersCount
+	OnlineUsersCount
+	AnonymiusUsersCount ;; online
+	SessionsCount 
+	DataProcessedAmount
+	ProcessingTime
+	Power
+
+todo:
+Download geo data from http://georama-project.labs.exalead.com/gazetiki.htm and convert to sql
+Create tables and relation (where is necessary)
+Optimization
+
+WEBSITE
+
+ASP.NET MVC, C#
+BootStrap for design
+Minifie js (and combine into one file)
+WCF service
+Google analytics	
+
+Classes:
+Model classes (from db)
+
+Services to relate repository and controller:
+// all returns view
+GeoDataService // should by sync!!
+	-GeoDataRep
+	+GetById(id)
+	+GetForNextTask() []
+	+GetBySession()
+DataClasterService
+	-DataClasterRep
+	+GetById(id)
+	+Parent(claster)
+	+Save(clasterview)
+UserService
+	-UserRep
+	+Authorize
+	+GetInfo
+	+GetStatistics
+	+GetCurrentSession
+SessionService
+	-SessionRep
+	+CreateNewSession(user) // get geodata
+	+GetById(id)
+	+UpdateSession(id)
+StatisticsService
+	-StatisticsRep
+	-UpdateStatistics() // check from user with frequency 1 sec, update 1 min
+	+GetStatistics(id)
+	+GetStatisticsByDateRange(fromdate, todate) []
+	
+Helpers: ping (schedule for checking session status), resources
+Global.asax - change url
+ModelViews and ClientModelViews
+Master page
+AboutController
+	- Index
+ProcessingController
+	- Index
+	- Start
+	- Stop
+	- Ping
+ResultsController // must know how to draw results on map
+	- Index
+	- Refresh
+StatistiscController (partial view)
+	- Refresh
+
+Client resources:
+Minified script with hierarchical clasterization of data (clusterfck.js)
+todo: investigate how to paralelize this algorithm and how to trancate date for it (and save)
+Provide security for users
+Scenarius:
+	>Client go to site and sign in or user go to url (if is invisible mode - empty page)
+	>Client load script (or from cache)
+	>Client get data from server, some range (maybe save data in storage to continue processing after close??)
+	>Client start algorithm, in async mode client calculate process statistics and send ping to server. If server not reserved ping for 10 sec, it close session and send data to other user.
+	>Client should be informed about session failed [if visuble mode]
+	>If client complete task, it send result to server and get next task (1 request)
+
+0984003315
+
+BUGS
+
+LAYOUT
+
+- Add footer info
+- Add background
+- Move menu to partial view
+- Add oop to js
+- Resources prefixes +
+Button_
+Content_ 
+Header_
+Link_
+Title_
+Label_
+Error_
+Success_
+Msg_
+
+ABOUT
+
+- Add info about project
+
+SIGN IN & SIGN UP
+
+- Fix get value from checkbox (terms) +
+- Add support enter after focus +
+- Add loading animation +
+- Add delay for success message +
+- Fix bug with cookies (remembers always) +
+
+- Send email with credentials
+- Add authorization via url
+- Add terms pop-up
+- Security!!
+
+BUSINESS LOGIC
+
+- Add handling any errors (404, server errors)
+- Add logs
+
+PROCESSING
+
+- DataInterval - think how to implement not defragmented algorithm
+- Add processing with iframe
+
+SQL Optimization
+
+- add index for username
+
+BUGS
+
+-fill texts
+-send email after registration
+-add minified script
+
+-add state and error message after create member +
+-add logs (also general try catch) +
+-error pages +
+-check browser support
+
+
+
+MERSENNE PRIME JS
+
+- Open source and free
+- Minified script, which can be built into different sites
+	- websockets
+	- webworkers
+	- calculation with OpenGL, Native client etc. (based on browser complatibility)
+	- min script, which gets task with script
+	- widgets
+- Central powerfull server
+	- Node js, optimized db
+	- All statistics
+- Independence parts:
+	Widgets
+	Api
+	Sessions
+	Algorithms
+	Data

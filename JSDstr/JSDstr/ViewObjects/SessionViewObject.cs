@@ -20,6 +20,7 @@ namespace JSDstr.ViewObjects
             State = source.State;
             StateMessage = source.StateMessage;
             CalculationId = source.CalculationId;
+            CalculationTime = source.CalculationTime;
         }
 
         public DateTime CreatedDate { get; set; }
@@ -29,6 +30,7 @@ namespace JSDstr.ViewObjects
         public SessionState State { get; set; }
         public string StateMessage { get; set; }
         public int CalculationId { get; set; }
+        public int CalculationTime { get; set; }
 
         public CalculationTaskViewObject CalculationTask { get; set; }
 

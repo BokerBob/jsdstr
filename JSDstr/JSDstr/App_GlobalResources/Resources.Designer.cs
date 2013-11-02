@@ -519,6 +519,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data range.
+        /// </summary>
+        internal static string Label_DataRange {
+            get {
+                return ResourceManager.GetString("Label_DataRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration.
+        /// </summary>
+        internal static string Label_Duration {
+            get {
+                return ResourceManager.GetString("Label_Duration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string Label_Email {

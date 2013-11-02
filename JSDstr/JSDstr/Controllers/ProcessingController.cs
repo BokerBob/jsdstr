@@ -56,5 +56,11 @@ namespace JSDstr.Controllers
         {
             return _sessionService.CompleteSession((SessionViewObject)sessionJson, User.Identity.Name);
         }
+        
+        [HttpPost]
+        public JsonResult GetStatistics()
+        {
+
+        }
     }
 }
