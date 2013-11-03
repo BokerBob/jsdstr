@@ -49,14 +49,13 @@ namespace JSDstr.Services
 
         private void SetValue(string key, string value)
         {
-            _settingsRepository.BeginContext();
             var settings = _settingsRepository.Entities.SingleOrDefault(x => x.Key == key);
             if (settings == null)
                 CreateSettings(key, value);
             else
             {
                 settings.Value = value;
-                _settingsRepository.Submit();
+                _settingsRepository.Save(settings);
             }
         }
 

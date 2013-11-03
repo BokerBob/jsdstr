@@ -98,7 +98,7 @@ namespace JSDstr
             var ex = Server.GetLastError();
             if (Response.StatusCode != 404)
             {
-                LogService.Log(ex);
+                LogService.Log(ex, true);
             }
         }
     }

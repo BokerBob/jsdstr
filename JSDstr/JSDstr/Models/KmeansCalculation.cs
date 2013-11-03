@@ -22,26 +22,26 @@ namespace JSDstr.Models
     [Table]
     public class KmeansCalculation : BaseModel
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = true, UpdateCheck = UpdateCheck.Never)]
         public override int Id { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public override DateTime CreatedDate { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public override DateTime ChangedDate { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public int K { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public int Iteration { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public int MaxIterations { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public CalculationState State { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public string StateMessage { get; set; }
     }
 }

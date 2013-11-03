@@ -24,7 +24,6 @@ namespace JSDstr.Repositories
         public SqlRepository(string connectionString)
         {
             ConnectionString = connectionString;
-            DataContext = new DataContext(ConnectionString);
         }
 
         private Table<TModel> GetTable(DataContext dataContext)
@@ -78,10 +77,11 @@ namespace JSDstr.Repositories
 
         public void Delete(TModel entity)
         {
+            if (entity == null)
+                return;
             lock (_locker)
             {
-                if (DataContext == null)
-                    DataContext = new DataContext(ConnectionString);
+                BeginContext();
                 entity.ChangedDate = DateTime.Now;
                 GetTable(DataContext).DeleteOnSubmit(entity);
                 DataContext.SubmitChanges();
@@ -92,10 +92,11 @@ namespace JSDstr.Repositories
 
         public void Delete(IEnumerable<TModel> entities)
         {
+            if (entities == null)
+                return;
             lock (_locker)
             {
-                if (DataContext == null)
-                    DataContext = new DataContext(ConnectionString);
+                BeginContext();
                 var source = entities.ToArray();
                 var now = DateTime.Now;
                 foreach (var entity in source)
@@ -109,24 +110,48 @@ namespace JSDstr.Repositories
             }
         }
 
-        public void BeginContext()
+        public TModel Save(TModel entity)
         {
-            DataContext = new DataContext(ConnectionString);
+            if (entity == null)
+                return null;
+            var ctx = BeginContext();
+            ctx.Attach(entity, true);
+            Submit();
+            return entity;
         }
 
-        public void Submit(bool updateChangedDate = true)
+        public IEnumerable<TModel> Save(IEnumerable<TModel> entities)
+        {
+            if (entities == null)
+                return null;
+            var ctx = BeginContext();
+            ctx.AttachAll(entities, true);
+            Submit();
+            return entities;
+        }
+
+        public Table<TModel> BeginContext()
+        {
+            DataContext = new DataContext(ConnectionString);
+            return GetTable(DataContext);
+        }
+
+        public void Submit()
         {
             lock (_locker)
             {
-                if (DataContext == null)
-                    DataContext = new DataContext(ConnectionString);
-                if (updateChangedDate)
+                var changed = DataContext.GetChangeSet().Updates;
+                var inserted = DataContext.GetChangeSet().Inserts;
+                var now = DateTime.Now;
+                foreach (TModel entity in changed)
                 {
-                    var changed = DataContext.GetChangeSet().Updates;
-                    foreach (TModel entity in changed)
-                    {
-                        entity.ChangedDate = DateTime.Now;
-                    }
+                    entity.ChangedDate = now;
+                    if (entity.CreatedDate == DateTime.MinValue)
+                        entity.CreatedDate = now;
+                }
+                foreach (TModel entity in inserted)
+                {
+                    entity.CreatedDate = entity.ChangedDate = DateTime.Now;
                 }
                 DataContext.SubmitChanges();
                 DataContext.Dispose();
@@ -134,12 +159,9 @@ namespace JSDstr.Repositories
             }
         }
 
-        public void Refresh()
+        public void Refresh(TModel entity)
         {
-            using (var dataContext = new DataContext(ConnectionString))
-            {
-                dataContext.Refresh(RefreshMode.OverwriteCurrentValues);
-            }
+            DataContext.Refresh(RefreshMode.KeepChanges, entity);
         }
     }
 

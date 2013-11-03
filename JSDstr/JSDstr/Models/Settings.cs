@@ -9,16 +9,16 @@ namespace JSDstr.Models
     [Table]
     public class Settings : BaseModel
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = true, UpdateCheck = UpdateCheck.Never)]
         public override int Id { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public override DateTime CreatedDate { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public override DateTime ChangedDate { get; set; }
 
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public string Key { get; set; }
-        [Column]
+        [Column(UpdateCheck = UpdateCheck.Never)]
         public string Value { get; set; }
     }
 }

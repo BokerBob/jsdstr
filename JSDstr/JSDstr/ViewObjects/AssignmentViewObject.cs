@@ -11,12 +11,12 @@ namespace JSDstr.ViewObjects
         public AssignmentViewObject(CentroidAssignment source) : base(source)
         {
             Id = source.Id;
-            CentroidId = source.CentroidId.Value;
-            VectorId = source.Vectorid.Value;
+            C = source.CentroidId.Value;
+            V = source.Vectorid.Value;
         }
 
         public int Id { get; set; }
-        public int CentroidId { get; set; }
-        public int VectorId { get; set; }
+        public int C { get; set; }
+        public int V { get; set; }
     }
 }

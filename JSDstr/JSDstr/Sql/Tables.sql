@@ -139,30 +139,52 @@ create table CentroidAssignment
 	Iteration int not null,
 );
 
-drop table VectorTask
-create table VectorTask
+create table Task
 (
 	Id int identity(1,1) primary key,
 	CreatedDate datetime default getdate(),
 	ChangedDate datetime default getdate(),
 
-	VectorId int not null,
 	State int not null,
 	Type int not null,
 	SessionGuid uniqueidentifier null,
 	CalculationId int not null,
-	Iteration int not null
+	Iteration int not null,
+	SlotStart int not null,
+	SlotCapacity int not null
 );
 
-select * from KmeansCalculation
-where Id = 47;
-select * from Centroid
-where CalculationId = 47;
-select * from CentroidAssignment
-where CalculationId = 47;
-select * from VectorTask
-where CalculationId = 47 and Type = 3 and State = 1
-select * from Session
-where CalculationId = 47 and Guid = '7B61B8DD-DF0F-4080-8EF6-7CA696410922'
 
-select * from settings
+declare @id int;
+select @id = Value from Settings
+where [KEY] = 'CurrentCalculationId'
+declare @type int;
+select @type = State
+from KmeansCalculation
+where id = @id;
+select * from Centroid
+where CalculationId = @id;
+select * from KmeansCalculation
+where ID = @id
+select COUNT(*) from Task
+where CalculationId = @id and Type = @type and State = 0;
+select COUNT(*), SessionGuid from Task
+where CalculationId = @id and Type = @type and State = 1
+group by SessionGuid;
+select COUNT(*), SessionGuid from Task
+where CalculationId = @id and Type = @type and State = 2
+group by SessionGuid;
+select COUNT(*) from Task
+where CalculationId = @id and Type = @type and State = 3;
+
+select * from Session
+where Guid = 'B6BD7B25-4802-466B-8832-107411D0AA33'
+
+delete from KmeansCalculation
+delete from Centroid
+delete from CentroidAssignment
+delete from Session
+
+update Settings
+set value = '0'
+where [key] = 'CurrentCalculationId' 

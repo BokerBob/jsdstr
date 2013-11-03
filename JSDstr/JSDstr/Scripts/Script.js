@@ -351,8 +351,8 @@
                             }
                         }
                         assignments[i] = {
-                            CentroidId: d.centroids[best].Id,
-                            VectorId: vector.Id
+                            С: best,
+                            V: i
                         };
                     }
                     return assignments;
@@ -364,6 +364,8 @@
                 };
             }
             else if (task.State == Processing.calculationState.UpdateCentroidsLoop) {
+                if (task.Centroids == null || task.Centroids.length != task.K)
+                    throw "Kmeans: centroids is invalid";
                 if (task.Assignments == null)
                     throw "Kmeans: assignments is invalid";
                 this.execute = function (d) {
@@ -378,14 +380,7 @@
                     var n = d.vectors.length;
                     var centroids = new Array(d.k);
                     for (var i = 0; i < n; i++) {
-                        var centroidId = d.assignments[i].CentroidId;
-                        var cluster = 0;
-                        for (var j = 0; j < d.K; j++) {
-                            if (d.centroids[j].Id == centroidId) {
-                                cluster = j;
-                                break;
-                            }
-                        }
+                        var cluster = d.assignments[i];
                         if (centroids[cluster] == null)
                             centroids[cluster] = d.vectors[i];
                         else

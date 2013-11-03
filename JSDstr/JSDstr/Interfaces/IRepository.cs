@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using JSDstr.Models;
 
@@ -11,8 +12,10 @@ namespace JSDstr.Interfaces
         IQueryable<TModel> Insert(IEnumerable<TModel> entities);
         void Delete(TModel entity);
         void Delete(IEnumerable<TModel> entities);
-        void BeginContext();
-        void Submit(bool updateChangedDate = true);
-        void Refresh();
+        TModel Save(TModel entity);
+        IEnumerable<TModel> Save(IEnumerable<TModel> entities);
+        Table<TModel> BeginContext();
+        //void Submit();
+        void Refresh(TModel entity);
     }
 }

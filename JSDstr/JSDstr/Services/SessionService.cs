@@ -13,41 +13,35 @@ namespace JSDstr.Services
         private readonly ICalculationService _calculationService = KmeansService.Instance;
         private readonly ISettingsService _settingsService = new SettingsService();
 
-        private const int IdleTimeToTerminate = 10000;
+        private const int IdleTimeToTerminate = 60000;
 
         private bool HandleCalculationState(CalculationTaskViewObject task, Session session, ref string logMsg)
         {
-            _sessionRepository.BeginContext();
             var successful = true;
             if (task.State == CalculationState.Failed)
             {
-                session.State = SessionState.Stopped;
-                session.StateMessage = "Session calculation failed";
+                session.StateMessage = "Calculation failed";
                 logMsg = string.Format("Session [{0}] calculation failed", session.Guid);
                 successful = false;
             }
             else if (task.State == CalculationState.Completed)
             {
-                session.State = SessionState.Stopped;
-                session.StateMessage = "Session calculation completed";
+                session.StateMessage = "Calculation completed";
                 logMsg = string.Format("Session [{0}] calculation completed", session.Guid);
                 successful = false;
             }
             else if (task.State == CalculationState.Error)
             {
-                session.State = SessionState.Stopped;
-                session.StateMessage = "Session calculation error";
+                session.StateMessage = "Calculation error";
                 logMsg = string.Format("Session [{0}] calculation error", session.Guid);
                 successful = false;
             }
             else if (task.State == CalculationState.Busy)
             {
-                session.State = SessionState.Stopped;
-                session.StateMessage = "Session calculation busy";
+                session.StateMessage = "Calculation busy";
                 logMsg = string.Format("Session [{0}] calculation busy", session.Guid);
                 successful = false;
             }
-            _sessionRepository.Submit();
             return successful;
         }
 
@@ -57,25 +51,33 @@ namespace JSDstr.Services
                 return;
             var deadlineTerminateDate = DateTime.Now.AddMilliseconds(-IdleTimeToTerminate);
             var logMsg = "";
-            _sessionRepository.BeginContext();
             var inactiveSessions = _sessionRepository.Entities.Where(x =>
                 x.State == SessionState.Started &&
                 x.ChangedDate < deadlineTerminateDate &&
-                x.CalculationId == calculationId);
+                x.CalculationId == calculationId).ToArray();
+            var anyTerminated = false;
             foreach (var inactiveSession in inactiveSessions)
             {
-                inactiveSession.State = SessionState.Stopped;
-                inactiveSession.ChangedDate = DateTime.Now;
-                if (!HandleCalculationState(_calculationService.CancelTask(new CalculationTaskViewObject { SessionGuid = inactiveSession.Guid }), inactiveSession, ref logMsg))
+                var taskResult = _calculationService.CancelTask(new CalculationTaskViewObject
+                {
+                    SessionGuid = inactiveSession.Guid
+                });
+                if (!HandleCalculationState(taskResult, inactiveSession, ref logMsg))
                 {
                     Log(logMsg, LogType.Warning);
                 }
+                else
+                {
+                    inactiveSession.State = SessionState.Stopped;
+                    inactiveSession.StateMessage = "Terminated as inactive";
+                    _sessionRepository.Save(inactiveSession);
+                    anyTerminated = true;
+                }
             }
-            if (inactiveSessions.Any())
+            if (anyTerminated)
             {
-                Log(string.Format("Inactive sessions terminated. Sessions ids: [{0}]",
-                    inactiveSessions.Select(x => x.Id.ToString()).ToList().Aggregate((a, b) => (a + "," + b))));
-                _sessionRepository.Submit(false);
+                Log(string.Format("Inactive sessions terminated. Sessions guids: [{0}]",
+                    inactiveSessions.Select(x => x.Guid.ToString()).ToList().Aggregate((a, b) => (a + "," + b))));
             }
         }
 
@@ -94,22 +96,23 @@ namespace JSDstr.Services
                     Guid = Guid.NewGuid(),
                     CalculationId = calculationId
                 };
-                session = _sessionRepository.Insert(session);
                 var calculationTask = _calculationService.GetTask(new CalculationTaskViewObject
                 {
                     SessionGuid = session.Guid,
                     VectorsCached = sessionViewObject.CalculationTask.VectorsCached
-                });
+                });                
                 if (!HandleCalculationState(calculationTask, session, ref logMsg))
                 {
+                    session.State = SessionState.Stopped;
+                    session.CalculationId = calculationTask.CalculationId;
                     Log(logMsg, LogType.Error);
                 }
                 else
                 {
                     session.CalculationId = calculationTask.CalculationId;
-                    _sessionRepository.Submit();
                     Log(string.Format("Session [{0}] created successfull", session.Guid));
                 }
+                session = _sessionRepository.Insert(session);
                 sessionViewObject = new SessionViewObject(session)
                 {
                     CalculationTask = calculationTask
@@ -130,7 +133,6 @@ namespace JSDstr.Services
                 var logType = LogType.Info;
                 string logMsg;
                 var calculationId = _settingsService.CurrentCalculationId;
-                _sessionRepository.BeginContext();
                 var session = _sessionRepository.Entities.SingleOrDefault(x =>
                     x.Guid == sessionViewObject.Guid &&
                     x.UserName == sessionViewObject.UserName &&
@@ -159,7 +161,7 @@ namespace JSDstr.Services
                     logMsg = string.Format("Session [{0}] ping successfull", session.Guid);
                 }
                 session.ChangedDate = DateTime.Now;
-                _sessionRepository.Submit(false);
+                _sessionRepository.Save(session);
                 Log(logMsg, logType);
                 return session;
             }
@@ -178,7 +180,6 @@ namespace JSDstr.Services
                 var logType = LogType.Info;
                 var calculationId = _settingsService.CurrentCalculationId;
                 CalculationTaskViewObject calculationTask = null;
-                _sessionRepository.BeginContext();
                 var session = _sessionRepository.Entities.SingleOrDefault(x =>
                     x.Guid == sessionViewObject.Guid &&
                     x.UserName == sessionViewObject.UserName &&
@@ -211,8 +212,7 @@ namespace JSDstr.Services
                         sessionViewObject.State, session.State);
                     logType = LogType.Warning;
                 }
-                session.ChangedDate = DateTime.Now;
-                _sessionRepository.Submit(false);
+                _sessionRepository.Save(session);
                 Log(logMsg, logType);
                 return new SessionViewObject(session)
                 {
@@ -234,7 +234,6 @@ namespace JSDstr.Services
                 var logType = LogType.Info;
                 var calculationId = _settingsService.CurrentCalculationId;
                 CalculationTaskViewObject calculationTask = null;
-                _sessionRepository.BeginContext();
                 var session = _sessionRepository.Entities.SingleOrDefault(x =>
                     x.Guid == sessionViewObject.Guid &&
                     x.UserName == sessionViewObject.UserName &&
@@ -255,6 +254,10 @@ namespace JSDstr.Services
                         session.StateMessage = "Completed successfull";
                         logMsg = string.Format("Session [{0}] complete successfull", session.Guid);
                     }
+                    else
+                    {
+                        session.State = SessionState.Stopped;
+                    }
                 }
                 else
                 {
@@ -266,8 +269,7 @@ namespace JSDstr.Services
                         session.Guid, sessionViewObject.State, session.State);
                     logType = LogType.Warning;
                 }
-                session.ChangedDate = DateTime.Now;
-                _sessionRepository.Submit(false);
+                _sessionRepository.Save(session);
                 LogService.Log(logMsg, logType);
                 return new SessionViewObject(session)
                 {
