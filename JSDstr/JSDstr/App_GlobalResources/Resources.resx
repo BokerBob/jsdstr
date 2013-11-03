@@ -133,7 +133,13 @@
     <value>Stop session</value>
   </data>
   <data name="Content_About" xml:space="preserve">
-    <value>&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;</value>
+    <value>&lt;p&gt;Our project provides in-browser distributed calculations. Its main purpose is to investigate, whether browser-based distributed computing is affordable and beneficial for solving certain problems.&lt;/p&gt;&lt;p&gt;The calculation process performs clusterization of seismic data using algorithm k-means.&lt;/p&gt;&lt;blockquote&gt;
+  &lt;p&gt;Clustering is the task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar (in some sense or another) to each other than to those in other groups (clusters).&lt;/p&gt;
+&lt;/blockquote&gt;&lt;blockquote&gt;
+  &lt;p&gt;k-means clustering algorithm aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;The process of k-means algorithm is shown below:&lt;/p&gt;&lt;p&gt;&lt;img width="100%" src="/content/Images/kmeans_process.png"/&gt;&lt;/p&gt;&lt;p&gt;Seismic data is provided by &lt;a href="http://www.ngdc.noaa.gov/nndc/struts/form?t=101650&amp;s=1&amp;d=1t=101650&amp;s=1&amp;d=1"&gt;The Significant Earthquake Database&lt;/a&gt;&lt;/p&gt;&lt;blockquote&gt;
+  &lt;p&gt;The Significant Earthquake Database contains information on destructive earthquakes from 2150 B.C. to the present that meet at least one of the following criteria: Moderate damage (approximately $1 million or more), 10 or more deaths, Magnitude 7.5 or greater, Modified Mercalli Intensity X or greater, or the earthquake generated a tsunami.&lt;/p&gt;
+&lt;/blockquote&gt;</value>
   </data>
   <data name="Content_Footer" xml:space="preserve">
     <value>© 2013 Andriy Babets</value>
@@ -142,21 +148,19 @@
     <value />
   </data>
   <data name="Content_Home" xml:space="preserve">
-    <value>&lt;p&gt;
-    jsDSTR is a javascript distributed system for clasterization big data. 
+    <value>&lt;br/&gt;&lt;p&gt;
+    &lt;abbr title="Javascript Distributed" &gt;jsDSTR&lt;/abbr&gt; is a javascript distributed system for clasterization seismic activity. 
 &lt;/p&gt;
 &lt;p&gt;
-    The main idea is to use browser as a processing node in calculations.
-    Processing are doing on the big array of geographic data.
+    The main idea is to use browser as a processing node in calculations. You can join our project and contribute to the general process.
 &lt;/p&gt;</value>
   </data>
   <data name="Content_PageWasNotFound" xml:space="preserve">
     <value />
   </data>
   <data name="Content_Processing" xml:space="preserve">
-    <value>Click start button for beginning of calculation above. &lt;br /&gt;
-            You will become a little node in the great process. &lt;br /&gt;
-            Improve our world now!</value>
+    <value>&lt;p&gt;Click Start session button for beginning of calculation above. &lt;/p&gt;
+&lt;p&gt;You will become a little node in the great process. Your involvement and involvement of many others will allow to reach the common goal&lt;/p&gt;</value>
   </data>
   <data name="Content_ServerError" xml:space="preserve">
     <value />

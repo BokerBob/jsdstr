@@ -106,7 +106,8 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p class=&quot;text-muted&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;&lt;p class=&quot;text-muted&quot;&gt;Lorem ipsum dolor sit ame [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;p&gt;Our project provides in-browser distributed calculations. Its main purpose is to investigate, whether browser-based distributed computing is affordable and beneficial for solving certain problems.&lt;/p&gt;&lt;p&gt;The calculation process performs clusterization of seismic data using algorithm k-means.&lt;/p&gt;&lt;blockquote&gt;
+        ///  &lt;p&gt;Clustering is the task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar (in some sense or another) to each other than to those in othe [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Content_About {
             get {
@@ -133,12 +134,11 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p&gt;
-        ///    jsDSTR is a javascript distributed system for clasterization big data. 
+        ///   Looks up a localized string similar to &lt;br/&gt;&lt;p&gt;
+        ///    &lt;abbr title=&quot;Javascript Distributed&quot; &gt;jsDSTR&lt;/abbr&gt; is a javascript distributed system for clasterization seismic activity. 
         ///&lt;/p&gt;
         ///&lt;p&gt;
-        ///    The main idea is to use browser as a processing node in calculations.
-        ///    Processing are doing on the big array of geographic data.
+        ///    The main idea is to use browser as a processing node in calculations. You can join our project and contribute to the general process.
         ///&lt;/p&gt;.
         /// </summary>
         internal static string Content_Home {
@@ -157,9 +157,8 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click start button for beginning of calculation above. &lt;br /&gt;
-        ///            You will become a little node in the great process. &lt;br /&gt;
-        ///            Improve our world now!.
+        ///   Looks up a localized string similar to &lt;p&gt;Click Start session button for beginning of calculation above. &lt;/p&gt;
+        ///&lt;p&gt;You will become a little node in the great process. Your involvement and involvement of many others will allow to reach the common goal&lt;/p&gt;.
         /// </summary>
         internal static string Content_Processing {
             get {

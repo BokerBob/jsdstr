@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls.WebParts;
 using JSDstr.Interfaces;
 using JSDstr.Models;
 using JSDstr.Repositories;
@@ -30,6 +31,9 @@ namespace JSDstr.Services
         {
             return _sessionRepository.Entities.Where(x => x.CalculationId == calculationId);
         }
+
+        private static KeyValuePair<DateTime, int>[] TestUsersActivity { get; set; }
+        private static KeyValuePair<DateTime, int>[] TestSessionsActivity { get; set; }
 
         public StatisticsViewObject GetStatistics(Guid? sessionGuid)
         {
@@ -86,14 +90,17 @@ namespace JSDstr.Services
                 var userActivities =
                     _userActivityRepository.Entities.GroupBy(x => x.CreatedDate.Date)
                         .Select(x => new KeyValuePair<DateTime, int>(x.Key, x.Count())).ToArray();
-                //var tt = new KeyValuePair<DateTime, int>[50];
-                //var startDate = new DateTime(2013, 11, 1);
-                //var rand = new Random();
-                //for (var i = 0; i < 50; i++)
-                //{
-                //    tt[i] = new KeyValuePair<DateTime, int>(startDate.AddDays(i), rand.Next(1, 20));
-                //}
-                result.OnlineUsersCount = userActivities;
+                var rand = new Random();
+                if (TestUsersActivity == null)
+                {
+                    TestUsersActivity = new KeyValuePair<DateTime, int>[20];
+                    var startDate = new DateTime(2013, 11, 1);
+                    for (var i = 0; i < 20; i++)
+                    {
+                        TestUsersActivity[i] = new KeyValuePair<DateTime, int>(startDate.AddDays(i), rand.Next(1, 20));
+                    }
+                }
+                result.OnlineUsersCount = TestUsersActivity;
                 result.TotalUsersCount = _settingsService.TotalUsersCount;
                 var todayUsersCount = userActivities.Where(x => x.Key.Date == now.Date).FirstOrDefault();
                 result.TodayOnlineUsersCount = todayUsersCount.Key != default(DateTime) ? todayUsersCount.Value : 0;
@@ -101,7 +108,16 @@ namespace JSDstr.Services
                 var sessionsActivities =
                     sessions.GroupBy(x => x.CreatedDate.Date)
                         .Select(x => new KeyValuePair<DateTime, int>(x.Key, x.Count())).ToArray();
-                result.SessionsCount = sessionsActivities;
+                if (TestSessionsActivity == null)
+                {
+                    TestSessionsActivity = new KeyValuePair<DateTime, int>[20];
+                    var startDate = new DateTime(2013, 11, 1);
+                    for (var i = 0; i < 20; i++)
+                    {
+                        TestSessionsActivity[i] = new KeyValuePair<DateTime, int>(startDate.AddDays(i), TestUsersActivity[i].Value*rand.Next(1, 10));
+                    }
+                }
+                result.SessionsCount = TestSessionsActivity;
                 result.TotalSessionsCount = sessions.Count();
                 var todaySessionsCount = sessionsActivities.Where(x => x.Key.Date == now.Date).FirstOrDefault();
                 result.TodaySessionsCount = todaySessionsCount.Key != default(DateTime) ? todaySessionsCount.Value : 0;

@@ -1094,7 +1094,7 @@
         var noneValue = "none";
         function updateStatistics(d) {
             var $statistics = $('#statistics');
-            if (d == null) {
+            if (d == null || d == "") {
                 $statistics.css('display', 'none');
                 return;
             }
@@ -1159,8 +1159,8 @@
             var $wrapper = $(wrapper);
             $wrapper.find('#' + id).remove();
             var margin = { top: 0, right: 0, bottom: 0, left: 30 };
-            var width = 320 - margin.left - margin.right;
-            var height = 100 - margin.top - margin.bottom;
+            var width = $wrapper.innerWidth() - margin.left - margin.right;
+            var height = $wrapper.innerHeight() - margin.top - margin.bottom;
             var parseDate = helpers.parseDate;
             var x = d3.time.scale()
                 .range([0, width]);

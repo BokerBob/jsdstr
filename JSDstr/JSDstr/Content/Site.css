@@ -144,7 +144,7 @@ body {
 }
 
 #statistics .chart {
-
+    height: 100px;
 }
 
 #map {
