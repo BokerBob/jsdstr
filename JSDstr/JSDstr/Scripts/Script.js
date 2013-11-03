@@ -676,6 +676,8 @@
 
     var clusterizationResults = {
         drawClusters: function (data) {
+            if (data == null || data == "")
+                return;
             var map = new google.maps.Map(d3.select("#map").node(), {
                 zoom: 1,
                 center: new google.maps.LatLng(0, 0),
@@ -1149,8 +1151,10 @@
                 $userAverageProcessingSpeed.html(d.UserAverageProcessingSpeed);
                 $userMaxProcessingSpeed.html(d.UserMaxProcessingSpeed);
             }
-            drawChart(d.OnlineUsersCount, "svgOnlineUsersCount", '#chartOnlineUsersCount', 'Users');
-            drawChart(d.SessionsCount, "svgSessionsCount", '#chartSessionsCount', 'Sessions');
+            if (d.OnlineUsersCount)
+                drawChart(d.OnlineUsersCount, "svgOnlineUsersCount", '#chartOnlineUsersCount', 'Users');
+            if (d.SessionsCount)
+                drawChart(d.SessionsCount, "svgSessionsCount", '#chartSessionsCount', 'Sessions');
             //drawOnlineUsersCountChart(d.OnlineUsersCount, "svgOnlineUsersCount", $('#chartOnlineUsersCount')[0]);
             $statistics.fadeIn();
         }
