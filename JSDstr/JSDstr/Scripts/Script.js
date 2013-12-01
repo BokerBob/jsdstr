@@ -67,10 +67,10 @@
             return source;
         },
 
-        saveToStorage: function(key, value) {
+        saveToStorage: function (key, value) {
             if (key == null)
                 return null;
-            if (typeof(Storage) === "undefined")
+            if (typeof (Storage) === "undefined")
                 return null;
             localStorage[key] = value;
             return value;
@@ -179,7 +179,7 @@
 
         var checkCurrentSession = function (disableHandler) {
             if (!$.isPlainObject(currentSession)) {
-                if(!disableHandler)
+                if (!disableHandler)
                     handlers.failSessionClientNull.fire();
                 return false;
             }
@@ -317,7 +317,7 @@
             } else if (task.Vectors == null) {
                 throw "Kmeans: vectors is null";
             } else {
-                if(helpers.saveToStorage(vectorsStoreKey, JSON.stringify(task.Vectors)) != null)
+                if (helpers.saveToStorage(vectorsStoreKey, JSON.stringify(task.Vectors)) != null)
                     task.VectorsCached = true;
             }
             if (Number(task.SlotStart) == NaN || task.SlotStart < 0)
@@ -331,11 +331,17 @@
                 if (task.Centroids == null || task.Centroids.length != task.K)
                     throw "Kmeans: centroids is invalid";
                 this.execute = function (d) {
-                    function euclidianDistance(a, b) { // correct distance for coordinates
-                        var ds = (a.V1 - b.V1) * (a.V1 - b.V1) +
-                            (a.V1 - b.V2) * (a.V1 - b.V2) +
-                            (a.V1 - b.V3) * (a.V1 - b.V3);
-                        ds = Math.sqrt(ds);
+                    function euclidianDistance(a, b) {
+                        var dV1 = Math.abs(a.V1 - b.V1);
+                        var dV2 = Math.abs(a.V2 - b.V2);
+                        var dV3 = Math.abs(a.V3 - b.V3);
+                        var maxdV1 = 180;
+                        var maxdV2 = 360;
+                        if (dV1 > maxdV1/2)
+                            dV1 = maxdV1 - dV1;
+                        if (dV2 > maxdV2/2)
+                            dV2 = maxdV2 - dV2;
+                        ds = Math.sqrt(dV1 * dV1 + dV2 * dV2 + dV3 * dV3);
                         return ds;
                     };
 
@@ -462,7 +468,7 @@
             } else {
                 sessionClone = cloneSessionWithoutTask(currentSession);
             }
-            
+
             $.post('/processing/createsession?sessionjson=' + JSON.stringify(sessionClone), function (session) {
                 if (checkSession(session, Processing.sessionState.Started, sessionTaskType.get)) {
                     try {
